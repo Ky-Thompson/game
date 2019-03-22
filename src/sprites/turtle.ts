@@ -1,0 +1,89 @@
+import { Body } from '../models';
+import { TiledGameObject } from '../scenes';
+import { Enemy } from './enemy';
+import { Goomba } from './goomba';
+
+export class Turtle extends Enemy {
+  static DIMENSIONS: Partial<Body> = { x: 1, y: 12 };
+  static SLIDE_VELOCITY: number = 150;
+
+  private sliding: boolean = false;
+  readonly type = 'turtle';
+
+  constructor(config) {
+    super(config);
+
+    this.anims.play('turtle');
+    this.flipX = true;
+    this.setBody(Turtle.DIMENSIONS);
+  }
+
+  update() {
+    if (!this.isActivated) {
+      return;
+    }
+
+    if (this.sliding) {
+      this.currentScene.physics.world.collide(this, this.currentScene.groundLayer, (enemy: Turtle | Goomba, tile: TiledGameObject) =>
+        this.currentScene.tileCollision(enemy, tile)
+      );
+
+      this.currentScene.enemyGroup.children.entries.forEach((enemy: Turtle | Goomba) => {
+        if (this !== enemy) {
+          this.currentScene.physics.world.overlap(this, enemy, () => this.slideKill(enemy));
+        }
+      });
+    } else {
+      // Execute collider
+      this.collideGround();
+    }
+
+    // Collide with Player
+    this.currentScene.physics.world.overlap(this, this.currentScene.mario, () => this.playerHit());
+
+    // The enemy stopped, better try to walk in the other direction.
+    if (this.body.velocity.x === 0) {
+      this.direction = -this.direction;
+      this.body.velocity.x = this.direction;
+      this.flipX = this.direction < 0;
+    }
+  }
+
+  slideKill(victim: Enemy) {
+    if (victim.kill) {
+      victim.kill(true);
+    }
+  }
+
+  playerHit() {
+    if (this.isVerticalHit) {
+      this.updatePoints();
+
+      // Set the turtle shell and start to slide
+      if (!this.sliding || (this.sliding && this.body.velocity.x === 0)) {
+        this.scene.sound.playAudioSprite('sfx', 'smb_kick');
+
+        this.direction = Turtle.SLIDE_VELOCITY * (this.player.x < this.x ? 1 : -1);
+        this.body.velocity.x = this.direction;
+      } else {
+        this.scene.sound.playAudioSprite('sfx', 'smb_stomp');
+
+        this.direction = 0;
+        this.body.velocity.x = 0;
+      }
+
+      this.sliding = true;
+      this.play('turtleShell');
+      this.player.enemyBounce(this);
+    } else {
+      // Player hit
+      if (this.sliding && this.body.velocity.x === 0) {
+        this.scene.sound.playAudioSprite('sfx', 'smb_kick');
+
+        this.direction = Turtle.SLIDE_VELOCITY;
+        this.body.velocity.x = Turtle.SLIDE_VELOCITY;
+      }
+      this.hurtPlayer();
+    }
+  }
+}

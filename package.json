@@ -1,0 +1,42 @@
+{
+  "name": "caleb-sophia-madrid",
+  "version": "0.0.0",
+  "engines": {
+    "node": "^8.15.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/caleb-sophia-madrid/game.git"
+  },
+  "scripts": {
+    "start": "gulp watch",
+    "build": "gulp build",
+    "serve": "gulp serve",
+    "docker:build": "docker build -t caleb-sophia-madrid .",
+    "docker:shell": "docker run -it caleb-sophia-madrid sh"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.26.3",
+    "chalk": "^2.4.2",
+    "del": "^4.0.0",
+    "expose-loader": "^0.7.5",
+    "fs-extra": "^7.0.1",
+    "gulp": "^4.0.0",
+    "gulp-watch": "^5.0.1",
+    "hasbin": "^1.2.3",
+    "html-webpack-plugin": "^3.2.0",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.16.1",
+    "raw-loader": "^1.0.0",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.2.4",
+    "webpack": "^4.29.0"
+  },
+  "dependencies": {
+    "phaser": "^3.15.1",
+    "phaser-animated-tiles": "^2.0.2"
+  }
+}

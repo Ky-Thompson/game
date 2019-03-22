@@ -1,0 +1,29 @@
+dist: xenial
+sudo: required
+language: node_js
+node_js: '8'
+cache: npm
+
+before_install:
+  - npm install -g npm@latest # Update npm
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -q
+  - sudo apt-get install -y -q wget libglu1-mesa libglib2.0-0 libstdc++6 gcc-4.9 g++-4.9 # Dependencies for TexturePacker
+  - wget https://www.codeandweb.com/download/texturepacker/4.11.1/TexturePacker-4.11.1-ubuntu64.deb -O TexturePacker.deb -q # Download TexturePacker
+  - sudo dpkg -i TexturePacker.deb && sudo apt-get install -f -y # Install TexturePacker
+  - echo 'agree' | TexturePacker --license-info # Agree with license
+
+before_script:
+  - export NODE_ENV=production # So that webpack builds with production setting
+
+script:
+  - npm run build
+
+deploy:
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    target_branch: gh-pages
+    local_dir: dist
+    on:
+      branch: master

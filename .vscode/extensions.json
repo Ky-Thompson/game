@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "CoenraadS.bracket-pair-colorizer",
+    "esbenp.prettier-vscode",
+    "eg2.tslint",
+    "joelday.docthis",
+    "aaron-bond.better-comments",
+    "felixrieseberg.vsc-travis-ci-status",
+    "hdg.live-html-previewer",
+    "msjsdiag.debugger-for-chrome",
+    "mike-co.import-sorter"
+  ]
+}
