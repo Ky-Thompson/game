@@ -36,6 +36,12 @@ const texturePacker = (execPath, src, sheet, data) =>
       '0',
       '--algorithm',
       'Basic',
+      '--basic-sort-by',
+      'Best',
+      '--basic-order',
+      'Ascending',
+      '--extrude',
+      '0',
     ]);
 
     packer.stdout.on('data', (data) => {

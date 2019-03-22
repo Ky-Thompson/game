@@ -1,5 +1,7 @@
 # Caleb and Sophia Adventures
 
+See the game online at https://caleb-sophia-madrid.github.io/game/
+
 ## Pre-requisites
 
 * Install [Texture Packer](https://www.codeandweb.com/texturepacker)
@@ -7,13 +9,15 @@
 * Install [NodeJS](https://nodejs.org/es/) version greater than 8.15
 * Install [GitBash](https://gitforwindows.org/)
 
+You can download some of them from [here](https://github.com/caleb-sophia-madrid/game/tree/master/bin).
+
 ## Clone the repository
 
 In a console do:
 
 ```shell
-git clone https://github.com/samuelfernandez/caleb-adventures
-cd caleb-adventures
+git clone https://github.com/caleb-sophia-madrid/game
+cd caleb-sophia-madrid
 npm ci
 ```
 
@@ -36,7 +40,15 @@ git commit -m "Explanation of the change"
 git push origin <branch>
 ```
 
-And submit a PR from GitHub.
+And submit a Pull Request from GitHub.
+
+After checkout the master branch again:
+
+```shell
+git checkout -f # Discard any existing changes
+git checkout master
+git pull --rebase # Get latest changes
+```
 
 ## PixelArt resources
 
