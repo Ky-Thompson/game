@@ -1,8 +1,10 @@
 import { makeAnimations } from '../helpers/animations';
 
 export class BootScene extends Phaser.Scene {
+  static readonly SceneKey = 'BootScene';
+
   constructor() {
-    super({ key: 'BootScene' });
+    super({ key: BootScene.SceneKey });
   }
 
   preload() {
@@ -15,14 +17,14 @@ export class BootScene extends Phaser.Scene {
 
     this.load.on('progress', (value: number) => {
       progress.clear();
-      progress.fillStyle(0xffffff, 1);
-      progress.fillRect(0, this.sys.game.config.height / 2, this.sys.game.config.width * value, 60);
+      progress.fillStyle(0xffffff, 1); // TODO: Define color
+      progress.fillRect(0, this.sys.game.config.height / 2, this.sys.game.config.width * value, 60); // TODO: Use config
     });
 
     this.load.on('complete', () => {
       makeAnimations(this);
       progress.destroy();
-      this.scene.start('TitleScene');
+      this.scene.start('TitleScene'); // TODO: Use static name
     });
   }
 

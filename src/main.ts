@@ -1,15 +1,15 @@
 /// <reference path="./phaser.d.ts"/>
 import 'phaser';
 
+import { GAME_HEIGHT, GAME_WIDTH } from './config';
 import { BootScene, GameScene, TitleScene } from './scenes';
 
 const config: GameConfig = {
   type: Phaser.AUTO,
   pixelArt: true,
   roundPixels: true,
-  parent: 'content',
-  width: 400,
-  height: 240,
+  width: GAME_WIDTH,
+  height: GAME_HEIGHT,
   physics: {
     default: 'arcade',
     arcade: {

@@ -3,40 +3,78 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Phaser Game</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta http-equiv="cleartype" content="on">
-  <meta name="format-detection" content="telephone=no">
+  <title>Caleb & Sophia Game</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
   <style>
     html,
     body {
+      height: 100%;
       margin: 0;
       padding: 0;
       image-rendering: optimizeSpeed;
-      /* Older versions of FF */
       image-rendering: -moz-crisp-edges;
-      /* FF 6.0+ */
       image-rendering: -webkit-optimize-contrast;
-      /* Webkit (non standard naming) */
       image-rendering: -o-crisp-edges;
-      /* OS X & Windows Opera (12.02+) */
       image-rendering: crisp-edges;
-      /* Possible future browsers. */
       -ms-interpolation-mode: nearest-neighbor;
-      /* IE (non standard naming) */
       image-rendering: pixelated;
-      /* Chrome 41 */
+    }
+
+    body {
+      background: black;
+      text-align: center;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain;
+    }
+
+    /* Full screen in safari */
+    /* https://dev.to/marvindanig/fullscreen-web-apps-on-ipad-safari--3p9b */
+
+    :-webkit-full-screen body,
+    :-moz-full-screen body,
+    :-ms-fullscreen body {
+      /* properties */
+      width: 100vw;
+      height: 100vh;
+    }
+
+    :full-screen body {
+      /*pre-spec */
+      /* properties */
+      width: 100vw;
+      height: 100vh;
+    }
+
+    :fullscreen body {
+      /* spec */
+      /* properties */
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* deeper elements */
+
+    :-webkit-full-screen body {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* styling the backdrop*/
+
+    ::backdrop,
+    ::-ms-backdrop {
+      /* Custom styles */
     }
   </style>
 </head>
 
-<body style="background-color: black;">
-  <div style="text-align: center">
-    <div id="content" style="display: block; width: 100%; text-align: center"></div>
-  </div>
-
-</body>
+<body></body>
 
 </html>

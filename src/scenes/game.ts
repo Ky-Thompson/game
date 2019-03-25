@@ -1,5 +1,4 @@
-import * as AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.min.js';
-
+import * as AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.js';
 import { BounceBrick } from '../sprites/brick';
 import { Enemy } from '../sprites/enemy';
 import { Fire } from '../sprites/fire';

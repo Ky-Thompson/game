@@ -8,7 +8,7 @@ export class TitleScene extends Phaser.Scene {
   }
 
   create() {
-    this.fitScreen();
+    this.setFullscreen();
     this.createTitle();
     this.createAttractMode();
   }
@@ -26,23 +26,12 @@ export class TitleScene extends Phaser.Scene {
    * Methods for the scene
    */
 
-  fitScreen() {
-    const height: number = window.screen.availHeight;
-    const width: number = window.screen.availWidth;
-
-    let multiplier = 1;
-
-    if (height / width > 0.6) {
-      multiplier = width / this.sys.game.config.width;
-    } else {
-      multiplier = height / this.sys.game.config.height;
-    }
-
-    multiplier = Math.floor(multiplier);
-
+  async setFullscreen() {
     const el = document.getElementsByTagName('canvas')[0];
-    el.style.width = 400 * multiplier + 'px';
-    el.style.height = 240 * multiplier + 'px';
+
+    try {
+      await el.requestFullscreen();
+    } catch (e) {}
   }
 
   createAttractMode() {
