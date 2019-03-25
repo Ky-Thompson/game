@@ -1,5 +1,7 @@
 # Caleb and Sophia Adventures
 
+[![Build Status](https://travis-ci.org/caleb-sophia-madrid/game.svg?branch=master)](https://travis-ci.org/caleb-sophia-madrid/game)
+
 See the game online at https://caleb-sophia-madrid.github.io/game/
 
 ## Pre-requisites

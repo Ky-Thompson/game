@@ -27,11 +27,16 @@ export class TitleScene extends Phaser.Scene {
    */
 
   async setFullscreen() {
-    const el = document.getElementsByTagName('canvas')[0];
+    const el: any = document.getElementsByTagName('canvas')[0];
+
+    var requestFullScreen: () => Promise<void> =
+      el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullScreen || el.msRequestFullscreen || el.webkitEnterFullscreen;
 
     try {
-      await el.requestFullscreen();
+      await requestFullScreen.call(el);
     } catch (e) {}
+
+    window.scrollTo(0, 1);
   }
 
   createAttractMode() {
