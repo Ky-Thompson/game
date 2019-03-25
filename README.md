@@ -17,7 +17,7 @@ In a console do:
 
 ```shell
 git clone https://github.com/caleb-sophia-madrid/game
-cd caleb-sophia-madrid
+cd game
 npm ci
 ```
 
