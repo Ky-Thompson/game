@@ -19,7 +19,7 @@ const config: GameConfig = {
     },
   },
   input: {
-    activePointers: 2,
+    activePointers: 6,
   },
   scene: [BootScene, TitleScene, GameScene],
 };
@@ -31,8 +31,19 @@ export class Game extends Phaser.Game {
 }
 
 window.addEventListener('load', () => {
-  new Game(config);
+  const game = new Game(config);
+
+  // Allow multitouch
+  game.input.addPointer();
+  game.input.addPointer();
+  game.input.addPointer();
+  game.input.addPointer();
+  game.input.addPointer();
 });
+
+// TODO: Move to helper folder
+
+// Handle resizing
 
 (<any>window).resizeGame = () => {
   const canvas: HTMLCanvasElement = document.querySelector('canvas');
@@ -51,3 +62,34 @@ window.addEventListener('load', () => {
 };
 
 window.addEventListener('resize', (<any>window).resizeGame, false);
+
+// Fullscreen
+
+const gameContainerElement: any = document.getElementById('game-container');
+let fullscreenRequested: boolean = false;
+
+const setFullscreen = async () => {
+  if (fullscreenRequested) {
+    return;
+  }
+
+  fullscreenRequested = true;
+  gameContainerElement.removeEventListener('click', setFullscreen);
+  gameContainerElement.removeEventListener('touchstart', setFullscreen);
+
+  var requestFullScreen: () => Promise<void> =
+    gameContainerElement.requestFullscreen ||
+    gameContainerElement.mozRequestFullScreen ||
+    gameContainerElement.webkitRequestFullScreen ||
+    gameContainerElement.msRequestFullscreen ||
+    gameContainerElement.webkitEnterFullscreen;
+
+  try {
+    await requestFullScreen.call(gameContainerElement);
+  } catch (e) {}
+
+  window.scrollTo(0, 1);
+};
+
+gameContainerElement.addEventListener('click', setFullscreen);
+gameContainerElement.addEventListener('touchstart', setFullscreen);

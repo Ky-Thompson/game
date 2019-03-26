@@ -305,10 +305,12 @@ export class GameScene extends Phaser.Scene {
   }
 
   private createPad() {
+    // TODO: Use pad instead of keys
     const isAndroid: Boolean = !!navigator.userAgent.match(/Android/i);
     const isIOS: Boolean = !!navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    const needsPad: Boolean = isAndroid || isIOS;
 
-    if (!isAndroid && !isIOS) {
+    if (!needsPad || this.attractMode) {
       return; // Don't add pad if not needed
     }
 
@@ -322,14 +324,20 @@ export class GameScene extends Phaser.Scene {
         .setDepth(100)
         .setAlpha(0.9)
         .setInteractive({ useHandCursor: true })
-        .on('pointerover', () => button.setTint(0xff4d4d))
-        .on('pointerout', () => button.clearTint())
+        .on('pointerdown', () => button.setTint(0xff4d4d))
+        .on('pointerup', () => button.clearTint())
     );
 
-    rightButton.on('pointerdown', () => (this.pad.right = true));
+    rightButton.on('pointerdown', () => {
+      this.pad.right = true;
+      this.pad.left = false;
+    });
     rightButton.on('pointerup', () => (this.pad.right = false));
 
-    leftButton.on('pointerdown', () => (this.pad.left = true));
+    leftButton.on('pointerdown', () => {
+      this.pad.left = true;
+      this.pad.right = false;
+    });
     leftButton.on('pointerup', () => (this.pad.left = false));
 
     upButton.on('pointerdown', () => (this.pad.jump = true));
