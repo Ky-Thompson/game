@@ -320,7 +320,7 @@ export class GameScene extends Phaser.Scene {
       button
         .setScrollFactor(0, 0)
         .setDepth(100)
-        .setAlpha(0)
+        .setAlpha(0.9)
         .setInteractive({ useHandCursor: true })
         .on('pointerover', () => button.setTint(0xff4d4d))
         .on('pointerout', () => button.clearTint())

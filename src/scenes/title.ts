@@ -74,7 +74,7 @@ export class TitleScene extends Phaser.Scene {
     const title: Phaser.GameObjects.Sprite = this.add.sprite(this.sys.game.config.width / 2, 16 * 5);
     title.play('title');
 
-    this.pressX = this.add.bitmapText(16 * 8 + 4, 8 * 16, 'font', 'PRESS X TO START', 8);
+    this.pressX = this.add.bitmapText(17 * 8 + 4, 8 * 16, 'font', 'PRESS TO START', 8);
     this.startKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
 
     this.input.on('pointerdown', () => {
