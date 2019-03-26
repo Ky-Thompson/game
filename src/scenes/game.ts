@@ -308,7 +308,7 @@ export class GameScene extends Phaser.Scene {
     const isAndroid: Boolean = !!navigator.userAgent.match(/Android/i);
     const isIOS: Boolean = !!navigator.userAgent.match(/iPhone|iPad|iPod/i);
 
-    if (!isAndroid || !isIOS) {
+    if (!isAndroid && !isIOS) {
       return; // Don't add pad if not needed
     }
 
