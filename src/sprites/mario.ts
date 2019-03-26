@@ -1,5 +1,5 @@
 import { Body } from '../models';
-import { ActionKeys, ActionState, GameScene, TiledGameObject } from '../scenes';
+import { ActionState, GameScene, TiledGameObject } from '../scenes';
 import { Enemy } from './enemy';
 
 export enum Players {
@@ -107,7 +107,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
     }
   }
 
-  update(time: number, delta: number, keys: ActionKeys) {
+  update(time: number, delta: number, keys: Partial<ActionState>) {
     this.checkOutsideGame();
 
     // Don't do updates while entering the pipe or being dead
@@ -115,15 +115,14 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
       return;
     }
 
-    const input = this.getInputKeys(keys);
     this.collideGround();
-    this.updateAnimation(input);
-    this.updateFire(delta, input.fire);
+    this.updateAnimation(keys);
+    this.updateFire(delta, keys.fire);
     this.updateStar(delta);
     this.updateWasHurt(delta);
-    this.updateMovement(input.left, input.right);
-    this.updateJump(delta, input.jump);
-    this.updateBending(input.down);
+    this.updateMovement(keys.left, keys.right);
+    this.updateJump(delta, keys.jump);
+    this.updateBending(keys.down);
   }
 
   // Methods to update player
@@ -134,17 +133,6 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
     } else if (this.y > this.currentScene.sys.game.config.height && this.alive) {
       this.die();
     }
-  }
-
-  private getInputKeys(keys: ActionKeys): Partial<ActionState> {
-    return {
-      left: keys.left.isDown,
-      right: keys.right.isDown,
-      down: keys.down.isDown,
-      jump: keys.jump.isDown || keys.jump2.isDown,
-      fire: keys.fire.isDown,
-      player: keys.player.isDown,
-    };
   }
 
   private collideGround() {

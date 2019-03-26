@@ -1,4 +1,6 @@
 import * as AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.js';
+
+import { PadAnimations } from '../helpers/animations';
 import { BounceBrick } from '../sprites/brick';
 import { Enemy } from '../sprites/enemy';
 import { Fire } from '../sprites/fire';
@@ -104,6 +106,7 @@ export class GameScene extends Phaser.Scene {
   fireballs: Phaser.GameObjects.Group; // TODO: Make private
   private bounceTile;
   private keys: ActionKeys;
+  private pad: Partial<ActionState> = {};
   private blockEmitter: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private attractMode: AttractMode;
   private levelTimer: Timer;
@@ -136,6 +139,7 @@ export class GameScene extends Phaser.Scene {
     this.createWorld();
     this.createEnemies();
     this.createModifiers();
+    this.createPad();
     this.createInputKeys();
     this.createBlocks();
     this.createFireballs();
@@ -300,6 +304,38 @@ export class GameScene extends Phaser.Scene {
     return this.tileset.tileProperties[tile.gid - 1];
   }
 
+  private createPad() {
+    const isAndroid: Boolean = !!navigator.userAgent.match(/Android/i);
+    const isIOS: Boolean = !!navigator.userAgent.match(/iPhone|iPad|iPod/i);
+
+    if (!isAndroid || !isIOS) {
+      return; // Don't add pad if not needed
+    }
+
+    const rightButton: Phaser.GameObjects.Sprite = this.add.sprite(365, 205).play(PadAnimations.Right);
+    const leftButton: Phaser.GameObjects.Sprite = this.add.sprite(305, 205).play(PadAnimations.Left);
+    const upButton: Phaser.GameObjects.Sprite = this.add.sprite(35, 205).play(PadAnimations.Up);
+
+    [rightButton, leftButton, upButton].forEach((button) =>
+      button
+        .setScrollFactor(0, 0)
+        .setDepth(100)
+        .setAlpha(0)
+        .setInteractive({ useHandCursor: true })
+        .on('pointerover', () => button.setTint(0xff4d4d))
+        .on('pointerout', () => button.clearTint())
+    );
+
+    rightButton.on('pointerdown', () => (this.pad.right = true));
+    rightButton.on('pointerup', () => (this.pad.right = false));
+
+    leftButton.on('pointerdown', () => (this.pad.left = true));
+    leftButton.on('pointerup', () => (this.pad.left = false));
+
+    upButton.on('pointerdown', () => (this.pad.jump = true));
+    upButton.on('pointerup', () => (this.pad.jump = false));
+  }
+
   private createInputKeys() {
     this.keys = {
       jump: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP),
@@ -309,6 +345,17 @@ export class GameScene extends Phaser.Scene {
       right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT),
       down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN),
       player: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P),
+    };
+  }
+
+  private getInputKeys(): Partial<ActionState> {
+    return {
+      left: this.keys.left.isDown || this.pad.left,
+      right: this.keys.right.isDown || this.pad.right,
+      down: this.keys.down.isDown,
+      jump: this.keys.jump.isDown || this.keys.jump2.isDown || this.pad.jump,
+      fire: this.keys.fire.isDown,
+      player: this.keys.player.justDown,
     };
   }
 
@@ -406,7 +453,7 @@ export class GameScene extends Phaser.Scene {
     this.updateEnemies(time, delta);
     this.updatePowerUps();
 
-    this.mario.update(time, delta, this.keys);
+    this.mario.update(time, delta, this.getInputKeys());
   }
 
   private updateAttractMode(delta: number) {

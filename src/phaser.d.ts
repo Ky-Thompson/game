@@ -40043,10 +40043,14 @@ declare namespace Phaser {
          */
         isDown: boolean;
 
+        justDown: boolean;
+
         /**
          * The "up" state of the key. This will remain `true` for as long as the keyboard thinks this key is up.
          */
         isUp: boolean;
+
+        justUp: boolean;
 
         /**
          * The down state of the ALT key, if pressed at the same time as this key.

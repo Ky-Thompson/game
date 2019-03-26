@@ -1,3 +1,21 @@
+export enum PadAnimations {
+  Up = 'pad/up',
+  Down = 'pad/down',
+  Right = 'pad/right',
+  Left = 'pad/left',
+  A = 'pad/a',
+}
+
+const makePadAnimations = (scene: Phaser.Scene) => {
+  for (const padAnimation in PadAnimations) {
+    const config: AnimationConfig = {
+      key: PadAnimations[padAnimation],
+      frames: [{ key: 'mario-sprites', frame: PadAnimations[padAnimation] }],
+    };
+    scene.anims.create(config);
+  }
+};
+
 const makePlayerAnimations = (scene, player) => {
   let config: any;
 
@@ -62,6 +80,8 @@ const makePlayerAnimations = (scene, player) => {
 };
 
 export function makeAnimations(scene) {
+  makePadAnimations(scene);
+
   // TONS of animations. Everything animation-related is ugly and stupid below.
   // TODO:  maybe use JSON to load animations
   let config: any;
@@ -291,26 +311,6 @@ export function makeAnimations(scene) {
     frameRate: 30,
     repeat: -1,
     repeatDelay: 0,
-  };
-  scene.anims.create(config);
-  config = {
-    key: 'dpad',
-    frames: [
-      {
-        frame: 'controller/dpad',
-        key: 'mario-sprites',
-      },
-    ],
-  };
-  scene.anims.create(config);
-  config = {
-    key: 'button',
-    frames: [
-      {
-        frame: 'controller/button',
-        key: 'mario-sprites',
-      },
-    ],
   };
   scene.anims.create(config);
 

@@ -8,6 +8,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
+    (<any>window).resizeGame();
     this.createProgressBar();
     this.loadAssets();
   }

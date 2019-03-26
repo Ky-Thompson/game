@@ -8,7 +8,6 @@ export class TitleScene extends Phaser.Scene {
   }
 
   create() {
-    this.setFullscreen();
     this.createTitle();
     this.createAttractMode();
   }
@@ -27,7 +26,7 @@ export class TitleScene extends Phaser.Scene {
    */
 
   async setFullscreen() {
-    const el: any = document.getElementsByTagName('canvas')[0];
+    const el: any = document.getElementById('game-container');
 
     var requestFullScreen: () => Promise<void> =
       el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullScreen || el.msRequestFullscreen || el.webkitEnterFullscreen;
@@ -79,6 +78,7 @@ export class TitleScene extends Phaser.Scene {
     this.startKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
 
     this.input.on('pointerdown', () => {
+      this.setFullscreen();
       this.startGame();
     });
   }
