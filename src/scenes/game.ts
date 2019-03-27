@@ -170,7 +170,7 @@ export class GameScene extends Phaser.Scene {
 
   private createMusic() {
     if (!this.attractMode) {
-      this.music = this.sound.add('overworld');
+      this.music = this.sound.add('89');
       this.music.play({ loop: true });
     }
   }

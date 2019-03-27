@@ -54,6 +54,11 @@
         "url": ["assets/music/overworld.ogg", "assets/music/overworld.mp3"]
       },
       {
+        "type": "audio",
+        "key": "89",
+        "url": ["assets/music/89.ogg", "assets/music/89.mp3"]
+      },
+      {
         "type": "audioSprite",
         "key": "sfx",
         "jsonURL": "assets/audio/sfx.json",
