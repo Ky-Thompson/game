@@ -1,5 +1,7 @@
 # Caleb and Sophia Adventures
 
+![Logo](https://raw.githubusercontent.com/caleb-sophia-madrid/game/master/reference/caleb-sophia.jpg)
+
 [![Build Status](https://travis-ci.org/caleb-sophia-madrid/game.svg?branch=master)](https://travis-ci.org/caleb-sophia-madrid/game)
 
 See the game online at https://caleb-sophia-madrid.github.io/game/
@@ -59,7 +61,7 @@ Use a [limited color palette](https://stuartspixelgames.com/2018/07/15/retro-gam
 ![palette](https://stuartspixelgames.files.wordpress.com/2018/07/arcade-standard-29.png?w=700)
 ![palette-example](https://lospec.com/images/palette-list/arcade-standard-29-palette-example-palette-example-by-grafxkid.png)
 
-[PixelEditor](https://lospec.com/pixel-editor/app/arcade-standard-29) is a good online editor for pixel art, used along with for example [Paint.NET](https://www.getpaint.net/).
+Suggested editor for pixel art is [Paint.NET](https://www.getpaint.net/). Here you have the [Arcade Standard 29 Palette](https://raw.githubusercontent.com/caleb-sophia-madrid/game/master/src/assets/Paint.NET%20Arcade%20Standard%2029%20Palette.txt) for Paint.NET.
 
 Some online resources:
 

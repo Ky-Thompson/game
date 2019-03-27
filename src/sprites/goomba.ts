@@ -1,9 +1,5 @@
+import { GoombaAnimations } from '../animations';
 import { Enemy } from './enemy';
-
-export enum GoombaAnimations {
-  Default = 'liar',
-  Flattened = 'liarFlat',
-}
 
 export class Goomba extends Enemy {
   static KILLED_TIMEOUT: number = 500;

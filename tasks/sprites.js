@@ -1,3 +1,5 @@
+// Documentation for the CLI https://www.codeandweb.com/texturepacker/documentation/texture-settings
+
 const { spawn } = require('child_process');
 const chalk = require('chalk');
 const fse = require('fs-extra');
@@ -42,6 +44,7 @@ const texturePacker = (execPath, src, sheet, data) =>
       'Ascending',
       '--extrude',
       '0',
+      '--disable-auto-alias',
     ]);
 
     packer.stdout.on('data', (data) => {

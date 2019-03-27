@@ -1,3 +1,5 @@
+import { TitleAnimations } from '../animations';
+
 export class TitleScene extends Phaser.Scene {
   private pressX: Phaser.GameObjects.BitmapText;
   private startKey: Phaser.Input.Keyboard.Key;
@@ -53,13 +55,8 @@ export class TitleScene extends Phaser.Scene {
    */
 
   createTitle() {
-    this.anims.create({
-      key: 'title',
-      frames: [{ frame: 'title', key: 'mario-sprites' }],
-    });
-
     const title: Phaser.GameObjects.Sprite = this.add.sprite(this.sys.game.config.width / 2, 16 * 5);
-    title.play('title');
+    title.play(TitleAnimations.Title);
 
     this.pressX = this.add.bitmapText(17 * 8 + 4, 8 * 16, 'font', 'PRESS TO START', 8);
     this.startKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);

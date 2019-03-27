@@ -1,3 +1,4 @@
+import { TurtleAnimations } from '../animations';
 import { Body } from '../models';
 import { TiledGameObject } from '../scenes';
 import { Enemy } from './enemy';
@@ -13,7 +14,7 @@ export class Turtle extends Enemy {
   constructor(config) {
     super(config);
 
-    this.anims.play('turtle');
+    this.anims.play(TurtleAnimations.Default);
     this.flipX = true;
     this.setBody(Turtle.DIMENSIONS);
   }
@@ -73,7 +74,7 @@ export class Turtle extends Enemy {
       }
 
       this.sliding = true;
-      this.play('turtleShell');
+      this.play(TurtleAnimations.Shell);
       this.player.enemyBounce(this);
     } else {
       // Player hit

@@ -1,29 +1,7 @@
-import { Body } from '../models';
+import { getPlayerAnimationKey } from '../animations';
+import { Body, PlayerActions, Players, PlayerStates } from '../models';
 import { ActionState, GameScene, TiledGameObject } from '../scenes';
 import { Enemy } from './enemy';
-
-export enum Players {
-  Mario = 'mario',
-  Caleb = 'caleb',
-  Sophia = 'sophia',
-}
-
-export enum PlayerAnimations {
-  Stand = 'stand',
-  Jump = 'jump',
-  Run = 'run',
-  Turn = 'turn',
-  Bend = 'bend',
-  Grow = 'grow',
-  Shrink = 'shrink',
-  Death = 'death',
-}
-
-export enum PlayerState {
-  Default = '',
-  Super = 'Super',
-  Fire = 'Fire',
-}
 
 export enum PipeDirection {
   Up = 'up',
@@ -72,7 +50,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
   private starTimer: number = 0;
   private starStep: number = 0;
   readonly type = 'mario';
-  playerState: PlayerState = PlayerState.Default;
+  playerState: PlayerStates = PlayerStates.Default;
   alive: boolean = true;
 
   constructor(config) {
@@ -92,15 +70,19 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
     this.small();
 
     const onAnimationComplete = () => {
-      if (this.anims.currentAnim.key === PlayerAnimations.Grow || this.anims.currentAnim.key === PlayerAnimations.Shrink) {
+      const animationGrow = getPlayerAnimationKey(this.playerType, PlayerActions.Grow);
+      const animationShrink = getPlayerAnimationKey(this.playerType, PlayerActions.Shrink);
+
+      if (this.anims.currentAnim.key === animationGrow || this.anims.currentAnim.key === animationShrink) {
         this.currentScene.physics.world.resume();
       }
     };
+
     this.on('animationcomplete', onAnimationComplete, this);
   }
 
-  private animate(animation: PlayerAnimations = PlayerAnimations.Stand) {
-    const playerAnimation = this.playerType + '/' + animation + this.playerState;
+  animate(animation: PlayerActions = PlayerActions.Stand) {
+    const playerAnimation = getPlayerAnimationKey(this.playerType, animation, this.playerState);
 
     if (!this.anims.currentAnim || (this.anims.currentAnim.key !== playerAnimation && !this.currentScene.physics.world.isPaused)) {
       this.anims.play(playerAnimation);
@@ -151,26 +133,26 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
       this.playerType = this.playerType === Players.Caleb ? (this.playerType = Players.Sophia) : (this.playerType = Players.Caleb);
     }
 
-    let animation: PlayerAnimations = PlayerAnimations.Stand;
+    let animation: PlayerActions = PlayerActions.Stand;
 
     if (Math.abs(this.body.velocity.y) > Mario.MIN_VELOCITY_Y && !this.body.blocked.down) {
       // Jumping
-      animation = PlayerAnimations.Jump;
+      animation = PlayerActions.Jump;
     } else if (this.body.velocity.x !== 0 || input.left || input.right) {
       // Running
-      animation = PlayerAnimations.Run;
+      animation = PlayerActions.Walk;
       const turningLeft = this.body.velocity.x > 0 && this.body.acceleration.x < 0;
       const turningRight = this.body.velocity.x < 0 && this.body.acceleration.x > 0;
 
       if ((input.left || input.right) && (turningLeft || turningRight)) {
-        animation = PlayerAnimations.Turn;
-      } else if (this.playerState !== PlayerState.Default && input.down && !(input.right || input.left)) {
-        animation = PlayerAnimations.Bend;
+        animation = PlayerActions.Turn;
+      } else if (this.playerState !== PlayerStates.Default && input.down && !(input.right || input.left)) {
+        animation = PlayerActions.Bend;
       }
     } else {
       // Bending
-      if (this.playerState !== PlayerState.Default && input.down && !(input.right || input.left)) {
-        animation = PlayerAnimations.Bend;
+      if (this.playerState !== PlayerStates.Default && input.down && !(input.right || input.left)) {
+        animation = PlayerActions.Bend;
       }
     }
 
@@ -182,7 +164,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
       this.fireCoolDownTimer -= delta;
     }
 
-    if (fire && this.playerState === PlayerState.Fire && this.fireCoolDownTimer <= 0) {
+    if (fire && this.playerState === PlayerStates.Fire && this.fireCoolDownTimer <= 0) {
       let fireball = this.currentScene.fireballs.get(this);
       if (fireball) {
         fireball.fire(this.x, this.y, this.flipX);
@@ -277,7 +259,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
     }
 
     if (!this.jumping) {
-      if (this.playerState === PlayerState.Default) {
+      if (this.playerState === PlayerStates.Default) {
         this.currentScene.sound.playAudioSprite('sfx', 'smb_jump-small'); // TODO: Refactor play into scene
       } else {
         this.currentScene.sound.playAudioSprite('sfx', 'smb_jump-super');
@@ -296,12 +278,12 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
   resize(large: boolean) {
     if (large) {
       this.large();
-      this.playerState = PlayerState.Super;
-      this.play(PlayerAnimations.Grow);
+      this.playerState = PlayerStates.Super;
+      this.play(getPlayerAnimationKey(this.playerType, PlayerActions.Grow));
     } else {
       this.small();
-      this.playerState = PlayerState.Default;
-      this.play(PlayerAnimations.Shrink);
+      this.playerState = PlayerStates.Default;
+      this.play(getPlayerAnimationKey(this.playerType, PlayerActions.Shrink));
     }
 
     this.currentScene.physics.world.pause(); // Stop the world in transition
@@ -340,7 +322,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
       enemy.updatePoints();
     } else if (this.wasHurtTimer <= 0) {
       // Mario get's hurt
-      if (this.playerState !== PlayerState.Default) {
+      if (this.playerState !== PlayerStates.Default) {
         this.resize(false);
         this.currentScene.sound.playAudioSprite('sfx', 'smb_pipe');
         this.wasHurtTimer = Mario.WAS_HURT_TIME;
@@ -352,7 +334,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
 
   die() {
     this.currentScene.music.pause();
-    this.animate(PlayerAnimations.Death);
+    this.animate(PlayerActions.Death);
     this.currentScene.sound.playAudioSprite('sfx', 'smb_mariodie');
     this.body.setAcceleration(0);
     this.body.setVelocity(0, Mario.DEATH_VELOCITY);
@@ -361,7 +343,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
 
   enterPipe(destinationTileId: number, pipeDirection: PipeDirection) {
     // TODO:  fix enter to right
-    this.animate(PlayerAnimations.Bend);
+    this.animate(PlayerActions.Bend);
     this.currentScene.sound.playAudioSprite('sfx', 'smb_pipe');
 
     this.enteringPipe = true;

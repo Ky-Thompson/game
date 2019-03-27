@@ -1,12 +1,7 @@
+import { FireAnimations } from '../animations';
 import { Body } from '../models';
 import { GameScene } from '../scenes';
 import { Enemy } from './enemy';
-
-export enum FireAnimations {
-  Explode = 'fireExplode',
-  Shrink = 'shrink',
-  Fly = 'fireFly',
-}
 
 // Rename to fireball
 
@@ -33,7 +28,7 @@ export class Fire extends Phaser.GameObjects.Sprite {
     this.body.offset.set(Fire.DIMENSIONS.x, Fire.DIMENSIONS.y);
 
     const onAnimationComplete = () => {
-      if (this.anims.currentAnim.key === FireAnimations.Explode || this.anims.currentAnim.key === FireAnimations.Shrink) {
+      if (this.anims.currentAnim.key === FireAnimations.Explode) {
         this.setActive(false);
         this.setVisible(false);
       }

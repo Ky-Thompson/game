@@ -1,11 +1,12 @@
 import * as AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.js';
 
-import { PadAnimations } from '../helpers/animations';
+import { PadAnimations, SPRITES_KEY, TileAnimations } from '../animations';
+import { PlayerActions, Players, PlayerStates } from '../models';
 import { BounceBrick } from '../sprites/brick';
 import { Enemy } from '../sprites/enemy';
 import { Fire } from '../sprites/fire';
 import { Goomba } from '../sprites/goomba';
-import { Mario, PipeDirection, Players } from '../sprites/mario';
+import { Mario, PipeDirection } from '../sprites/mario';
 import { PowerUp, PowerUps } from '../sprites/power-up';
 import { Turtle } from '../sprites/turtle';
 
@@ -107,6 +108,10 @@ export class GameScene extends Phaser.Scene {
   private bounceTile;
   private keys: ActionKeys;
   private pad: Partial<ActionState> = {};
+  private rightButton: Phaser.GameObjects.Sprite;
+  private leftButton: Phaser.GameObjects.Sprite;
+  private upButton: Phaser.GameObjects.Sprite;
+  private fireButton: Phaser.GameObjects.Sprite;
   private blockEmitter: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private attractMode: AttractMode;
   private levelTimer: Timer;
@@ -195,7 +200,7 @@ export class GameScene extends Phaser.Scene {
           this.enemyGroup.add(new Goomba({ scene: this, key: 'sprites16', x: enemy.x, y: enemy.y }));
           break;
         case 'turtle':
-          this.enemyGroup.add(new Turtle({ scene: this, key: 'mario-sprites', x: enemy.x, y: enemy.y }));
+          this.enemyGroup.add(new Turtle({ scene: this, key: SPRITES_KEY, x: enemy.x, y: enemy.y }));
           break;
       }
     });
@@ -304,21 +309,24 @@ export class GameScene extends Phaser.Scene {
     return this.tileset.tileProperties[tile.gid - 1];
   }
 
-  private createPad() {
-    // TODO: Use pad instead of keys
+  private showPad(): Boolean {
     const isAndroid: Boolean = !!navigator.userAgent.match(/Android/i);
     const isIOS: Boolean = !!navigator.userAgent.match(/iPhone|iPad|iPod/i);
     const needsPad: Boolean = isAndroid || isIOS;
+    return !this.attractMode && needsPad;
+  }
 
-    if (!needsPad || this.attractMode) {
+  private createPad() {
+    if (!this.showPad()) {
       return; // Don't add pad if not needed
     }
 
-    const rightButton: Phaser.GameObjects.Sprite = this.add.sprite(365, 205).play(PadAnimations.Right);
-    const leftButton: Phaser.GameObjects.Sprite = this.add.sprite(305, 205).play(PadAnimations.Left);
-    const upButton: Phaser.GameObjects.Sprite = this.add.sprite(35, 205).play(PadAnimations.Up);
+    this.rightButton = this.add.sprite(365, 205).play(PadAnimations.Right);
+    this.leftButton = this.add.sprite(305, 205).play(PadAnimations.Left);
+    this.upButton = this.add.sprite(35, 205).play(PadAnimations.Up);
+    this.fireButton = this.add.sprite(95, 205).play(PadAnimations.A);
 
-    [rightButton, leftButton, upButton].forEach((button) =>
+    [this.rightButton, this.leftButton, this.upButton, this.fireButton].forEach((button) =>
       button
         .setScrollFactor(0, 0)
         .setDepth(100)
@@ -328,20 +336,19 @@ export class GameScene extends Phaser.Scene {
         .on('pointerup', () => button.clearTint())
     );
 
-    rightButton.on('pointerdown', () => {
-      this.pad.right = true;
-      this.pad.left = false;
-    });
-    rightButton.on('pointerup', () => (this.pad.right = false));
+    this.fireButton.setAlpha(0); // Fire button is hidden until available
 
-    leftButton.on('pointerdown', () => {
-      this.pad.left = true;
-      this.pad.right = false;
-    });
-    leftButton.on('pointerup', () => (this.pad.left = false));
+    this.rightButton.on('pointerdown', () => (this.pad.right = true));
+    this.rightButton.on('pointerup', () => (this.pad.right = false));
 
-    upButton.on('pointerdown', () => (this.pad.jump = true));
-    upButton.on('pointerup', () => (this.pad.jump = false));
+    this.leftButton.on('pointerdown', () => (this.pad.left = true));
+    this.leftButton.on('pointerup', () => (this.pad.left = false));
+
+    this.upButton.on('pointerdown', () => (this.pad.jump = true));
+    this.upButton.on('pointerup', () => (this.pad.jump = false));
+
+    this.fireButton.on('pointerdown', () => (this.pad.fire = true));
+    this.fireButton.on('pointerup', () => (this.pad.fire = false));
   }
 
   private createInputKeys() {
@@ -362,7 +369,7 @@ export class GameScene extends Phaser.Scene {
       right: this.keys.right.isDown || this.pad.right,
       down: this.keys.down.isDown,
       jump: this.keys.jump.isDown || this.keys.jump2.isDown || this.pad.jump,
-      fire: this.keys.fire.isDown,
+      fire: this.keys.fire.isDown || this.pad.fire,
       player: this.keys.player.justDown,
     };
   }
@@ -428,7 +435,7 @@ export class GameScene extends Phaser.Scene {
       x: worldEndAt,
       active: false,
     };
-    this.finishLine.flag.play('flag');
+    this.finishLine.flag.play(TileAnimations.Flag);
   }
 
   private createPlayer() {
@@ -462,6 +469,7 @@ export class GameScene extends Phaser.Scene {
     this.updatePowerUps();
 
     this.mario.update(time, delta, this.getInputKeys());
+    this.updatePad();
   }
 
   private updateAttractMode(delta: number) {
@@ -502,6 +510,14 @@ export class GameScene extends Phaser.Scene {
       fire: <Key>{ isDown: this.attractMode.recording[this.attractMode.current].keys.fire },
       player: <Key>{ isDown: false },
     };
+  }
+
+  private updatePad() {
+    if (!this.showPad()) {
+      return; // Don't add pad if not needed
+    }
+
+    this.fireButton.setAlpha(this.mario.playerState === PlayerStates.Fire ? 0.9 : 0);
   }
 
   private updateFireballs(time: number, delta: number) {
@@ -640,7 +656,7 @@ export class GameScene extends Phaser.Scene {
       case 0:
         this.music.pause();
         this.sound.playAudioSprite('sfx', 'smb_flagpole');
-        this.mario.play('mario/climb' + this.mario.playerState); // TODO: Refactor
+        this.mario.animate(PlayerActions.Climb);
         this.mario.x = this.finishLine.x - 1;
         this.tweens.add({
           targets: this.finishLine.flag,
@@ -666,7 +682,7 @@ export class GameScene extends Phaser.Scene {
         });
         sound.play('smb_stage_clear');
 
-        this.mario.play('run' + this.mario.playerState);
+        this.mario.animate(PlayerActions.Walk);
 
         this.mario.flipX = false;
         this.tweens.add({

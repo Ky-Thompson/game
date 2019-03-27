@@ -1,13 +1,13 @@
-import { Body } from '../models';
+import { PowerUpAnimations } from '../animations';
+import { Body, PlayerStates } from '../models';
 import { GameScene } from '../scenes';
-import { PlayerState } from './mario';
 
 export const TILE_SIZE = 16; // TODO: Move to game config
 export enum PowerUps {
   Coin = 'candy',
   Mushroom = 'mushroom',
   Flower = 'flower',
-  Live = '1up',
+  Life = '1up',
   Star = 'star',
 }
 
@@ -54,14 +54,14 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
   }
 
   private activate() {
-    if (this.type === PowerUps.Mushroom && this.currentScene.mario.playerState !== PlayerState.Default) {
+    if (this.type === PowerUps.Mushroom && this.currentScene.mario.playerState !== PlayerStates.Default) {
       this.type = PowerUps.Flower;
     }
 
     // Configure power up depending on type
     switch (this.type) {
       case PowerUps.Mushroom:
-      case PowerUps.Live:
+      case PowerUps.Life:
         this.body.velocity.y = -PowerUp.ACTIVATE_VELOCITY_Y;
         break;
 
@@ -90,7 +90,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
         break;
     }
 
-    // Play sounds and animation
+    // Play sounds
     switch (this.type) {
       case PowerUps.Coin:
         this.currentScene.sound.playAudioSprite('sfx', 'smb_coin'); // TODO: Refactor
@@ -100,7 +100,24 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
         this.currentScene.powerUps.add(this);
     }
 
-    this.anims.play(this.type);
+    // Play animation
+    switch (this.type) {
+      case PowerUps.Coin:
+        this.anims.play(PowerUpAnimations.Coin);
+        break;
+      case PowerUps.Mushroom:
+        this.anims.play(PowerUpAnimations.Mushroom);
+        break;
+      case PowerUps.Flower:
+        this.anims.play(PowerUpAnimations.Flower);
+        break;
+      case PowerUps.Life:
+        this.anims.play(PowerUpAnimations.Life);
+        break;
+      case PowerUps.Star:
+        this.anims.play(PowerUpAnimations.Star);
+        break;
+    }
   }
 
   update() {
@@ -133,13 +150,13 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
   }
 
   private collected() {
-    if (this.type === PowerUps.Flower && this.currentScene.mario.playerState === PlayerState.Default) {
+    if (this.type === PowerUps.Flower && this.currentScene.mario.playerState === PlayerStates.Default) {
       this.type = PowerUps.Mushroom;
     }
 
     switch (this.type) {
       case PowerUps.Flower:
-        this.currentScene.mario.playerState = PlayerState.Fire;
+        this.currentScene.mario.playerState = PlayerStates.Fire;
         this.scene.sound.playAudioSprite('sfx', 'smb_powerup'); // TODO: Refactor
         break;
       case PowerUps.Mushroom:
@@ -152,7 +169,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
         this.currentScene.mario.activateStar();
         this.scene.sound.playAudioSprite('sfx', 'smb_powerup');
         break;
-      case PowerUps.Live:
+      case PowerUps.Life:
         this.scene.sound.playAudioSprite('sfx', 'smb_1-up');
         break;
     }

@@ -1,4 +1,14 @@
-import { makeAnimations } from '../helpers/animations';
+import {
+  makeFireAnimations,
+  makeGoombaAnimations,
+  makePadAnimations,
+  makePlayerAnimations,
+  makePowerUpAnimations,
+  makeTileAnimations,
+  makeTitleAnimations,
+  makeTurtleAnimations,
+} from '../animations';
+import { Players } from '../models';
 
 export class BootScene extends Phaser.Scene {
   static readonly SceneKey = 'BootScene';
@@ -8,7 +18,6 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    (<any>window).resizeGame();
     this.createProgressBar();
     this.loadAssets();
   }
@@ -23,7 +32,7 @@ export class BootScene extends Phaser.Scene {
     });
 
     this.load.on('complete', () => {
-      makeAnimations(this);
+      this.makeAnimations();
       progress.destroy();
       this.scene.start('TitleScene'); // TODO: Use static name
     });
@@ -31,5 +40,20 @@ export class BootScene extends Phaser.Scene {
 
   loadAssets() {
     this.load.pack('preload', 'assets/pack.json', 'preload');
+  }
+
+  makeAnimations() {
+    makePadAnimations(this);
+    makeTitleAnimations(this);
+    makeTileAnimations(this);
+
+    makePlayerAnimations(this, Players.Mario);
+    makePlayerAnimations(this, Players.Caleb);
+    makePlayerAnimations(this, Players.Sophia);
+    makeFireAnimations(this);
+
+    makeGoombaAnimations(this);
+    makeTurtleAnimations(this);
+    makePowerUpAnimations(this);
   }
 }
