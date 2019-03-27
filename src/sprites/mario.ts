@@ -40,6 +40,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
   protected readonly currentScene: GameScene;
   private jumpTimer: number = 0;
   private jumping: boolean = false;
+  private lastPlayerKey: boolean = false; // TODO: Remove
   private playerType: Players = Players.Caleb;
   bending: boolean = false;
   private enteringPipe: boolean = false;
@@ -129,9 +130,11 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
   }
 
   private updateAnimation(input: Partial<ActionState>) {
-    if (input.player) {
+    // TODO: Remove once player selection is in place
+    if (input.player && !this.lastPlayerKey) {
       this.playerType = this.playerType === Players.Caleb ? (this.playerType = Players.Sophia) : (this.playerType = Players.Caleb);
     }
+    this.lastPlayerKey = input.player;
 
     let animation: PlayerActions = PlayerActions.Stand;
 

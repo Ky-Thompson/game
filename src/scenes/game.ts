@@ -370,7 +370,7 @@ export class GameScene extends Phaser.Scene {
       down: this.keys.down.isDown,
       jump: this.keys.jump.isDown || this.keys.jump2.isDown || this.pad.jump,
       fire: this.keys.fire.isDown || this.pad.fire,
-      player: this.keys.player.justDown,
+      player: this.keys.player.isDown,
     };
   }
 
