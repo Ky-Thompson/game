@@ -5979,7 +5979,7 @@
         0,
         0,
         0,
-        47,
+        0,
         21,
         22,
         0,
@@ -7819,7 +7819,7 @@
     {
       "columns": 11,
       "firstgid": 1,
-      "image": "../images/super-mario-16bit.png",
+      "image": "../images/super-mario.png",
       "imageheight": 90,
       "imagewidth": 198,
       "margin": 1,

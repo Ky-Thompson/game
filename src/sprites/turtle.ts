@@ -1,6 +1,5 @@
 import { TurtleAnimations } from '../animations';
-import { Body } from '../models';
-import { TiledGameObject } from '../scenes';
+import { Body, TiledGameObject } from '../models';
 import { Enemy } from './enemy';
 import { Goomba } from './goomba';
 
@@ -29,11 +28,7 @@ export class Turtle extends Enemy {
         this.currentScene.tileCollision(enemy, tile)
       );
 
-      this.currentScene.enemyGroup.children.entries.forEach((enemy: Turtle | Goomba) => {
-        if (this !== enemy) {
-          this.currentScene.physics.world.overlap(this, enemy, () => this.slideKill(enemy));
-        }
-      });
+      this.currentScene.enemies.overlapTurtle(this);
     } else {
       // Execute collider
       this.collideGround();

@@ -1,5 +1,4 @@
 import { GameScene } from '../scenes';
-import { Enemy } from './enemy';
 import { TILE_SIZE } from './power-up';
 
 export const BLOCK_TILE = 44; // Use properties
@@ -31,13 +30,7 @@ export class BounceBrick extends Phaser.GameObjects.Sprite {
   }
 
   update() {
-    // TODO: Use type
-    this.currentScene.enemyGroup.children.entries.forEach((enemy: Enemy) => {
-      this.currentScene.physics.world.overlap(this, enemy, () => {
-        enemy.kill(true);
-        enemy.updatePoints();
-      });
-    });
+    this.currentScene.enemies.overlapBrick(this);
   }
 
   restart(tile: Phaser.Tilemaps.Tile) {

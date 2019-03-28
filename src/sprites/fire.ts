@@ -1,7 +1,6 @@
 import { FireAnimations } from '../animations';
 import { Body } from '../models';
 import { GameScene } from '../scenes';
-import { Enemy } from './enemy';
 
 // Rename to fireball
 
@@ -42,11 +41,7 @@ export class Fire extends Phaser.GameObjects.Sprite {
     }
 
     this.currentScene.physics.world.collide(this, this.currentScene.groundLayer, () => this.collided());
-    this.currentScene.physics.world.overlap(this, this.currentScene.enemyGroup, (fire: Fire, enemy: Enemy) => {
-      fire.explode();
-      enemy.kill(true);
-      enemy.updatePoints();
-    });
+    this.currentScene.enemies.overlapFire(this);
   }
 
   private collided() {
@@ -60,7 +55,7 @@ export class Fire extends Phaser.GameObjects.Sprite {
     }
   }
 
-  private explode() {
+  explode() {
     this.body.allowGravity = false;
     this.body.velocity.y = 0;
     this.play(FireAnimations.Explode);

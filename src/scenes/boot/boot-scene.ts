@@ -7,10 +7,14 @@ import {
   makeTileAnimations,
   makeTitleAnimations,
   makeTurtleAnimations,
-} from '../animations';
-import { Players } from '../models';
+} from '../../animations';
+import { Colors } from '../../helpers'; // TODO: Fix ../..
+import { Players } from '../../models';
+import { BaseScene } from '../base';
+import { TitleScene } from '../title';
+import { PROGRESS_BAR_HEIGHT } from './constants';
 
-export class BootScene extends Phaser.Scene {
+export class BootScene extends BaseScene {
   static readonly SceneKey = 'BootScene';
 
   constructor() {
@@ -22,21 +26,30 @@ export class BootScene extends Phaser.Scene {
     this.loadAssets();
   }
 
+  /**
+   * Methods for the scene
+   */
+
   createProgressBar() {
     const progress: Phaser.GameObjects.Graphics = this.add.graphics();
+    const { height, width } = this.gameConfig();
 
     this.load.on('progress', (value: number) => {
       progress.clear();
-      progress.fillStyle(0xffffff, 1); // TODO: Define color
-      progress.fillRect(0, this.sys.game.config.height / 2, this.sys.game.config.width * value, 60); // TODO: Use config
+      progress.fillStyle(Colors.White, 1);
+      progress.fillRect(0, height / 2, width * value, PROGRESS_BAR_HEIGHT);
     });
 
     this.load.on('complete', () => {
       this.makeAnimations();
       progress.destroy();
-      this.scene.start('TitleScene'); // TODO: Use static name
+      this.scene.start(TitleScene.SceneKey);
     });
   }
+
+  /**
+   * Assets and animations
+   */
 
   loadAssets() {
     this.load.pack('preload', 'assets/pack.json', 'preload');

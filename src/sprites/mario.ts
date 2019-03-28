@@ -1,6 +1,6 @@
 import { getPlayerAnimationKey } from '../animations';
-import { Body, PlayerActions, Players, PlayerStates } from '../models';
-import { ActionState, GameScene, TiledGameObject } from '../scenes';
+import { ActionState, Body, PlayerActions, Players, PlayerStates, TiledGameObject } from '../models';
+import { GameScene } from '../scenes';
 import { Enemy } from './enemy';
 
 export enum PipeDirection {

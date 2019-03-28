@@ -35,6 +35,7 @@
   // Import Sorter
   "importSorter.generalConfiguration.sortOnBeforeSave": true,
   "importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.count": 140,
+  "importSorter.importStringConfiguration.tabSize": 2,
   "importSorter.sortConfiguration.customOrderingRules.rules": [
     {
       "type": "importMember",

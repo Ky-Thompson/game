@@ -16,6 +16,8 @@ const texturePackerPaths = [
   'C:\\Program Files (x86)\\CodeAndWeb\\TexturePacker\\bin\\TexturePacker.exe',
 ];
 
+// TODO: Accept legal terms
+
 const texturePacker = (execPath, src, sheet, data) =>
   new Promise((resolve, reject) => {
     const packer = spawn(execPath, [

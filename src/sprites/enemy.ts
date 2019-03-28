@@ -129,7 +129,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
   }
 
   remove() {
-    this.currentScene.enemyGroup.remove(this);
+    this.currentScene.enemies.remove(this);
     this.destroy();
   }
 }

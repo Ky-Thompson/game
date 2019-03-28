@@ -17,16 +17,6 @@
         }
       },
       {
-        "type": "spritesheet",
-        "key": "tiles-16bit",
-        "url": "assets/images/super-mario-16bit.png",
-        "frameConfig": {
-          "frameWidth": 16,
-          "frameHeight": 16,
-          "spacing": 2
-        }
-      },
-      {
         "type": "atlas",
         "key": "mario-sprites",
         "textureURL": "assets/sprites/mario-sprites.png",

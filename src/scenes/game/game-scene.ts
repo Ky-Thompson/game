@@ -1,35 +1,25 @@
 import * as AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.js';
 
-import { PadAnimations, SPRITES_KEY, TileAnimations } from '../animations';
-import { PlayerActions, Players, PlayerStates } from '../models';
-import { BounceBrick } from '../sprites/brick';
-import { Enemy } from '../sprites/enemy';
-import { Fire } from '../sprites/fire';
-import { Goomba } from '../sprites/goomba';
-import { Mario, PipeDirection } from '../sprites/mario';
-import { PowerUp, PowerUps } from '../sprites/power-up';
-import { Turtle } from '../sprites/turtle';
+import { TileAnimations } from '../../animations';
+import { GameOptions, Music, PlayerActions, Players, SKY_HEIGHT, TileCallbacks, TiledGameObject, Tilemap } from '../../models';
+import { BounceBrick } from '../../sprites/brick';
+import { Fire } from '../../sprites/fire';
+import { Goomba } from '../../sprites/goomba';
+import { Mario, PipeDirection } from '../../sprites/mario';
+import { PowerUp, PowerUps } from '../../sprites/power-up';
+import { Turtle } from '../../sprites/turtle';
+import { BaseScene } from '../base';
+import { AttractMode } from './attract-mode';
+import { COIN_SCORE, GAME_TIMEOUT, METALLIC_BLOCK_TILE, PLAYER_START_X } from './constants';
+import { EnemyGroup } from './enemy-group';
+import { GamePad } from './game-pad';
+import { Keyboard } from './keyboard';
 
 // TODO: Refactor
 
 // TODO: Fix finish line for small size
 
 export type Key = Phaser.Input.Keyboard.Key;
-export type Actions = 'jump' | 'jump2' | 'fire' | 'left' | 'right' | 'down' | 'player';
-export type ActionKeys = { [key in Actions]: Phaser.Input.Keyboard.Key };
-export type ActionState = { [key in Actions]: boolean };
-
-export enum GameOptions {
-  AttractMode = 'attractMode',
-  RestartScene = 'restartScene',
-}
-
-export interface AttractMode {
-  recording: any; // TODO: Type
-  current: number;
-  time: 0;
-}
-
 export type Destinations = { [id: string]: Destination };
 export type Destination = any;
 
@@ -38,25 +28,6 @@ export interface Room {
   width: number;
   sky: string; // TODO: Rename to background
 }
-
-export type TileProperties = {
-  callback?: TileCallbacks;
-  // TODO: Type other properties
-  [key: string]: any;
-};
-
-export interface TiledGameObject extends Phaser.GameObjects.GameObject {
-  gid?: number;
-  index?: number;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  properties: TileProperties;
-  powerUp?: PowerUps; // TODO: Remove
-  setCollision: (recalculateFaces?: boolean) => Phaser.Tilemaps.Tile;
-}
-
 export enum Modifiers {
   PowerUp = 'powerUp',
   Pipe = 'pipe',
@@ -82,38 +53,35 @@ export interface FinishLine {
   active: boolean;
 }
 
-export enum TileCallbacks {
-  QuestionMark = 'questionMark',
-  Breakable = 'breakable',
-  Toggle16Bit = 'toggle16bit',
-}
+export class GameScene extends BaseScene {
+  static readonly SceneKey = 'GameScene';
 
-export class GameScene extends Phaser.Scene {
-  static GAME_TIMEOUT = 150;
-  static COIN_SCORE = 50; // Move to a common file
-  static METALLIC_BLOCK_TILE = 44; // TODO: get from somewhere else
+  // Game
+  attractMode: AttractMode;
+  private gamePad: GamePad;
+  private keyboard: Keyboard;
+
+  // Map
+  private map: Phaser.Tilemaps.Tilemap;
+  private tileset: Phaser.Tilemaps.Tileset;
+  backgroundLayer: Phaser.Tilemaps.StaticTilemapLayer; // TODO: Make private / class
+  groundLayer: Phaser.Tilemaps.DynamicTilemapLayer; // TODO: Make private / class
+
+  // Objects
+  enemies: EnemyGroup;
+
+  // OLD
 
   private pluginsLodaded: boolean;
-  private eightBit: boolean = true;
   readonly destinations: Destinations = {};
   readonly rooms: Room[] = [];
   music: Phaser.Sound.BaseSound; // TODO: Make private
-  private map: Phaser.Tilemaps.Tilemap;
-  private tileset: Phaser.Tilemaps.Tileset;
-  backgroundLayer: Phaser.Tilemaps.StaticTilemapLayer;
-  groundLayer: Phaser.Tilemaps.DynamicTilemapLayer;
-  enemyGroup: Phaser.GameObjects.Group; // TODO: Make private
+
   powerUps: Phaser.GameObjects.Group; // TODO: Make private
   fireballs: Phaser.GameObjects.Group; // TODO: Make private
   private bounceTile;
-  private keys: ActionKeys;
-  private pad: Partial<ActionState> = {};
-  private rightButton: Phaser.GameObjects.Sprite;
-  private leftButton: Phaser.GameObjects.Sprite;
-  private upButton: Phaser.GameObjects.Sprite;
-  private fireButton: Phaser.GameObjects.Sprite;
+
   private blockEmitter: Phaser.GameObjects.Particles.ParticleEmitterManager;
-  private attractMode: AttractMode;
   private levelTimer: Timer;
   private score: Score;
   private hud: Phaser.GameObjects.BitmapText;
@@ -121,31 +89,26 @@ export class GameScene extends Phaser.Scene {
   mario: Mario; // TODO: rename
 
   constructor() {
-    super({ key: 'GameScene' });
-  }
-
-  private getRegistry(option: GameOptions) {
-    return this.registry.get(String(option));
-  }
-  private setRegistry(option: GameOptions, value: any) {
-    return this.registry.set(String(option), value);
+    super({ key: GameScene.SceneKey });
   }
 
   preload() {
     if (!this.pluginsLodaded) {
+      // TODO: Use enum
       this.load.scenePlugin('animatedTiles', AnimatedTiles, 'animatedTiles', 'animatedTiles');
       this.pluginsLodaded = true;
     }
   }
 
   create() {
-    this.createAttractMode();
+    this.attractMode = new AttractMode(this);
+    this.gamePad = new GamePad(this);
+    this.keyboard = new Keyboard(this, this.gamePad);
+
     this.createMusic();
     this.createWorld();
-    this.createEnemies();
+    this.enemies = new EnemyGroup(this, this.map.getObjectLayer('enemies'), this.tileset);
     this.createModifiers();
-    this.createPad();
-    this.createInputKeys();
     this.createBlocks();
     this.createFireballs();
     this.createHUD();
@@ -156,54 +119,26 @@ export class GameScene extends Phaser.Scene {
     this.physics.world.resume();
   }
 
-  private createAttractMode() {
-    if (this.getRegistry(GameOptions.AttractMode)) {
-      this.attractMode = {
-        recording: this.sys.cache.json.entries.entries.attractMode,
-        current: 0,
-        time: 0,
-      };
-    } else {
-      this.attractMode = null;
-    }
-  }
-
   private createMusic() {
-    if (!this.attractMode) {
-      this.music = this.sound.add('89');
+    // TODO: Refactor in class
+    if (this.attractMode.isActive()) {
+      this.music = this.sound.add(Music.Song89);
       this.music.play({ loop: true });
     }
   }
 
   private createWorld() {
-    this.map = this.make.tilemap({ key: 'map' });
+    // TODO: Refactor in class
+    this.map = this.make.tilemap({ key: Tilemap.MapKey });
     (<any>this.sys).animatedTiles.init(this.map);
 
-    this.tileset = this.map.addTilesetImage('SuperMarioBros-World1-1', 'tiles-16bit'); // TODO: Rename
-    this.backgroundLayer = this.map.createStaticLayer('background', this.tileset, 0, 0);
-    this.groundLayer = this.map.createDynamicLayer('world', this.tileset, 0, 0);
-    this.add.tileSprite(0, 0, this.groundLayer.width, 500, 'background-clouds');
-    this.add.tileSprite(0, 0, this.backgroundLayer.width, 500, 'background-clouds').setDepth(-1); // Fix background color
+    this.tileset = this.map.addTilesetImage(Tilemap.TilesetName, Tilemap.TilesetKey);
+    this.backgroundLayer = this.map.createStaticLayer(Tilemap.BackgroundLayerKey, this.tileset, 0, 0);
+    this.groundLayer = this.map.createDynamicLayer(Tilemap.WorldLayerKey, this.tileset, 0, 0);
+    this.add.tileSprite(0, 0, this.backgroundLayer.width, SKY_HEIGHT, Tilemap.SkyKey).setDepth(-1); // Fix background color
 
     this.physics.world.bounds.width = this.groundLayer.width;
     this.groundLayer.setCollisionByExclusion([-1], true);
-  }
-
-  private createEnemies() {
-    this.enemyGroup = this.add.group();
-
-    this.map.getObjectLayer('enemies').objects.forEach((enemy: TiledGameObject) => {
-      const tileProperties = this.getTilesetProperties(enemy);
-
-      switch (tileProperties.name) {
-        case 'goomba': // TODO: Refactor sprit to be generic
-          this.enemyGroup.add(new Goomba({ scene: this, key: 'sprites16', x: enemy.x, y: enemy.y }));
-          break;
-        case 'turtle':
-          this.enemyGroup.add(new Turtle({ scene: this, key: SPRITES_KEY, x: enemy.x, y: enemy.y }));
-          break;
-      }
-    });
   }
 
   private createModifiers() {
@@ -215,7 +150,7 @@ export class GameScene extends Phaser.Scene {
       let tile, type, properties;
 
       if (modifier.gid) {
-        properties = this.getTilesetProperties(modifier);
+        properties = this.getTilesetProperties(modifier, this.tileset);
         type = properties.type;
         if (properties.hasOwnProperty('powerUp')) {
           type = 'powerUp'; // TODO: Use type in tiled
@@ -293,87 +228,6 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  private consolidateProperties(tile: TiledGameObject) {
-    // TODO: Move to helper
-    if (Array.isArray(tile.properties)) {
-      const properties = {};
-      tile.properties.forEach((prop) => {
-        properties[prop.name] = prop.value;
-      });
-      tile.properties = properties;
-    }
-  }
-
-  private getTilesetProperties(tile: TiledGameObject): TileProperties {
-    // TODO: Move to helper
-    return this.tileset.tileProperties[tile.gid - 1];
-  }
-
-  private showPad(): Boolean {
-    const isAndroid: Boolean = !!navigator.userAgent.match(/Android/i);
-    const isIOS: Boolean = !!navigator.userAgent.match(/iPhone|iPad|iPod/i);
-    const needsPad: Boolean = isAndroid || isIOS;
-    return !this.attractMode && needsPad;
-  }
-
-  private createPad() {
-    if (!this.showPad()) {
-      return; // Don't add pad if not needed
-    }
-
-    this.rightButton = this.add.sprite(365, 205).play(PadAnimations.Right);
-    this.leftButton = this.add.sprite(305, 205).play(PadAnimations.Left);
-    this.upButton = this.add.sprite(35, 205).play(PadAnimations.Up);
-    this.fireButton = this.add.sprite(95, 205).play(PadAnimations.A);
-
-    [this.rightButton, this.leftButton, this.upButton, this.fireButton].forEach((button) =>
-      button
-        .setScrollFactor(0, 0)
-        .setDepth(100)
-        .setAlpha(0.9)
-        .setInteractive({ useHandCursor: true })
-        .on('pointerdown', () => button.setTint(0xff4d4d))
-        .on('pointerup', () => button.clearTint())
-    );
-
-    this.fireButton.setAlpha(0); // Fire button is hidden until available
-
-    this.rightButton.on('pointerdown', () => (this.pad.right = true));
-    this.rightButton.on('pointerup', () => (this.pad.right = false));
-
-    this.leftButton.on('pointerdown', () => (this.pad.left = true));
-    this.leftButton.on('pointerup', () => (this.pad.left = false));
-
-    this.upButton.on('pointerdown', () => (this.pad.jump = true));
-    this.upButton.on('pointerup', () => (this.pad.jump = false));
-
-    this.fireButton.on('pointerdown', () => (this.pad.fire = true));
-    this.fireButton.on('pointerup', () => (this.pad.fire = false));
-  }
-
-  private createInputKeys() {
-    this.keys = {
-      jump: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP),
-      jump2: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
-      fire: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
-      left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
-      right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT),
-      down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN),
-      player: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P),
-    };
-  }
-
-  private getInputKeys(): Partial<ActionState> {
-    return {
-      left: this.keys.left.isDown || this.pad.left,
-      right: this.keys.right.isDown || this.pad.right,
-      down: this.keys.down.isDown,
-      jump: this.keys.jump.isDown || this.keys.jump2.isDown || this.pad.jump,
-      fire: this.keys.fire.isDown || this.pad.fire,
-      player: this.keys.player.isDown,
-    };
-  }
-
   private createBlocks() {
     this.blockEmitter = this.add.particles('mario-sprites');
 
@@ -403,7 +257,7 @@ export class GameScene extends Phaser.Scene {
 
     this.levelTimer = {
       textObject: this.add.bitmapText(41 * 8, 16, 'font', '255', 8).setScrollFactor(0, 0),
-      time: GameScene.GAME_TIMEOUT * 1000,
+      time: GAME_TIMEOUT * 1000,
       displayedTime: 255,
       hurry: false,
     };
@@ -413,7 +267,7 @@ export class GameScene extends Phaser.Scene {
       pts: 0,
     };
 
-    if (this.attractMode) {
+    if (this.attractMode.isActive()) {
       this.hud.alpha = 0;
       this.levelTimer.textObject.alpha = 0;
       this.score.textObject.alpha = 0;
@@ -465,59 +319,35 @@ export class GameScene extends Phaser.Scene {
 
     this.updateFinishLine();
     this.updateTimer(delta);
-    this.updateEnemies(time, delta);
+    this.enemies.update(time, delta);
     this.updatePowerUps();
 
-    this.mario.update(time, delta, this.getInputKeys());
-    this.updatePad();
+    this.mario.update(time, delta, this.attractMode.isActive() ? this.attractMode.getCurrentFrame().keys : this.keyboard.getActions());
+    this.gamePad.update();
   }
 
   private updateAttractMode(delta: number) {
-    if (!this.attractMode) {
+    if (!this.attractMode.isActive()) {
       return;
     }
 
-    this.attractMode.time += delta;
+    this.attractMode.update(delta);
 
-    if (
-      this.mario.y > this.sys.game.config.height ||
-      this.attractMode.recording.length <= this.attractMode.current + 2 ||
-      this.attractMode.current === 14000
-    ) {
-      this.attractMode.current = 0;
-      this.attractMode.time = 0;
-      this.mario.x = 16 * 6;
+    if (this.mario.y > this.sys.game.config.height || this.attractMode.hasEnded()) {
+      this.attractMode.reset();
+      this.mario.x = PLAYER_START_X;
       this.setRegistry(GameOptions.RestartScene, true);
       return;
     }
 
-    if (this.attractMode.time >= this.attractMode.recording[this.attractMode.current + 1].time) {
-      this.attractMode.current++;
-      this.mario.x = this.attractMode.recording[this.attractMode.current].x;
-      this.mario.y = this.attractMode.recording[this.attractMode.current].y;
-      this.mario.body.setVelocity(
-        this.attractMode.recording[this.attractMode.current].vx,
-        this.attractMode.recording[this.attractMode.current].vy
-      );
+    if (this.attractMode.isNewFrame()) {
+      this.attractMode.goNextFrame();
+      const { x, y, vx, vy } = this.attractMode.getCurrentFrame();
+
+      this.mario.x = x;
+      this.mario.y = y;
+      this.mario.body.setVelocity(vx, vy);
     }
-
-    this.keys = {
-      jump: <Key>{ isDown: this.attractMode.recording[this.attractMode.current].keys.jump },
-      jump2: <Key>{ isDown: false },
-      left: <Key>{ isDown: this.attractMode.recording[this.attractMode.current].keys.left },
-      right: <Key>{ isDown: this.attractMode.recording[this.attractMode.current].keys.right },
-      down: <Key>{ isDown: this.attractMode.recording[this.attractMode.current].keys.down },
-      fire: <Key>{ isDown: this.attractMode.recording[this.attractMode.current].keys.fire },
-      player: <Key>{ isDown: false },
-    };
-  }
-
-  private updatePad() {
-    if (!this.showPad()) {
-      return; // Don't add pad if not needed
-    }
-
-    this.fireButton.setAlpha(this.mario.playerState === PlayerStates.Fire ? 0.9 : 0);
   }
 
   private updateFireballs(time: number, delta: number) {
@@ -532,12 +362,6 @@ export class GameScene extends Phaser.Scene {
       this.physics.world.pause();
       return;
     }
-  }
-
-  private updateEnemies(time: number, delta: number) {
-    Array.from(this.enemyGroup.children.entries).forEach((enemy: Enemy) => {
-      enemy.update(time, delta);
-    });
   }
 
   private updatePowerUps() {
@@ -597,7 +421,7 @@ export class GameScene extends Phaser.Scene {
     if (tile.properties.callback) {
       switch (tile.properties.callback) {
         case TileCallbacks.QuestionMark:
-          tile.index = GameScene.METALLIC_BLOCK_TILE; // Shift to a metallic block
+          tile.index = METALLIC_BLOCK_TILE; // Shift to a metallic block
           this.bounceTile.restart(tile); // Bounce it a bit
           delete tile.properties.callback;
           tile.setCollision(true); // Invincible blocks are only collidable from above, but everywhere once revealed
@@ -622,18 +446,10 @@ export class GameScene extends Phaser.Scene {
             this.sound.playAudioSprite('sfx', 'smb_bump');
           } else {
             // Get points
-            this.updateScore(GameScene.COIN_SCORE);
+            this.updateScore(COIN_SCORE);
             this.map.removeTileAt(tile.x, tile.y, true, true, <any>this.groundLayer);
             this.sound.playAudioSprite('sfx', 'smb_breakblock');
             this.blockEmitter.emitParticle(6, tile.x * 16, tile.y * 16);
-          }
-          break;
-        case TileCallbacks.Toggle16Bit:
-          this.eightBit = !this.eightBit;
-          if (this.eightBit) {
-            this.tileset.setImage(this.sys.textures.get('tiles'));
-          } else {
-            this.tileset.setImage(this.sys.textures.get('tiles-16bit'));
           }
           break;
         default:
@@ -643,6 +459,9 @@ export class GameScene extends Phaser.Scene {
     } else {
       this.sound.playAudioSprite('sfx', 'smb_bump');
     }
+  }
+  static COIN_SCORE(COIN_SCORE: any): any {
+    throw new Error('Method not implemented.');
   }
 
   updateScore(score: number) {
