@@ -1,10 +1,11 @@
 # Caleb and Sophia Adventures
 
-![Logo](https://raw.githubusercontent.com/caleb-sophia-madrid/game/master/reference/caleb-sophia.jpg)
+[![Logo](https://raw.githubusercontent.com/caleb-sophia-madrid/game/master/reference/caleb-sophia.jpg)](https://caleb-sophia-madrid.github.io/game/)
 
 [![Build Status](https://travis-ci.org/caleb-sophia-madrid/game.svg?branch=master)](https://travis-ci.org/caleb-sophia-madrid/game)
 
-See the game online at https://caleb-sophia-madrid.github.io/game/
+Production web: https://caleb-sophia-madrid.github.io/game/
+Staging web: https://caleb-sophia-madrid-dev.herokuapp.com/
 
 ## Pre-requisites
 
