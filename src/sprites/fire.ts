@@ -40,7 +40,7 @@ export class Fire extends Phaser.GameObjects.Sprite {
       return;
     }
 
-    this.currentScene.physics.world.collide(this, this.currentScene.groundLayer, () => this.collided());
+    this.currentScene.world.collide(this, () => this.collided());
     this.currentScene.enemies.overlapFire(this);
   }
 

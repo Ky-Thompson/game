@@ -4,8 +4,8 @@
 
 [![Build Status](https://travis-ci.org/caleb-sophia-madrid/game.svg?branch=master)](https://travis-ci.org/caleb-sophia-madrid/game)
 
-Production web: https://caleb-sophia-madrid.github.io/game/
-Staging web: https://caleb-sophia-madrid-dev.herokuapp.com/
+* Production web: https://caleb-sophia-madrid.github.io/game/
+* Staging web: https://caleb-sophia-madrid-dev.herokuapp.com/
 
 ## Pre-requisites
 

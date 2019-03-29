@@ -132,7 +132,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
       return;
     }
 
-    this.currentScene.physics.world.collide(this, this.currentScene.groundLayer);
+    this.currentScene.world.collide(this);
     this.currentScene.physics.world.overlap(this, this.currentScene.mario, () => this.collected());
 
     // Invert direction

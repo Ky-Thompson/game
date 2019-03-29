@@ -1,7 +1,3 @@
-export enum Music {
-  Song89 = '89',
-}
-
 export enum Tilemap {
   MapKey = 'map',
   TilesetName = 'SuperMarioBros-World1-1', // TODO: Rename

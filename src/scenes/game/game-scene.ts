@@ -2,10 +2,9 @@ import * as AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.js';
 
 import { TileAnimations } from '../../animations';
 import { TILE_SIZE } from '../../config';
-import { GameOptions, Music, PlayerActions, Players, SKY_HEIGHT, TileCallbacks, TiledGameObject, Tilemap } from '../../models';
+import { GameOptions, PlayerActions, Players, TileCallbacks, TiledGameObject } from '../../models';
 import { BounceBrick } from '../../sprites/brick';
 import { Fire } from '../../sprites/fire';
-import { Goomba } from '../../sprites/goomba';
 import { Mario, PipeDirection } from '../../sprites/mario';
 import { PowerUp, PowerUps } from '../../sprites/power-up';
 import { Turtle } from '../../sprites/turtle';
@@ -15,6 +14,8 @@ import { COIN_SCORE, GAME_TIMEOUT, METALLIC_BLOCK_TILE, PLAYER_START_X } from '.
 import { EnemyGroup } from './enemy-group';
 import { GamePad } from './game-pad';
 import { Keyboard } from './keyboard';
+import { SoundEffects } from './music';
+import { World, WorldLayers } from './world';
 
 // TODO: Refactor
 
@@ -61,12 +62,8 @@ export class GameScene extends BaseScene {
   attractMode: AttractMode;
   private gamePad: GamePad;
   private keyboard: Keyboard;
-
-  // Map
-  private map: Phaser.Tilemaps.Tilemap;
-  private tileset: Phaser.Tilemaps.Tileset;
-  backgroundLayer: Phaser.Tilemaps.StaticTilemapLayer; // TODO: Make private / class
-  groundLayer: Phaser.Tilemaps.DynamicTilemapLayer; // TODO: Make private / class
+  world: World;
+  soundEffects: SoundEffects;
 
   // Objects
   enemies: EnemyGroup;
@@ -76,7 +73,6 @@ export class GameScene extends BaseScene {
   private pluginsLodaded: boolean;
   readonly destinations: Destinations = {};
   readonly rooms: Room[] = [];
-  music: Phaser.Sound.BaseSound; // TODO: Make private
 
   powerUps: Phaser.GameObjects.Group; // TODO: Make private
   fireballs: Phaser.GameObjects.Group; // TODO: Make private
@@ -105,10 +101,10 @@ export class GameScene extends BaseScene {
     this.attractMode = new AttractMode(this);
     this.gamePad = new GamePad(this);
     this.keyboard = new Keyboard(this, this.gamePad);
+    this.world = new World(this);
+    this.soundEffects = new SoundEffects(this);
 
-    this.createMusic();
-    this.createWorld();
-    this.enemies = new EnemyGroup(this, this.map.getObjectLayer('enemies'), this.tileset);
+    this.enemies = new EnemyGroup(this, this.world);
     this.createModifiers();
     this.createBlocks();
     this.createFireballs();
@@ -120,38 +116,16 @@ export class GameScene extends BaseScene {
     this.physics.world.resume();
   }
 
-  private createMusic() {
-    // TODO: Refactor in class
-    if (this.attractMode.isActive()) {
-      this.music = this.sound.add(Music.Song89);
-      this.music.play({ loop: true });
-    }
-  }
-
-  private createWorld() {
-    // TODO: Refactor in class
-    this.map = this.make.tilemap({ key: Tilemap.MapKey });
-    (<any>this.sys).animatedTiles.init(this.map);
-
-    this.tileset = this.map.addTilesetImage(Tilemap.TilesetName, Tilemap.TilesetKey);
-    this.backgroundLayer = this.map.createStaticLayer(Tilemap.BackgroundLayerKey, this.tileset, 0, 0);
-    this.groundLayer = this.map.createDynamicLayer(Tilemap.WorldLayerKey, this.tileset, 0, 0);
-    this.add.tileSprite(0, 0, this.backgroundLayer.width, SKY_HEIGHT, Tilemap.SkyKey).setDepth(-1); // Fix background color
-
-    this.physics.world.bounds.width = this.groundLayer.width;
-    this.groundLayer.setCollisionByExclusion([-1], true);
-  }
-
   private createModifiers() {
     this.powerUps = this.add.group();
 
     // TODO: Split powerups and modifiers in different layers
 
-    this.map.getObjectLayer('modifiers').objects.forEach((modifier: TiledGameObject) => {
+    this.world.getLayer(WorldLayers.Modifiers).objects.forEach((modifier: TiledGameObject) => {
       let tile, type, properties;
 
       if (modifier.gid) {
-        properties = this.getTilesetProperties(modifier, this.tileset);
+        properties = this.getTilesetProperties(modifier, this.world.getTileset());
         type = properties.type;
         if (properties.hasOwnProperty('powerUp')) {
           type = 'powerUp'; // TODO: Use type in tiled
@@ -165,7 +139,7 @@ export class GameScene extends BaseScene {
       switch (type) {
         case Modifiers.PowerUp:
           // Modifies a questionmark below the modifier to contain something else than the default (coin)
-          tile = this.groundLayer.getTileAt(modifier.x / TILE_SIZE, modifier.y / TILE_SIZE - 1);
+          tile = this.world.getTileAt(modifier.x / TILE_SIZE, modifier.y / TILE_SIZE - 1);
           tile.powerUp = properties.powerUp; // TODO: Refactor
           tile.properties.callback = 'questionMark';
           break;
@@ -173,7 +147,7 @@ export class GameScene extends BaseScene {
           // Adds info on where to go from a pipe under the modifier
           for (let x = 0; x < modifier.width / TILE_SIZE; x++) {
             for (let y = 0; y < modifier.height / TILE_SIZE; y++) {
-              tile = this.groundLayer.getTileAt(modifier.x / TILE_SIZE + x, modifier.y / TILE_SIZE + y);
+              tile = this.world.getTileAt(modifier.x / TILE_SIZE + x, modifier.y / TILE_SIZE + y);
               tile.properties.dest = parseInt(modifier.properties.goto);
               tile.properties.direction = modifier.properties.direction;
               tile.properties.pipe = true;
@@ -277,8 +251,9 @@ export class GameScene extends BaseScene {
 
   private createFinishLine() {
     let worldEndAt = -1;
-    for (let x = 0; x < this.groundLayer.width; x++) {
-      let tile = this.groundLayer.getTileAt(x, 2); // Finish line must be in tile y=2
+    const { width } = this.world.size();
+    for (let x = 0; x < width; x++) {
+      let tile = this.world.getTileAt(x, 2); // Finish line must be in tile y=2
       if (tile && tile.properties['worldsEnd']) {
         worldEndAt = tile.pixelX;
         break;
@@ -379,27 +354,21 @@ export class GameScene extends BaseScene {
       this.levelTimer.textObject.setText((<any>('' + this.levelTimer.displayedTime)).padStart(3, '0'));
       if (this.levelTimer.displayedTime < 50 && !this.levelTimer.hurry) {
         this.levelTimer.hurry = true;
-        this.music.pause();
-        let sound = this.sound.addAudioSprite('sfx');
-        (<any>sound).on('ended', (sound) => {
-          (<any>this.music).seek = 0;
-          (<any>this.music).rate = 1.5;
-          this.music.resume();
-          sound.destroy();
-        });
-        (<any>sound).play('smb_warning');
+        this.soundEffects.playEffect('smb_warning');
+        this.soundEffects.setMusicRate(1.5);
+        this.soundEffects.pauseMusic();
       }
       if (this.levelTimer.displayedTime < 1) {
         this.mario.die();
         this.levelTimer.hurry = false;
-        (<any>this.music).rate = 1;
+        (<any>this.soundEffects).rate = 1;
         this.levelTimer.time = 150 * 1000;
         this.levelTimer.displayedTime = 255;
       }
     }
   }
 
-  tileCollision(sprite: Mario | Turtle | Goomba, tile: TiledGameObject) {
+  tileCollision(sprite: Phaser.GameObjects.Sprite, tile: TiledGameObject) {
     if (sprite instanceof Turtle) {
       // Turtles ignore the ground
       if (tile.y > Math.round(sprite.y / TILE_SIZE)) {
@@ -448,7 +417,7 @@ export class GameScene extends BaseScene {
           } else {
             // Get points
             this.updateScore(COIN_SCORE);
-            this.map.removeTileAt(tile.x, tile.y, true, true, <any>this.groundLayer);
+            this.world.removeTileAt(tile.x, tile.y);
             this.sound.playAudioSprite('sfx', 'smb_breakblock');
             this.blockEmitter.emitParticle(6, tile.x * TILE_SIZE, tile.y * TILE_SIZE);
           }
@@ -474,7 +443,7 @@ export class GameScene extends BaseScene {
     // TODO: Use enum for steps
     switch (step) {
       case 0:
-        this.music.pause();
+        this.soundEffects.pauseMusic();
         this.sound.playAudioSprite('sfx', 'smb_flagpole');
         this.mario.animate(PlayerActions.Climb);
         this.mario.x = this.finishLine.x - 1;

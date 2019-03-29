@@ -4,15 +4,20 @@ import { BounceBrick, Enemy, Fire } from '../../sprites';
 import { Goomba } from '../../sprites/goomba';
 import { Turtle } from '../../sprites/turtle';
 import { GameScene } from './game-scene';
+import { World, WorldLayers } from './world';
 
 export class EnemyGroup {
   private group: Phaser.GameObjects.Group;
+  private mapLayer: Phaser.Tilemaps.ObjectLayer;
+  private tileset: Phaser.Tilemaps.Tileset;
 
-  constructor(private scene: GameScene, private mapLayer: Phaser.Tilemaps.ObjectLayer, private tileset: Phaser.Tilemaps.Tileset) {
+  constructor(private scene: GameScene, private world: World) {
     this.init();
   }
 
   private init() {
+    this.mapLayer = this.world.getLayer(WorldLayers.Enemies);
+    this.tileset = this.world.getTileset();
     this.group = this.scene.add.group();
 
     this.mapLayer.objects.forEach((enemy: TiledGameObject) => {

@@ -1,7 +1,6 @@
 import { TurtleAnimations } from '../animations';
 import { Body, TiledGameObject } from '../models';
 import { Enemy } from './enemy';
-import { Goomba } from './goomba';
 
 export class Turtle extends Enemy {
   static DIMENSIONS: Partial<Body> = { x: 2, y: 24 };
@@ -24,13 +23,11 @@ export class Turtle extends Enemy {
     }
 
     if (this.sliding) {
-      this.currentScene.physics.world.collide(this, this.currentScene.groundLayer, (enemy: Turtle | Goomba, tile: TiledGameObject) =>
-        this.currentScene.tileCollision(enemy, tile)
-      );
-
+      this.currentScene.world.collide(this, (object: Phaser.GameObjects.Sprite, tile: TiledGameObject) =>
+        this.currentScene.tileCollision(object, tile)
+      ); // Turtle destroys tiles when sliding
       this.currentScene.enemies.overlapTurtle(this);
     } else {
-      // Execute collider
       this.collideGround();
     }
 

@@ -121,11 +121,9 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
   private collideGround() {
     // Just run callbacks when hitting something from below or trying to enter it
     if (this.body.velocity.y < 0 || this.bending) {
-      this.currentScene.physics.world.collide(this, this.currentScene.groundLayer, (player: Mario, tile: TiledGameObject) =>
-        this.currentScene.tileCollision(player, tile)
-      );
+      this.currentScene.world.collide(this, (player: Mario, tile: TiledGameObject) => this.currentScene.tileCollision(player, tile));
     } else {
-      this.currentScene.physics.world.collide(this, this.currentScene.groundLayer);
+      this.currentScene.world.collide(this);
     }
   }
 
@@ -336,7 +334,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
   }
 
   die() {
-    this.currentScene.music.pause();
+    this.currentScene.soundEffects.pauseMusic();
     this.animate(PlayerActions.Death);
     this.currentScene.sound.playAudioSprite('sfx', 'smb_mariodie');
     this.body.setAcceleration(0);
@@ -422,9 +420,9 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
     // TODO: Move logic to game scene
     rooms.forEach((room) => {
       if (this.x >= room.x && this.x <= room.x + room.width) {
-        let camera: Phaser.Cameras.Scene2D.Camera = this.currentScene.cameras.main;
-        let groundLayer = this.currentScene.groundLayer;
-        camera.setBounds(room.x, 0, room.width * groundLayer.scaleX, groundLayer.height * groundLayer.scaleY);
+        const camera: Phaser.Cameras.Scene2D.Camera = this.currentScene.cameras.main;
+        const { height, scaleX, scaleY } = this.currentScene.world.size();
+        camera.setBounds(room.x, 0, room.width * scaleX, height * scaleY);
         this.currentScene.finishLine.active = room.x === 0;
         this.currentScene.cameras.main.setBackgroundColor(room.sky);
       }

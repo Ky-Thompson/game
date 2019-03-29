@@ -92,7 +92,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
 
   protected collideGround() {
     if (!this.dropped) {
-      this.currentScene.physics.world.collide(this, this.currentScene.groundLayer);
+      this.currentScene.world.collide(this);
     }
   }
 
