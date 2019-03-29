@@ -13,7 +13,7 @@ export class Keyboard {
     this.keys = {
       jump: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP),
       jump2: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
-      fire: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z),
+      fire: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
       left: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
       right: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT),
       down: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN),

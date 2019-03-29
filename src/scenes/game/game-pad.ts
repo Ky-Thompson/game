@@ -4,15 +4,16 @@ import { GameScene } from './game-scene';
 
 const GAME_PAD_DEPTH = 100;
 const GAME_PAD_ALPHA = 0.9;
+const BUTTON_ACTIVE_COLOR = 0xff4d4d;
+
 const RIGHT_BUTTON_X = 365;
 const RIGHT_BUTTON_Y = 205;
 const LEFT_BUTTON_X = 305;
-const LEFT_BUTTON_Y = RIGHT_BUTTON_X;
+const LEFT_BUTTON_Y = RIGHT_BUTTON_Y;
 const UP_BUTTON_X = 35;
-const UP_BUTTON_Y = RIGHT_BUTTON_X;
+const UP_BUTTON_Y = RIGHT_BUTTON_Y;
 const FIRE_BUTTON_X = 95;
-const FIRE_BUTTON_Y = RIGHT_BUTTON_X;
-const BUTTON_ACTIVE_COLOR = 0xff4d4d;
+const FIRE_BUTTON_Y = RIGHT_BUTTON_Y;
 
 export class GamePad {
   private gamePad: Partial<ActionState> = {};
