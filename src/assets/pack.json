@@ -11,9 +11,9 @@
         "key": "tiles",
         "url": "assets/images/super-mario.png",
         "frameConfig": {
-          "frameWidth": 16,
-          "frameHeight": 16,
-          "spacing": 2
+          "frameWidth": 32,
+          "frameHeight": 32,
+          "spacing": 4
         }
       },
       {

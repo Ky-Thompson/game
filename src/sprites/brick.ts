@@ -1,5 +1,5 @@
+import { TILE_SIZE } from '../config';
 import { GameScene } from '../scenes';
-import { TILE_SIZE } from './power-up';
 
 export const BLOCK_TILE = 44; // Use properties
 
@@ -9,7 +9,7 @@ export enum BrickAnimations {
 }
 
 export class BounceBrick extends Phaser.GameObjects.Sprite {
-  static HIDDEN_X = -100;
+  static HIDDEN_X = -200;
   static ANIMATION_DURATION = 100;
   protected readonly currentScene: GameScene;
 

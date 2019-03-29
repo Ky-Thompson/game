@@ -11,4 +11,4 @@ export enum Tilemap {
   SkyKey = 'background-clouds',
 }
 
-export const SKY_HEIGHT = 500; // TODO: Investigate why
+export const SKY_HEIGHT = 1000; // TODO: Investigate why

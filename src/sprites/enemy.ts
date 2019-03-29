@@ -7,13 +7,13 @@ import { Mario } from './mario';
  * Classes for enemy types extend this class.
  */
 export abstract class Enemy extends Phaser.GameObjects.Sprite {
-  static DEFAULT_BODY: Body = { width: 12, height: 12, x: 1.5, y: 4 };
-  static INITIAL_POSITION_Y: number = 16;
-  static INITIAL_POSITION_X: number = 32;
+  static DEFAULT_BODY: Body = { width: 24, height: 24, x: 3, y: 8 };
+  static INITIAL_POSITION_Y: number = 32;
+  static INITIAL_POSITION_X: number = 64;
   static VERTICAL_COLLISION_THRESHOLD: number = 10;
-  static KILLED_VELOCITY_Y: number = -200;
+  static KILLED_VELOCITY_Y: number = -400;
   static KILLED_SCORE: number = 100;
-  static BASE_DIRECTION_VELOCITY: number = -50;
+  static BASE_DIRECTION_VELOCITY: number = -100;
 
   protected readonly currentScene: GameScene;
   protected direction: number = Enemy.BASE_DIRECTION_VELOCITY;

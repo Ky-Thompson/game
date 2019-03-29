@@ -15,27 +15,27 @@ export interface IPlayer {
 }
 
 export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
-  static DEFAULT_BODY: Body = { width: 10, height: 10, x: 3, y: 6 };
-  static SUPER_BODY: Body = { width: 10, height: 22, x: 3, y: 10 };
-  static ACCELERATION = 600;
-  static MIN_VELOCITY_X = 10;
-  static MIN_VELOCITY_Y = 15;
-  static MAX_VELOCITY_X = 200;
-  static MAX_VELOCITY_Y = 500;
-  static JUMP_VELOCITY = -200;
+  static DEFAULT_BODY: Body = { width: 20, height: 20, x: 6, y: 12 };
+  static SUPER_BODY: Body = { width: 20, height: 44, x: 6, y: 20 };
+  static ACCELERATION = 1200;
+  static MIN_VELOCITY_X = 20;
+  static MIN_VELOCITY_Y = 30;
+  static MAX_VELOCITY_X = 400;
+  static MAX_VELOCITY_Y = 1000;
+  static JUMP_VELOCITY = -400;
   static JUMP_TIME = 300;
-  static BEND_VELOCITY = 100;
+  static BEND_VELOCITY = 200;
   static FIRE_COOLDOWN = 300;
   static STAR_TINTS = [0xffffff, 0xff0000, 0xffffff, 0x00ff00, 0xffffff, 0x0000ff];
   static STAR_TIME = 10000;
   static WAS_HURT_ALPHA = 0.2;
   static WAS_HURT_TIME = 2000;
-  static DEATH_VELOCITY = -300;
+  static DEATH_VELOCITY = -600;
   static ENTER_PIPE_DURATION = 800;
   static ENTER_PIPE_DEPTH = -100;
   static EXIT_PIPE_DEPTH = 1;
-  static ENTER_PIPE_TRANSLATION = 40;
-  static ENTER_PIPE_START_Y = -100;
+  static ENTER_PIPE_TRANSLATION = 80;
+  static ENTER_PIPE_START_Y = -200;
 
   protected readonly currentScene: GameScene;
   private jumpTimer: number = 0;

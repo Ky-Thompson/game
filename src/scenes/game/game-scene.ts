@@ -1,6 +1,7 @@
 import * as AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.js';
 
 import { TileAnimations } from '../../animations';
+import { TILE_SIZE } from '../../config';
 import { GameOptions, Music, PlayerActions, Players, SKY_HEIGHT, TileCallbacks, TiledGameObject, Tilemap } from '../../models';
 import { BounceBrick } from '../../sprites/brick';
 import { Fire } from '../../sprites/fire';
@@ -164,15 +165,15 @@ export class GameScene extends BaseScene {
       switch (type) {
         case Modifiers.PowerUp:
           // Modifies a questionmark below the modifier to contain something else than the default (coin)
-          tile = this.groundLayer.getTileAt(modifier.x / 16, modifier.y / 16 - 1);
+          tile = this.groundLayer.getTileAt(modifier.x / TILE_SIZE, modifier.y / TILE_SIZE - 1);
           tile.powerUp = properties.powerUp; // TODO: Refactor
           tile.properties.callback = 'questionMark';
           break;
         case Modifiers.Pipe:
           // Adds info on where to go from a pipe under the modifier
-          for (let x = 0; x < modifier.width / 16; x++) {
-            for (let y = 0; y < modifier.height / 16; y++) {
-              tile = this.groundLayer.getTileAt(modifier.x / 16 + x, modifier.y / 16 + y);
+          for (let x = 0; x < modifier.width / TILE_SIZE; x++) {
+            for (let y = 0; y < modifier.height / TILE_SIZE; y++) {
+              tile = this.groundLayer.getTileAt(modifier.x / TILE_SIZE + x, modifier.y / TILE_SIZE + y);
               tile.properties.dest = parseInt(modifier.properties.goto);
               tile.properties.direction = modifier.properties.direction;
               tile.properties.pipe = true;
@@ -211,7 +212,7 @@ export class GameScene extends BaseScene {
           this.destinations[id] = {
             x: modifier.x + x,
             y: modifier.y + y,
-            top: modifier.y < 16,
+            top: modifier.y < TILE_SIZE,
             direction: direction,
           };
           break;
@@ -233,9 +234,9 @@ export class GameScene extends BaseScene {
 
     this.blockEmitter.createEmitter({
       frames: ['brick'],
-      gravityY: 1000,
+      gravityY: 2000,
       lifespan: 2000,
-      speed: 400,
+      speed: 800,
       angle: { min: -90 - 25, max: -45 - 25 },
       frequency: -1,
     });
@@ -252,18 +253,18 @@ export class GameScene extends BaseScene {
   }
 
   private createHUD() {
-    this.hud = this.add.bitmapText(5 * 8, 8, 'font', 'CALEB                              TIME', 8);
+    this.hud = this.add.bitmapText((5 * TILE_SIZE) / 2, TILE_SIZE / 2, 'font', 'CALEB                              TIME', TILE_SIZE / 2);
     this.hud.setScrollFactor(0, 0);
 
     this.levelTimer = {
-      textObject: this.add.bitmapText(41 * 8, 16, 'font', '255', 8).setScrollFactor(0, 0),
+      textObject: this.add.bitmapText((41 * TILE_SIZE) / 2, TILE_SIZE, 'font', '255', TILE_SIZE / 2).setScrollFactor(0, 0),
       time: GAME_TIMEOUT * 1000,
       displayedTime: 255,
       hurry: false,
     };
 
     this.score = {
-      textObject: this.add.bitmapText(5 * 8, 16, 'font', '000000', 8).setScrollFactor(0, 0),
+      textObject: this.add.bitmapText((5 * TILE_SIZE) / 2, TILE_SIZE, 'font', '000000', TILE_SIZE / 2).setScrollFactor(0, 0),
       pts: 0,
     };
 
@@ -285,7 +286,7 @@ export class GameScene extends BaseScene {
     }
 
     this.finishLine = {
-      flag: this.add.sprite(worldEndAt + 8, 4 * 16),
+      flag: this.add.sprite(worldEndAt + TILE_SIZE / 2, 4 * TILE_SIZE),
       x: worldEndAt,
       active: false,
     };
@@ -296,8 +297,8 @@ export class GameScene extends BaseScene {
     this.mario = new Mario({
       scene: this,
       key: Players.Mario,
-      x: 16 * 6,
-      y: this.sys.game.config.height - 48 - 48, // TODO: Use level settings, or initial tile
+      x: TILE_SIZE * 6,
+      y: this.sys.game.config.height - TILE_SIZE * 6, // TODO: Use level settings, or initial tile
     });
 
     // Set bounds for current room
@@ -401,7 +402,7 @@ export class GameScene extends BaseScene {
   tileCollision(sprite: Mario | Turtle | Goomba, tile: TiledGameObject) {
     if (sprite instanceof Turtle) {
       // Turtles ignore the ground
-      if (tile.y > Math.round(sprite.y / 16)) {
+      if (tile.y > Math.round(sprite.y / TILE_SIZE)) {
         return;
       }
     } else if (sprite instanceof Mario) {
@@ -433,8 +434,8 @@ export class GameScene extends BaseScene {
           const newPowerUp = new PowerUp({
             scene: this,
             key: 'sprites16',
-            x: tile.x * 16 + 8,
-            y: tile.y * 16 - 8,
+            x: tile.x * TILE_SIZE + TILE_SIZE / 2,
+            y: tile.y * TILE_SIZE - TILE_SIZE / 2,
             type: powerUp,
           });
 
@@ -449,7 +450,7 @@ export class GameScene extends BaseScene {
             this.updateScore(COIN_SCORE);
             this.map.removeTileAt(tile.x, tile.y, true, true, <any>this.groundLayer);
             this.sound.playAudioSprite('sfx', 'smb_breakblock');
-            this.blockEmitter.emitParticle(6, tile.x * 16, tile.y * 16);
+            this.blockEmitter.emitParticle(6, tile.x * TILE_SIZE, tile.y * TILE_SIZE);
           }
           break;
         default:
@@ -479,13 +480,13 @@ export class GameScene extends BaseScene {
         this.mario.x = this.finishLine.x - 1;
         this.tweens.add({
           targets: this.finishLine.flag,
-          y: 240 - 6 * 8,
+          y: 240 * 2 - (6 * TILE_SIZE) / 2,
           duration: 1500,
           onComplete: () => this.removeFlag(1),
         });
         this.tweens.add({
           targets: this.mario,
-          y: 240 - 3 * 16,
+          y: 240 * 2 - 3 * TILE_SIZE,
           duration: 1000,
           onComplete: () => {
             this.mario.flipX = true;
@@ -506,7 +507,7 @@ export class GameScene extends BaseScene {
         this.mario.flipX = false;
         this.tweens.add({
           targets: this.mario,
-          x: this.finishLine.x + 6 * 16,
+          x: this.finishLine.x + 6 * TILE_SIZE,
           duration: 1000,
           onComplete: () => this.removeFlag(2),
         });

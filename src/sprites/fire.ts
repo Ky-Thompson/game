@@ -5,9 +5,9 @@ import { GameScene } from '../scenes';
 // Rename to fireball
 
 export class Fire extends Phaser.GameObjects.Sprite {
-  static DIMENSIONS: Body = { width: 8, height: 8, x: 0, y: 0 };
-  static VELOCITY_X = 400;
-  static COLLIDE_VELOCITY_Y = -150;
+  static DIMENSIONS: Body = { width: 16, height: 16, x: 0, y: 0 };
+  static VELOCITY_X = 800;
+  static COLLIDE_VELOCITY_Y = -300;
 
   protected readonly currentScene: GameScene;
 

@@ -1,8 +1,8 @@
 import { PowerUpAnimations } from '../animations';
+import { TILE_SIZE } from '../config';
 import { Body, PlayerStates } from '../models';
 import { GameScene } from '../scenes';
 
-export const TILE_SIZE = 16; // TODO: Move to game config
 export enum PowerUps {
   Coin = 'candy',
   Mushroom = 'mushroom',
@@ -14,13 +14,13 @@ export enum PowerUps {
 // Split in different classes
 
 export class PowerUp extends Phaser.GameObjects.Sprite {
-  static DIMENSIONS: Body = { width: 12, height: 12, x: 1.5, y: 4 };
-  static VELOCITY_X = 70;
-  static ACTIVATE_VELOCITY_Y = -150;
+  static DIMENSIONS: Body = { width: 24, height: 24, x: 3, y: 8 };
+  static VELOCITY_X = 140;
+  static ACTIVATE_VELOCITY_Y = -300;
   static ANIMATION_DURATION = 500;
   static FLOWER_DEPTH = -100;
-  static COIN_MOVEMENT_Y = 50;
-  static STAR_VELOCITY_Y = -300;
+  static COIN_MOVEMENT_Y = 100;
+  static STAR_VELOCITY_Y = -600;
   static POWER_UP_SCORE: number = 100;
 
   protected readonly currentScene: GameScene;

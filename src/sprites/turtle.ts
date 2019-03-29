@@ -4,8 +4,8 @@ import { Enemy } from './enemy';
 import { Goomba } from './goomba';
 
 export class Turtle extends Enemy {
-  static DIMENSIONS: Partial<Body> = { x: 1, y: 12 };
-  static SLIDE_VELOCITY: number = 150;
+  static DIMENSIONS: Partial<Body> = { x: 2, y: 24 };
+  static SLIDE_VELOCITY: number = 300;
 
   private sliding: boolean = false;
   readonly type = 'turtle';

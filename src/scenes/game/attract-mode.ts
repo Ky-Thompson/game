@@ -4,13 +4,14 @@ import { GameScene } from './game-scene';
 const MAX_ATTRACT_MODE_TIME = 14000;
 
 // TODO: Move to models
+// TODO: Make new recording
 export interface AttractModeFrame {
   time: number;
   x: number;
   y: number;
   vx: number;
   vy: number;
-  keys: ActionState; // TODO: Use keys instead of actions
+  keys: Partial<ActionState>; // TODO: Use keys instead of actions
 }
 
 export class AttractMode {
@@ -48,7 +49,8 @@ export class AttractMode {
   }
 
   isNewFrame(): boolean {
-    return this.time >= this.recording[this.current + 1].time;
+    return false;
+    // return this.time >= this.recording[this.current + 1].time;
   }
 
   goNextFrame() {
@@ -56,6 +58,7 @@ export class AttractMode {
   }
 
   getCurrentFrame(): AttractModeFrame {
-    return this.recording[this.current];
+    return { time: 0, x: 0, y: 0, vx: 0, vy: 0, keys: {} };
+    //return this.recording[this.current];
   }
 }
