@@ -15,6 +15,7 @@ import { EnemyGroup } from './enemy-group';
 import { GamePad } from './game-pad';
 import { Keyboard } from './keyboard';
 import { SoundEffects } from './music';
+import { PowerUpsGroup } from './power-ups-group';
 import { World, WorldLayers } from './world';
 
 // TODO: Refactor
@@ -31,7 +32,6 @@ export interface Room {
   sky: string; // TODO: Rename to background
 }
 export enum Modifiers {
-  PowerUp = 'powerUp',
   Pipe = 'pipe',
   Destination = 'dest',
   Room = 'room',
@@ -67,6 +67,7 @@ export class GameScene extends BaseScene {
 
   // Objects
   enemies: EnemyGroup;
+  powerUps: PowerUpsGroup;
 
   // OLD
 
@@ -74,7 +75,6 @@ export class GameScene extends BaseScene {
   readonly destinations: Destinations = {};
   readonly rooms: Room[] = [];
 
-  powerUps: Phaser.GameObjects.Group; // TODO: Make private
   fireballs: Phaser.GameObjects.Group; // TODO: Make private
   private bounceTile;
 
@@ -105,6 +105,8 @@ export class GameScene extends BaseScene {
     this.soundEffects = new SoundEffects(this);
 
     this.enemies = new EnemyGroup(this, this.world);
+    this.powerUps = new PowerUpsGroup(this, this.world);
+
     this.createModifiers();
     this.createBlocks();
     this.createFireballs();
@@ -117,32 +119,16 @@ export class GameScene extends BaseScene {
   }
 
   private createModifiers() {
-    this.powerUps = this.add.group();
-
     // TODO: Split powerups and modifiers in different layers
 
     this.world.getLayer(WorldLayers.Modifiers).objects.forEach((modifier: TiledGameObject) => {
-      let tile, type, properties;
+      let tile, type;
 
-      if (modifier.gid) {
-        properties = this.getTilesetProperties(modifier, this.world.getTileset());
-        type = properties.type;
-        if (properties.hasOwnProperty('powerUp')) {
-          type = 'powerUp'; // TODO: Use type in tiled
-        }
-      } else {
-        this.consolidateProperties(modifier);
-        type = modifier.properties.type;
-      }
+      this.consolidateProperties(modifier);
+      type = modifier.properties.type;
 
       // TODO: Move modifiers to a separate file in /modifiers and /powerUps
       switch (type) {
-        case Modifiers.PowerUp:
-          // Modifies a questionmark below the modifier to contain something else than the default (coin)
-          tile = this.world.getTileAt(modifier.x / TILE_SIZE, modifier.y / TILE_SIZE - 1);
-          tile.powerUp = properties.powerUp; // TODO: Refactor
-          tile.properties.callback = 'questionMark';
-          break;
         case Modifiers.Pipe:
           // Adds info on where to go from a pipe under the modifier
           for (let x = 0; x < modifier.width / TILE_SIZE; x++) {
@@ -296,7 +282,7 @@ export class GameScene extends BaseScene {
     this.updateFinishLine();
     this.updateTimer(delta);
     this.enemies.update(time, delta);
-    this.updatePowerUps();
+    this.powerUps.update(time, delta);
 
     this.mario.update(time, delta, this.attractMode.isActive() ? this.attractMode.getCurrentFrame().keys : this.keyboard.getActions());
     this.gamePad.update();
@@ -338,12 +324,6 @@ export class GameScene extends BaseScene {
       this.physics.world.pause();
       return;
     }
-  }
-
-  private updatePowerUps() {
-    Array.from(this.powerUps.children.entries).forEach((powerUp: PowerUp) => {
-      powerUp.update();
-    });
   }
 
   private updateTimer(delta: number) {
@@ -399,7 +379,7 @@ export class GameScene extends BaseScene {
           tile.setCollision(true); // Invincible blocks are only collidable from above, but everywhere once revealed
 
           // Check powerUp for what to do, make a coin if not defined
-          let powerUp = tile.powerUp ? tile.powerUp : PowerUps.Coin; // TODO: Refactor powerUp, split powerUps
+          let powerUp = tile.properties.powerUp ? tile.properties.powerUp : PowerUps.Coin; // TODO: Refactor powerUp, split powerUps
 
           // Make powerUp (including a coin)
           const newPowerUp = new PowerUp({

@@ -24,7 +24,7 @@ export class EnemyGroup {
       const tileProperties = this.scene.getTilesetProperties(enemy, this.tileset);
 
       switch (tileProperties.name) {
-        case 'goomba': // TODO: Refactor sprit to be generic
+        case 'goomba': // TODO: Refactor sprite to be generic
           this.group.add(new Goomba({ scene: this.scene, key: 'sprites16', x: enemy.x, y: enemy.y }));
           break;
         case 'turtle':

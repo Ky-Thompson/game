@@ -1,5 +1,6 @@
 import { PowerUps } from './power-up';
 
+// TODO: try to remove
 export interface TiledGameObject extends Phaser.GameObjects.GameObject {
   gid?: number;
   index?: number;

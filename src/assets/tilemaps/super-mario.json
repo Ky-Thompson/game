@@ -7151,63 +7151,6 @@
       "name": "modifiers",
       "objects": [
         {
-          "gid": 12,
-          "height": 32,
-          "id": 3,
-          "name": "",
-          "properties": [
-            {
-              "name": "type",
-              "type": "string",
-              "value": "powerUp"
-            }
-          ],
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "width": 32,
-          "x": 2496,
-          "y": 320
-        },
-        {
-          "gid": 12,
-          "height": 32,
-          "id": 4,
-          "name": "",
-          "properties": [
-            {
-              "name": "type",
-              "type": "string",
-              "value": "powerUp"
-            }
-          ],
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "width": 32,
-          "x": 3488,
-          "y": 192
-        },
-        {
-          "gid": 19,
-          "height": 32,
-          "id": 5,
-          "name": "",
-          "properties": [
-            {
-              "name": "type",
-              "type": "string",
-              "value": "powerUp"
-            }
-          ],
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "width": 32,
-          "x": 3232,
-          "y": 320
-        },
-        {
           "height": 32,
           "id": 48,
           "name": "",
@@ -7422,18 +7365,6 @@
           "y": 320
         },
         {
-          "gid": 19,
-          "height": 32,
-          "id": 158,
-          "name": "",
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "width": 32,
-          "x": 512,
-          "y": 320
-        },
-        {
           "height": 32,
           "id": 159,
           "name": "",
@@ -7460,11 +7391,35 @@
           "width": 64,
           "x": 5216,
           "y": 0
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 5,
+      "name": "power-ups",
+      "objects": [
+        {
+          "gid": 19,
+          "height": 32,
+          "id": 165,
+          "name": "",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 32,
+          "x": 512,
+          "y": 320
         },
         {
           "gid": 12,
           "height": 32,
-          "id": 160,
+          "id": 166,
           "name": "",
           "properties": [
             {
@@ -7483,7 +7438,7 @@
         {
           "gid": 12,
           "height": 32,
-          "id": 162,
+          "id": 167,
           "name": "",
           "properties": [
             {
@@ -7502,7 +7457,7 @@
         {
           "gid": 12,
           "height": 32,
-          "id": 163,
+          "id": 168,
           "name": "",
           "properties": [
             {
@@ -7516,6 +7471,63 @@
           "visible": true,
           "width": 32,
           "x": 736,
+          "y": 320
+        },
+        {
+          "gid": 12,
+          "height": 32,
+          "id": 169,
+          "name": "",
+          "properties": [
+            {
+              "name": "type",
+              "type": "string",
+              "value": "powerUp"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 32,
+          "x": 2496,
+          "y": 320
+        },
+        {
+          "gid": 12,
+          "height": 32,
+          "id": 170,
+          "name": "",
+          "properties": [
+            {
+              "name": "type",
+              "type": "string",
+              "value": "powerUp"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 32,
+          "x": 3488,
+          "y": 192
+        },
+        {
+          "gid": 19,
+          "height": 32,
+          "id": 171,
+          "name": "",
+          "properties": [
+            {
+              "name": "type",
+              "type": "string",
+              "value": "powerUp"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 32,
+          "x": 3232,
           "y": 320
         }
       ],
@@ -7544,26 +7556,26 @@
         },
         {
           "gid": 45,
-          "height": 21.3333333333333,
+          "height": 31.9999999999984,
           "id": 22,
           "name": "",
           "rotation": 0,
           "type": "",
           "visible": true,
-          "width": 21.3333333333333,
+          "width": 31.9999999999984,
           "x": 1344,
           "y": 416
         },
         {
           "gid": 45,
-          "height": 21.3333333333333,
+          "height": 31.9999999999984,
           "id": 23,
           "name": "",
           "rotation": 0,
           "type": "",
           "visible": true,
-          "width": 21.3333333333333,
-          "x": 1386.66666666667,
+          "width": 31.9999999999984,
+          "x": 1408,
           "y": 416
         },
         {
@@ -7802,8 +7814,8 @@
       "y": 0
     }
   ],
-  "nextlayerid": 5,
-  "nextobjectid": 165,
+  "nextlayerid": 6,
+  "nextobjectid": 172,
   "orientation": "orthogonal",
   "properties": [
     {
@@ -7842,12 +7854,7 @@
           "id": 10,
           "properties": [
             {
-              "name": "coin",
-              "type": "string",
-              "value": "true"
-            },
-            {
-              "name": "powerUp",
+              "name": "name",
               "type": "string",
               "value": "coin"
             }
@@ -7857,19 +7864,9 @@
           "id": 11,
           "properties": [
             {
-              "name": "powerUp",
+              "name": "name",
               "type": "string",
               "value": "mushroom"
-            }
-          ]
-        },
-        {
-          "id": 12,
-          "properties": [
-            {
-              "name": "collide",
-              "type": "bool",
-              "value": false
             }
           ]
         },
@@ -7877,12 +7874,11 @@
           "id": 13,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "question"
             }
-          ],
-          "type": "question"
+          ]
         },
         {
           "id": 14,
@@ -7893,31 +7889,19 @@
               "value": "breakable"
             },
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "block"
             }
-          ],
-          "type": "block"
+          ]
         },
         {
           "id": 15,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
-            }
-          ],
-          "type": "block"
-        },
-        {
-          "id": 16,
-          "properties": [
-            {
-              "name": "collide",
-              "type": "bool",
-              "value": false
+              "name": "name",
+              "type": "string",
+              "value": "block"
             }
           ]
         },
@@ -7925,7 +7909,7 @@
           "id": 17,
           "properties": [
             {
-              "name": "powerUp",
+              "name": "name",
               "type": "string",
               "value": "1up"
             }
@@ -7935,7 +7919,7 @@
           "id": 18,
           "properties": [
             {
-              "name": "powerUp",
+              "name": "name",
               "type": "string",
               "value": "star"
             }
@@ -7945,132 +7929,116 @@
           "id": 19,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "block"
             }
-          ],
-          "type": "block"
+          ]
         },
         {
           "id": 20,
           "properties": [
-            {
-              "name": "collide",
-              "type": "bool",
-              "value": true
-            },
             {
               "name": "dest",
               "type": "int",
               "value": 0
             },
             {
-              "name": "pipe",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "pipe"
             }
-          ],
-          "type": "pipe"
+          ]
         },
         {
           "id": 21,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "pipe"
             }
-          ],
-          "type": "pipe"
+          ]
         },
         {
           "id": 22,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "block"
             }
-          ],
-          "type": "block"
+          ]
         },
         {
           "id": 23,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "block"
             }
-          ],
-          "type": "block"
+          ]
         },
         {
           "id": 24,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "block"
             }
-          ],
-          "type": "block"
+          ]
         },
         {
           "id": 26,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "pipe"
             }
-          ],
-          "type": "pipe"
+          ]
         },
         {
           "id": 27,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "pipe"
             }
-          ],
-          "type": "pipe"
+          ]
         },
         {
           "id": 28,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "block"
             }
-          ],
-          "type": "block"
+          ]
         },
         {
           "id": 32,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "block"
             }
-          ],
-          "type": "block"
+          ]
         },
         {
           "id": 39,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "block"
             }
-          ],
-          "type": "block"
+          ]
         },
         {
           "animation": [
@@ -8099,45 +8067,41 @@
               "value": "questionMark"
             },
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "questionMark"
             }
-          ],
-          "type": "questionMark"
+          ]
         },
         {
           "id": 41,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "questionMark"
             }
-          ],
-          "type": "questionMark"
+          ]
         },
         {
           "id": 42,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "questionMark"
             }
-          ],
-          "type": "questionMark"
+          ]
         },
         {
           "id": 43,
           "properties": [
             {
-              "name": "collide",
-              "type": "bool",
-              "value": true
+              "name": "name",
+              "type": "string",
+              "value": "questionMark"
             }
-          ],
-          "type": "questionMark"
+          ]
         },
         {
           "id": 44,

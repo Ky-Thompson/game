@@ -3,6 +3,7 @@ import { GameScene } from './game-scene';
 
 export enum WorldLayers {
   Enemies = 'enemies',
+  PowerUps = 'power-ups',
   Modifiers = 'modifiers',
 }
 
