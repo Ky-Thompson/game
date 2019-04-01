@@ -175,7 +175,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     }
 
     // Get points
-    this.currentScene.updateScore(PowerUp.POWER_UP_SCORE);
+    this.currentScene.hud.updateScore(PowerUp.POWER_UP_SCORE);
     this.alpha = 0;
   }
 }

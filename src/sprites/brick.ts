@@ -1,4 +1,5 @@
 import { TILE_SIZE } from '../config';
+import { TiledGameObject } from '../models';
 import { GameScene } from '../scenes';
 
 export const BLOCK_TILE = 44; // Use properties
@@ -34,7 +35,7 @@ export class BounceBrick extends Phaser.GameObjects.Sprite {
     this.currentScene.enemies.overlapBrick(this);
   }
 
-  restart(tile: Phaser.Tilemaps.Tile) {
+  restart(tile: TiledGameObject) {
     // Hide original tile and show this animation
     tile.alpha = 0;
     this.alpha = 1;

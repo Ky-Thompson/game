@@ -1,6 +1,6 @@
 import { ActionKeys, ActionState } from '../../models';
-import { GamePad } from './game-pad';
 import { GameScene } from './game-scene';
+import { GamePad } from './pad';
 
 export class Keyboard {
   private keys: ActionKeys;

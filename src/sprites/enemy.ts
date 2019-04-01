@@ -105,7 +105,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
   abstract update(time: number, delta: number): void;
 
   updatePoints() {
-    this.currentScene.updateScore(Enemy.KILLED_SCORE);
+    this.currentScene.hud.updateScore(Enemy.KILLED_SCORE);
     this.currentScene.sound.playAudioSprite('sfx', 'smb_stomp');
   }
 

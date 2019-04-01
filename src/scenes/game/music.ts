@@ -59,9 +59,9 @@ export class SoundEffects {
     sound.play(key);
   }
 
-  setMusicRate(rate: number) {
+  setMusicRate(rate: number = 1) {
     if (this.music) {
-      this.music.play({ seek: 0, rate: rate });
+      this.music.play({ seek: 0, rate });
     }
   }
 }

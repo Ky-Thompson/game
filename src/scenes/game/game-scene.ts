@@ -10,13 +10,14 @@ import { PowerUp, PowerUps } from '../../sprites/power-up';
 import { Turtle } from '../../sprites/turtle';
 import { BaseScene } from '../base';
 import { AttractMode } from './attract-mode';
-import { COIN_SCORE, GAME_TIMEOUT, METALLIC_BLOCK_TILE, PLAYER_START_X } from './constants';
+import { COIN_SCORE, METALLIC_BLOCK_TILE, PLAYER_START_X } from './constants';
 import { EnemyGroup } from './enemy-group';
 import { FireballsGroup } from './fireballs-group';
-import { GamePad } from './game-pad';
+import { HUD } from './hud';
 import { Keyboard } from './keyboard';
 import { ModifierGroup } from './modifiers-group';
 import { SoundEffects } from './music';
+import { GamePad } from './pad';
 import { PowerUpGroup } from './power-up-group';
 import { World } from './world';
 
@@ -59,13 +60,15 @@ export class GameScene extends BaseScene {
   private keyboard: Keyboard;
   world: World;
   soundEffects: SoundEffects;
+  hud: HUD;
 
   // Objects
   enemies: EnemyGroup;
   powerUps: PowerUpGroup;
   modifiers: ModifierGroup;
   fireballs: FireballsGroup;
-  private blockEmitter: BlockEmitter;
+  blockEmitter: BlockEmitter;
+  bounceBrick: BounceBrick;
 
   // OLD
 
@@ -73,11 +76,6 @@ export class GameScene extends BaseScene {
 
   readonly rooms: Room[] = []; // TODO: Refactor
 
-  private bounceBrick;
-
-  private levelTimer: Timer;
-  private score: Score;
-  private hud: Phaser.GameObjects.BitmapText;
   finishLine: FinishLine; // TODO: Make private
   mario: Mario; // TODO: rename
 
@@ -99,6 +97,7 @@ export class GameScene extends BaseScene {
     this.keyboard = new Keyboard(this, this.gamePad);
     this.world = new World(this);
     this.soundEffects = new SoundEffects(this);
+    this.hud = new HUD(this);
 
     this.enemies = new EnemyGroup(this, this.world);
     this.powerUps = new PowerUpGroup(this, this.world);
@@ -108,35 +107,11 @@ export class GameScene extends BaseScene {
     this.blockEmitter = new BlockEmitter(this);
     this.bounceBrick = new BounceBrick({ scene: this });
 
-    this.createHUD();
     this.createFinishLine();
     this.createPlayer();
 
     // If the game ended while physics was disabled
     this.physics.world.resume();
-  }
-
-  private createHUD() {
-    this.hud = this.add.bitmapText((5 * TILE_SIZE) / 2, TILE_SIZE / 2, 'font', 'CALEB                              TIME', TILE_SIZE / 2);
-    this.hud.setScrollFactor(0, 0);
-
-    this.levelTimer = {
-      textObject: this.add.bitmapText((41 * TILE_SIZE) / 2, TILE_SIZE, 'font', '255', TILE_SIZE / 2).setScrollFactor(0, 0),
-      time: GAME_TIMEOUT * 1000,
-      displayedTime: 255,
-      hurry: false,
-    };
-
-    this.score = {
-      textObject: this.add.bitmapText((5 * TILE_SIZE) / 2, TILE_SIZE, 'font', '000000', TILE_SIZE / 2).setScrollFactor(0, 0),
-      pts: 0,
-    };
-
-    if (this.attractMode.isActive()) {
-      this.hud.alpha = 0;
-      this.levelTimer.textObject.alpha = 0;
-      this.score.textObject.alpha = 0;
-    }
   }
 
   private createFinishLine() {
@@ -184,8 +159,8 @@ export class GameScene extends BaseScene {
     }
 
     this.updateFinishLine();
-    this.updateTimer(delta);
-    this.enemies.update(time, delta);
+    this.hud.update(delta);
+    this.enemies.update(time, delta); // TODO: Remove time from all
     this.powerUps.update(time, delta);
 
     this.mario.update(time, delta, this.attractMode.isActive() ? this.attractMode.getCurrentFrame().keys : this.keyboard.getActions());
@@ -221,30 +196,6 @@ export class GameScene extends BaseScene {
       this.removeFlag();
       this.physics.world.pause();
       return;
-    }
-  }
-
-  private updateTimer(delta: number) {
-    this.levelTimer.time -= delta * 2;
-
-    if (this.levelTimer.time - this.levelTimer.displayedTime * 1000 < 1000) {
-      this.levelTimer.displayedTime = Math.round(this.levelTimer.time / 1000);
-      this.levelTimer.textObject.setText((<any>('' + this.levelTimer.displayedTime)).padStart(3, '0'));
-      if (this.levelTimer.displayedTime < 40 && !this.levelTimer.hurry) {
-        this.levelTimer.hurry = true;
-        this.soundEffects.pauseMusic();
-        this.soundEffects.playEffect('smb_warning', () => {
-          this.soundEffects.resumeMusic();
-          this.soundEffects.setMusicRate(1.5);
-        });
-      }
-      if (this.levelTimer.displayedTime < 1) {
-        this.mario.die();
-        this.levelTimer.hurry = false;
-        (<any>this.soundEffects).rate = 1;
-        this.levelTimer.time = 150 * 1000;
-        this.levelTimer.displayedTime = 255;
-      }
     }
   }
 
@@ -296,7 +247,7 @@ export class GameScene extends BaseScene {
             this.sound.playAudioSprite('sfx', 'smb_bump');
           } else {
             // Get points
-            this.updateScore(COIN_SCORE);
+            this.hud.updateScore(COIN_SCORE);
             this.world.removeTileAt(tile.x, tile.y);
             this.sound.playAudioSprite('sfx', 'smb_breakblock');
             this.blockEmitter.emit(tile.x * TILE_SIZE, tile.y * TILE_SIZE);
@@ -309,14 +260,6 @@ export class GameScene extends BaseScene {
     } else {
       this.sound.playAudioSprite('sfx', 'smb_bump');
     }
-  }
-  static COIN_SCORE(COIN_SCORE: any): any {
-    throw new Error('Method not implemented.');
-  }
-
-  updateScore(score: number) {
-    this.score.pts += score;
-    this.score.textObject.setText(('' + this.score.pts).padStart(6, '0'));
   }
 
   private removeFlag(step: number = 0) {

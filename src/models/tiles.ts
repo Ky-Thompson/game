@@ -8,6 +8,7 @@ export interface TiledGameObject extends Phaser.GameObjects.GameObject {
   y: number;
   width: number;
   height: number;
+  alpha?: number;
   properties: TileProperties;
   powerUp?: PowerUps; // TODO: Remove
   setCollision: (recalculateFaces?: boolean) => Phaser.Tilemaps.Tile;
