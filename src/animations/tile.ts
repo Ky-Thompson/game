@@ -6,6 +6,8 @@ export enum TileAnimations {
   Flag = 'flag',
 }
 
+// TODO: Use sprite animations instead of tileset
+
 export const makeTileAnimations = (scene: Phaser.Scene) => {
   // Brick
   scene.anims.create({

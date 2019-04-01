@@ -8,6 +8,7 @@ export enum BrickAnimations {
   Block = 'blockTile',
 }
 
+// TODO: Rename file to bounce-brik
 export class BounceBrick extends Phaser.GameObjects.Sprite {
   static HIDDEN_X = -200;
   static ANIMATION_DURATION = 100;

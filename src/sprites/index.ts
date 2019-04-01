@@ -1,3 +1,4 @@
+export * from './block-emitter';
 export * from './brick';
 export * from './enemy';
 export * from './fire';

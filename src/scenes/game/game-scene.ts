@@ -3,6 +3,7 @@ import * as AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.js';
 import { TileAnimations } from '../../animations';
 import { TILE_SIZE } from '../../config';
 import { GameOptions, PlayerActions, Players, TileCallbacks, TiledGameObject } from '../../models';
+import { BlockEmitter } from '../../sprites';
 import { BounceBrick } from '../../sprites/brick';
 import { Fire } from '../../sprites/fire';
 import { Mario } from '../../sprites/mario';
@@ -63,6 +64,7 @@ export class GameScene extends BaseScene {
   enemies: EnemyGroup;
   powerUps: PowerUpGroup;
   modifiers: ModifierGroup;
+  private blockEmitter: BlockEmitter;
 
   // OLD
 
@@ -71,9 +73,8 @@ export class GameScene extends BaseScene {
   readonly rooms: Room[] = [];
 
   fireballs: Phaser.GameObjects.Group; // TODO: Make private
-  private bounceTile;
+  private bounceBrick;
 
-  private blockEmitter: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private levelTimer: Timer;
   private score: Score;
   private hud: Phaser.GameObjects.BitmapText;
@@ -103,7 +104,9 @@ export class GameScene extends BaseScene {
     this.powerUps = new PowerUpGroup(this, this.world);
     this.modifiers = new ModifierGroup(this, this.world);
 
-    this.createBlocks();
+    this.blockEmitter = new BlockEmitter(this);
+    this.bounceBrick = new BounceBrick({ scene: this });
+
     this.createFireballs();
     this.createHUD();
     this.createFinishLine();
@@ -111,21 +114,6 @@ export class GameScene extends BaseScene {
 
     // If the game ended while physics was disabled
     this.physics.world.resume();
-  }
-
-  private createBlocks() {
-    this.blockEmitter = this.add.particles('mario-sprites');
-
-    this.blockEmitter.createEmitter({
-      frames: ['brick'],
-      gravityY: 2000,
-      lifespan: 2000,
-      speed: 800,
-      angle: { min: -90 - 25, max: -45 - 25 },
-      frequency: -1,
-    });
-
-    this.bounceTile = new BounceBrick({ scene: this });
   }
 
   private createFireballs() {
@@ -298,7 +286,7 @@ export class GameScene extends BaseScene {
       switch (tile.properties.callback) {
         case TileCallbacks.QuestionMark:
           tile.index = METALLIC_BLOCK_TILE; // Shift to a metallic block
-          this.bounceTile.restart(tile); // Bounce it a bit
+          this.bounceBrick.restart(tile); // Bounce it a bit
           delete tile.properties.callback;
           tile.setCollision(true); // Invincible blocks are only collidable from above, but everywhere once revealed
 
@@ -318,14 +306,14 @@ export class GameScene extends BaseScene {
         case TileCallbacks.Breakable:
           if (sprite instanceof Mario && sprite.playerState === '') {
             // Can't break it anyway. Bounce it a bit.
-            this.bounceTile.restart(tile);
+            this.bounceBrick.restart(tile);
             this.sound.playAudioSprite('sfx', 'smb_bump');
           } else {
             // Get points
             this.updateScore(COIN_SCORE);
             this.world.removeTileAt(tile.x, tile.y);
             this.sound.playAudioSprite('sfx', 'smb_breakblock');
-            this.blockEmitter.emitParticle(6, tile.x * TILE_SIZE, tile.y * TILE_SIZE);
+            this.blockEmitter.emit(tile.x * TILE_SIZE, tile.y * TILE_SIZE);
           }
           break;
         default:

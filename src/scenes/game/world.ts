@@ -26,7 +26,7 @@ export class World {
 
   private init() {
     this.tilemap = this.scene.make.tilemap({ key: Tilemap.MapKey });
-    (<any>this.scene.sys).animatedTiles.init(this.tilemap);
+    (<any>this.scene.sys).animatedTiles.init(this.tilemap); // TODO: Make animated tiles work or remove
 
     this.tileset = this.tilemap.addTilesetImage(Tilemap.TilesetName, Tilemap.TilesetKey);
     this.backgroundLayer = this.tilemap.createStaticLayer(Tilemap.BackgroundLayerKey, this.tileset, 0, 0);
