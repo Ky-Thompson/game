@@ -97,7 +97,6 @@ export class GameScene extends BaseScene {
     this.keyboard = new Keyboard(this, this.gamePad);
     this.world = new World(this);
     this.soundEffects = new SoundEffects(this);
-    this.hud = new HUD(this);
 
     this.enemies = new EnemyGroup(this, this.world);
     this.powerUps = new PowerUpGroup(this, this.world);
@@ -110,6 +109,7 @@ export class GameScene extends BaseScene {
     this.createFinishLine();
     this.createPlayer();
 
+    this.hud = new HUD(this);
     // If the game ended while physics was disabled
     this.physics.world.resume();
   }
@@ -239,6 +239,10 @@ export class GameScene extends BaseScene {
             type: powerUp,
           });
 
+          if (powerUp === PowerUps.Coin) {
+            this.hud.updateScore(COIN_SCORE);
+          }
+
           break;
         case TileCallbacks.Breakable:
           if (sprite instanceof Mario && sprite.playerState === '') {
@@ -247,7 +251,7 @@ export class GameScene extends BaseScene {
             this.sound.playAudioSprite('sfx', 'smb_bump');
           } else {
             // Get points
-            this.hud.updateScore(COIN_SCORE);
+            this.hud.updateScore(COIN_SCORE); // TODO: Move COIN_SCORE somewhere
             this.world.removeTileAt(tile.x, tile.y);
             this.sound.playAudioSprite('sfx', 'smb_breakblock');
             this.blockEmitter.emit(tile.x * TILE_SIZE, tile.y * TILE_SIZE);

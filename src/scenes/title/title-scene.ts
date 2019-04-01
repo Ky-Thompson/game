@@ -1,8 +1,9 @@
 import { TitleAnimations } from '../../animations';
+import { FONT } from '../../config';
 import { GameOptions } from '../../models';
 import { BaseScene } from '../base';
 import { GameScene } from '../game';
-import { START_FONT, START_SIZE, START_TEXT, START_X, START_Y, TITLE_BLINK_TIME, TITLE_Y } from './constants';
+import { START_SIZE, START_TEXT, START_X, START_Y, TITLE_BLINK_TIME, TITLE_Y } from './constants';
 
 export class TitleScene extends BaseScene {
   static readonly SceneKey = 'TitleScene';
@@ -59,7 +60,7 @@ export class TitleScene extends BaseScene {
     const title: Phaser.GameObjects.Sprite = this.add.sprite(width / 2, TITLE_Y);
     title.play(TitleAnimations.Title);
 
-    this.startSprite = this.add.bitmapText(START_X, START_Y, START_FONT, START_TEXT, START_SIZE);
+    this.startSprite = this.add.bitmapText(START_X, START_Y, FONT, START_TEXT, START_SIZE);
 
     this.input.on('pointerdown', () => this.startGame());
     this.input.keyboard.on('keydown', () => this.startGame());

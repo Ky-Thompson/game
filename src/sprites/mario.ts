@@ -35,7 +35,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
   private jumpTimer: number = 0;
   private jumping: boolean = false;
   private lastPlayerKey: boolean = false; // TODO: Remove
-  private playerType: Players = Players.Caleb;
+  playerType: Players = Players.Caleb;
   bending: boolean = false;
   private enteringPipe: boolean = false;
   private wasHurtTimer: number = 0;
