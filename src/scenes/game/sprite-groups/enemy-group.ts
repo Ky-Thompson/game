@@ -1,10 +1,10 @@
-import { SPRITES_KEY } from '../../animations';
-import { TiledGameObject } from '../../models';
-import { BounceBrick, Enemy, Fire } from '../../sprites';
-import { Goomba } from '../../sprites/goomba';
-import { Turtle } from '../../sprites/turtle';
-import { GameScene } from './game-scene';
-import { World, WorldLayers } from './world';
+import { SPRITES_KEY } from '../../../animations';
+import { TiledGameObject } from '../../../models';
+import { BounceBrick, Enemy, Fire } from '../../../sprites';
+import { Goomba } from '../../../sprites/goomba';
+import { Turtle } from '../../../sprites/turtle';
+import { GameScene } from '../game-scene';
+import { World, WorldLayers } from '../world';
 
 export class EnemyGroup {
   private group: Phaser.GameObjects.Group;

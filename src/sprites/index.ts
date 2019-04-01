@@ -1,6 +1,7 @@
 export * from './block-emitter';
 export * from './brick';
 export * from './enemy';
+export * from './finish-line';
 export * from './fire';
 export * from './goomba';
 export * from './mario';

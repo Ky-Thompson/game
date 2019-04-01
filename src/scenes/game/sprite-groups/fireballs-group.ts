@@ -1,5 +1,5 @@
-import { Fire } from '../../sprites';
-import { GameScene } from './game-scene';
+import { Fire } from '../../../sprites';
+import { GameScene } from '../game-scene';
 
 export class FireballsGroup {
   private group: Phaser.GameObjects.Group;

@@ -1,8 +1,8 @@
-import { TILE_SIZE } from '../../config';
-import { TiledGameObject } from '../../models';
-import { PowerUp } from '../../sprites';
-import { GameScene } from './game-scene';
-import { World, WorldLayers } from './world';
+import { TILE_SIZE } from '../../../config';
+import { TiledGameObject } from '../../../models';
+import { PowerUp } from '../../../sprites';
+import { GameScene } from '../game-scene';
+import { World, WorldLayers } from '../world';
 
 export class PowerUpGroup {
   private group: Phaser.GameObjects.Group;

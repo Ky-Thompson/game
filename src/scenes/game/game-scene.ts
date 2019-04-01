@@ -1,9 +1,8 @@
 import * as AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.js';
 
-import { TileAnimations } from '../../animations';
 import { TILE_SIZE } from '../../config';
-import { GameOptions, PlayerActions, Players, TileCallbacks, TiledGameObject } from '../../models';
-import { BlockEmitter } from '../../sprites';
+import { GameOptions, Players, TileCallbacks, TiledGameObject } from '../../models';
+import { BlockEmitter, FinishLine } from '../../sprites';
 import { BounceBrick } from '../../sprites/brick';
 import { Mario } from '../../sprites/mario';
 import { PowerUp, PowerUps } from '../../sprites/power-up';
@@ -11,19 +10,14 @@ import { Turtle } from '../../sprites/turtle';
 import { BaseScene } from '../base';
 import { AttractMode } from './attract-mode';
 import { COIN_SCORE, METALLIC_BLOCK_TILE, PLAYER_START_X } from './constants';
-import { EnemyGroup } from './enemy-group';
-import { FireballsGroup } from './fireballs-group';
 import { HUD } from './hud';
 import { Keyboard } from './keyboard';
-import { ModifierGroup } from './modifiers-group';
 import { SoundEffects } from './music';
 import { GamePad } from './pad';
-import { PowerUpGroup } from './power-up-group';
+import { EnemyGroup, FireballsGroup, ModifierGroup, PowerUpGroup } from './sprite-groups';
 import { World } from './world';
 
 // TODO: Refactor
-
-// TODO: Fix finish line for small size
 
 export type Key = Phaser.Input.Keyboard.Key;
 
@@ -31,24 +25,6 @@ export interface Room {
   x: number;
   width: number;
   sky: string; // TODO: Rename to background
-}
-
-export interface Timer {
-  textObject: Phaser.GameObjects.BitmapText;
-  time: number;
-  displayedTime: number;
-  hurry: boolean;
-}
-
-export interface Score {
-  textObject: Phaser.GameObjects.BitmapText;
-  pts: number;
-}
-
-export interface FinishLine {
-  flag: Phaser.GameObjects.Sprite;
-  x: number;
-  active: boolean;
 }
 
 export class GameScene extends BaseScene {
@@ -62,13 +38,16 @@ export class GameScene extends BaseScene {
   soundEffects: SoundEffects;
   hud: HUD;
 
-  // Objects
+  // Sprite groups
   enemies: EnemyGroup;
   powerUps: PowerUpGroup;
   modifiers: ModifierGroup;
   fireballs: FireballsGroup;
   blockEmitter: BlockEmitter;
+
+  // Sprites
   bounceBrick: BounceBrick;
+  finishLine: FinishLine;
 
   // OLD
 
@@ -76,7 +55,6 @@ export class GameScene extends BaseScene {
 
   readonly rooms: Room[] = []; // TODO: Refactor
 
-  finishLine: FinishLine; // TODO: Make private
   mario: Mario; // TODO: rename
 
   constructor() {
@@ -105,32 +83,12 @@ export class GameScene extends BaseScene {
 
     this.blockEmitter = new BlockEmitter(this);
     this.bounceBrick = new BounceBrick({ scene: this });
-
-    this.createFinishLine();
+    this.finishLine = new FinishLine(this, this.modifiers.getFinishLine());
     this.createPlayer();
 
     this.hud = new HUD(this);
     // If the game ended while physics was disabled
     this.physics.world.resume();
-  }
-
-  private createFinishLine() {
-    let worldEndAt = -1;
-    const { width } = this.world.size();
-    for (let x = 0; x < width; x++) {
-      let tile = this.world.getTileAt(x, 2); // Finish line must be in tile y=2
-      if (tile && tile.properties['worldsEnd']) {
-        worldEndAt = tile.pixelX;
-        break;
-      }
-    }
-
-    this.finishLine = {
-      flag: this.add.sprite(worldEndAt + TILE_SIZE / 2, 4 * TILE_SIZE),
-      x: worldEndAt,
-      active: false,
-    };
-    this.finishLine.flag.play(TileAnimations.Flag);
   }
 
   private createPlayer() {
@@ -158,7 +116,7 @@ export class GameScene extends BaseScene {
       return;
     }
 
-    this.updateFinishLine();
+    this.finishLine.update(delta);
     this.hud.update(delta);
     this.enemies.update(time, delta); // TODO: Remove time from all
     this.powerUps.update(time, delta);
@@ -188,14 +146,6 @@ export class GameScene extends BaseScene {
       this.mario.x = x;
       this.mario.y = y;
       this.mario.body.setVelocity(vx, vy);
-    }
-  }
-
-  private updateFinishLine() {
-    if (this.mario.x > this.finishLine.x && this.finishLine.active) {
-      this.removeFlag();
-      this.physics.world.pause();
-      return;
     }
   }
 
@@ -263,59 +213,6 @@ export class GameScene extends BaseScene {
       }
     } else {
       this.sound.playAudioSprite('sfx', 'smb_bump');
-    }
-  }
-
-  private removeFlag(step: number = 0) {
-    // TODO: Use enum for steps
-    switch (step) {
-      case 0:
-        this.soundEffects.pauseMusic();
-        this.sound.playAudioSprite('sfx', 'smb_flagpole');
-        this.mario.animate(PlayerActions.Climb);
-        this.mario.x = this.finishLine.x - 1;
-        this.tweens.add({
-          targets: this.finishLine.flag,
-          y: 240 * 2 - (6 * TILE_SIZE) / 2,
-          duration: 1500,
-          onComplete: () => this.removeFlag(1),
-        });
-        this.tweens.add({
-          targets: this.mario,
-          y: 240 * 2 - 3 * TILE_SIZE,
-          duration: 1000,
-          onComplete: () => {
-            this.mario.flipX = true;
-            this.mario.x += 11;
-          },
-        });
-        break;
-      case 1:
-        let sound: any = this.sound.addAudioSprite('sfx');
-        (<any>sound).on('ended', (sound) => {
-          sound.destroy();
-          this.scene.start('TitleScene');
-        });
-        sound.play('smb_stage_clear');
-
-        this.mario.animate(PlayerActions.Walk);
-
-        this.mario.flipX = false;
-        this.tweens.add({
-          targets: this.mario,
-          x: this.finishLine.x + 6 * TILE_SIZE,
-          duration: 1000,
-          onComplete: () => this.removeFlag(2),
-        });
-        break;
-      case 2:
-        // TODO: fix y position
-        this.tweens.add({
-          targets: this.mario,
-          alpha: 0,
-          duration: 500,
-        });
-        break;
     }
   }
 }

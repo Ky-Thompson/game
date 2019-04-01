@@ -1,12 +1,13 @@
-import { TILE_SIZE } from '../../config';
-import { TiledGameObject } from '../../models';
-import { GameScene } from './game-scene';
-import { World, WorldLayers } from './world';
+import { TILE_SIZE } from '../../../config';
+import { TiledGameObject } from '../../../models';
+import { GameScene } from '../game-scene';
+import { World, WorldLayers } from '../world';
 
 export enum Modifiers {
   Pipe = 'pipe',
   Destination = 'dest',
   Room = 'room',
+  FinishLine = 'finishLine',
 }
 
 export enum PipeDirection {
@@ -28,6 +29,7 @@ export type PipeDestination = {
 export class ModifierGroup {
   private mapLayer: Phaser.Tilemaps.ObjectLayer;
   private readonly destinations: PipeDestinations = {};
+  private finishLine: TiledGameObject;
 
   constructor(private scene: GameScene, private world: World) {
     this.init();
@@ -52,7 +54,6 @@ export class ModifierGroup {
               tile.properties['pipe'] = true;
             }
           }
-
           break;
         case Modifiers.Destination:
           const id = modifier.properties.id;
@@ -98,6 +99,9 @@ export class ModifierGroup {
             sky: modifier.properties.sky,
           });
           break;
+        case Modifiers.FinishLine:
+          this.finishLine = modifier;
+          break;
       }
     });
   }
@@ -114,5 +118,9 @@ export class ModifierGroup {
 
   getDestination(id: number): PipeDestination {
     return this.destinations[id];
+  }
+
+  getFinishLine(): TiledGameObject {
+    return this.finishLine;
   }
 }

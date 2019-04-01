@@ -1,7 +1,7 @@
 import { getPlayerAnimationKey } from '../animations';
 import { ActionState, Body, PlayerActions, Players, PlayerStates, TiledGameObject } from '../models';
 import { GameScene } from '../scenes';
-import { PipeDirection } from '../scenes/game/modifiers-group';
+import { PipeDirection } from '../scenes/game/sprite-groups';
 import { Enemy } from './enemy';
 
 export interface IPlayer {
@@ -76,10 +76,13 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
     this.on('animationcomplete', onAnimationComplete, this);
   }
 
-  animate(animation: PlayerActions = PlayerActions.Stand) {
+  animate(animation: PlayerActions = PlayerActions.Stand, force: boolean = false) {
     const playerAnimation = getPlayerAnimationKey(this.playerType, animation, this.playerState);
+    const hasAnimation: boolean = Boolean(this.anims.currentAnim);
+    const isCurrentAnimation: boolean = hasAnimation && this.anims.currentAnim.key !== playerAnimation;
+    const enableAnimation = !this.currentScene.physics.world.isPaused || force;
 
-    if (!this.anims.currentAnim || (this.anims.currentAnim.key !== playerAnimation && !this.currentScene.physics.world.isPaused)) {
+    if (!hasAnimation || (isCurrentAnimation && enableAnimation)) {
       this.anims.play(playerAnimation);
     }
   }
@@ -112,7 +115,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
     }
   }
 
-  private collideGround() {
+  collideGround() {
     // Just run callbacks when hitting something from below or trying to enter it
     if (this.body.velocity.y < 0 || this.bending) {
       this.currentScene.world.collide(this, (player: Mario, tile: TiledGameObject) => this.currentScene.tileCollision(player, tile));
@@ -417,7 +420,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
         const camera: Phaser.Cameras.Scene2D.Camera = this.currentScene.cameras.main;
         const { height, scaleX, scaleY } = this.currentScene.world.size();
         camera.setBounds(room.x, 0, room.width * scaleX, height * scaleY);
-        this.currentScene.finishLine.active = room.x === 0;
+        this.currentScene.finishLine.setActive(room.x === 0);
         this.currentScene.cameras.main.setBackgroundColor(room.sky);
       }
     });
