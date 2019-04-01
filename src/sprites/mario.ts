@@ -160,7 +160,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
     }
 
     if (fire && this.playerState === PlayerStates.Fire && this.fireCoolDownTimer <= 0) {
-      let fireball = this.currentScene.fireballs.get(this);
+      let fireball = this.currentScene.fireballs.get();
       if (fireball) {
         fireball.fire(this.x, this.y, this.flipX);
         this.fireCoolDownTimer = Mario.FIRE_COOLDOWN;

@@ -5,7 +5,6 @@ import { TILE_SIZE } from '../../config';
 import { GameOptions, PlayerActions, Players, TileCallbacks, TiledGameObject } from '../../models';
 import { BlockEmitter } from '../../sprites';
 import { BounceBrick } from '../../sprites/brick';
-import { Fire } from '../../sprites/fire';
 import { Mario } from '../../sprites/mario';
 import { PowerUp, PowerUps } from '../../sprites/power-up';
 import { Turtle } from '../../sprites/turtle';
@@ -13,6 +12,7 @@ import { BaseScene } from '../base';
 import { AttractMode } from './attract-mode';
 import { COIN_SCORE, GAME_TIMEOUT, METALLIC_BLOCK_TILE, PLAYER_START_X } from './constants';
 import { EnemyGroup } from './enemy-group';
+import { FireballsGroup } from './fireballs-group';
 import { GamePad } from './game-pad';
 import { Keyboard } from './keyboard';
 import { ModifierGroup } from './modifiers-group';
@@ -64,15 +64,15 @@ export class GameScene extends BaseScene {
   enemies: EnemyGroup;
   powerUps: PowerUpGroup;
   modifiers: ModifierGroup;
+  fireballs: FireballsGroup;
   private blockEmitter: BlockEmitter;
 
   // OLD
 
   private pluginsLodaded: boolean;
 
-  readonly rooms: Room[] = [];
+  readonly rooms: Room[] = []; // TODO: Refactor
 
-  fireballs: Phaser.GameObjects.Group; // TODO: Make private
   private bounceBrick;
 
   private levelTimer: Timer;
@@ -103,25 +103,17 @@ export class GameScene extends BaseScene {
     this.enemies = new EnemyGroup(this, this.world);
     this.powerUps = new PowerUpGroup(this, this.world);
     this.modifiers = new ModifierGroup(this, this.world);
+    this.fireballs = new FireballsGroup(this);
 
     this.blockEmitter = new BlockEmitter(this);
     this.bounceBrick = new BounceBrick({ scene: this });
 
-    this.createFireballs();
     this.createHUD();
     this.createFinishLine();
     this.createPlayer();
 
     // If the game ended while physics was disabled
     this.physics.world.resume();
-  }
-
-  private createFireballs() {
-    this.fireballs = this.add.group({
-      classType: Fire,
-      maxSize: 10,
-      runChildUpdate: false, // Due to https://github.com/photonstorm/phaser/issues/3724
-    });
   }
 
   private createHUD() {
@@ -185,7 +177,7 @@ export class GameScene extends BaseScene {
 
   update(time: number, delta: number) {
     this.updateAttractMode(delta);
-    this.updateFireballs(time, delta);
+    this.fireballs.update(time, delta);
 
     if (this.physics.world.isPaused) {
       return;
@@ -222,12 +214,6 @@ export class GameScene extends BaseScene {
       this.mario.y = y;
       this.mario.body.setVelocity(vx, vy);
     }
-  }
-
-  private updateFireballs(time: number, delta: number) {
-    Array.from(this.fireballs.children.entries).forEach((fireball: Fire) => {
-      fireball.update(time, delta);
-    });
   }
 
   private updateFinishLine() {
