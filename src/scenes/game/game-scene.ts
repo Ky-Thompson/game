@@ -352,11 +352,13 @@ export class GameScene extends BaseScene {
     if (this.levelTimer.time - this.levelTimer.displayedTime * 1000 < 1000) {
       this.levelTimer.displayedTime = Math.round(this.levelTimer.time / 1000);
       this.levelTimer.textObject.setText((<any>('' + this.levelTimer.displayedTime)).padStart(3, '0'));
-      if (this.levelTimer.displayedTime < 50 && !this.levelTimer.hurry) {
+      if (this.levelTimer.displayedTime < 40 && !this.levelTimer.hurry) {
         this.levelTimer.hurry = true;
-        this.soundEffects.playEffect('smb_warning');
-        this.soundEffects.setMusicRate(1.5);
         this.soundEffects.pauseMusic();
+        this.soundEffects.playEffect('smb_warning', () => {
+          this.soundEffects.resumeMusic();
+          this.soundEffects.setMusicRate(1.5);
+        });
       }
       if (this.levelTimer.displayedTime < 1) {
         this.mario.die();

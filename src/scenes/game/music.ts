@@ -4,8 +4,11 @@ export enum MusicPlaylist {
   Song89 = '89',
 }
 
+export const PLAYLIST: MusicPlaylist[] = [MusicPlaylist.Song89];
+
 export class SoundEffects {
   private music: Phaser.Sound.BaseSound;
+  private track: number = 0;
 
   constructor(private scene: GameScene) {
     this.init();
@@ -13,11 +16,23 @@ export class SoundEffects {
 
   private init() {
     if (!this.scene.attractMode.isActive()) {
-      try {
-        this.music = this.scene.sound.add(MusicPlaylist.Song89);
-        this.music.play({ loop: true });
-      } catch (e) {}
+      this.playMusic();
     }
+  }
+
+  private playMusic() {
+    try {
+      if (this.music) {
+        this.music.stop();
+        this.music.destroy();
+      }
+
+      this.track = (this.track + 1) % PLAYLIST.length;
+
+      this.music = this.scene.sound.add(PLAYLIST[this.track]);
+      this.music.once('ended', () => this.playMusic());
+      this.music.play();
+    } catch (e) {}
   }
 
   pauseMusic() {
@@ -32,28 +47,21 @@ export class SoundEffects {
     }
   }
 
-  // TODO: Use enum
-  playEffect(key: string, pauseMusic: boolean = false) {
-    const sound = this.scene.sound.addAudioSprite('sfx');
+  // TODO: Use enum for audio sprite
+  playEffect(key: string, onEnded: Function = () => {}) {
+    const sound: any = this.scene.sound.addAudioSprite('sfx'); // TODO: Fix type
 
-    if (pauseMusic) {
-      this.pauseMusic();
-    }
-
-    (<any>sound).on('ended', (sound) => {
-      if (pauseMusic) {
-        this.resumeMusic();
-      }
+    sound.on('ended', () => {
       sound.destroy();
+      onEnded();
     });
 
-    (<any>sound).play(key);
+    sound.play(key);
   }
 
   setMusicRate(rate: number) {
     if (this.music) {
-      (<any>this.music).seek = 0;
-      (<any>this.music).rate = rate;
+      this.music.play({ seek: 0, rate: rate });
     }
   }
 }
