@@ -26,14 +26,4 @@ export abstract class BaseScene extends Phaser.Scene {
   getTilesetProperties(tile: TiledGameObject, tileset: Phaser.Tilemaps.Tileset): TileProperties {
     return tileset.tileProperties[tile.gid - 1];
   }
-
-  consolidateProperties(tile: TiledGameObject) {
-    if (Array.isArray(tile.properties)) {
-      const properties = {};
-      tile.properties.forEach((prop) => {
-        properties[prop.name] = prop.value;
-      });
-      tile.properties = properties;
-    }
-  }
 }

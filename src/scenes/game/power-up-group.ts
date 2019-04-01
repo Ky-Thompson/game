@@ -4,7 +4,7 @@ import { PowerUp } from '../../sprites';
 import { GameScene } from './game-scene';
 import { World, WorldLayers } from './world';
 
-export class PowerUpsGroup {
+export class PowerUpGroup {
   private group: Phaser.GameObjects.Group;
   private mapLayer: Phaser.Tilemaps.ObjectLayer;
   private tileset: Phaser.Tilemaps.Tileset;

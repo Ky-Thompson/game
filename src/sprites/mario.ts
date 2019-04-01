@@ -1,14 +1,8 @@
 import { getPlayerAnimationKey } from '../animations';
 import { ActionState, Body, PlayerActions, Players, PlayerStates, TiledGameObject } from '../models';
 import { GameScene } from '../scenes';
+import { PipeDirection } from '../scenes/game/modifiers-group';
 import { Enemy } from './enemy';
-
-export enum PipeDirection {
-  Up = 'up',
-  Down = 'down',
-  Left = 'left',
-  Right = 'right',
-}
 
 export interface IPlayer {
   type: 'mario';
@@ -376,7 +370,7 @@ export class Mario extends Phaser.GameObjects.Sprite implements IPlayer {
   }
 
   private exitPipe(destinationTileId: number) {
-    const destination = this.currentScene.destinations[destinationTileId]; // TODO: Add typing
+    const destination = this.currentScene.modifiers.getDestination(destinationTileId);
 
     if (destination.top) {
       this.setDepth(Mario.EXIT_PIPE_DEPTH);

@@ -5,7 +5,7 @@ import { TILE_SIZE } from '../../config';
 import { GameOptions, PlayerActions, Players, TileCallbacks, TiledGameObject } from '../../models';
 import { BounceBrick } from '../../sprites/brick';
 import { Fire } from '../../sprites/fire';
-import { Mario, PipeDirection } from '../../sprites/mario';
+import { Mario } from '../../sprites/mario';
 import { PowerUp, PowerUps } from '../../sprites/power-up';
 import { Turtle } from '../../sprites/turtle';
 import { BaseScene } from '../base';
@@ -14,27 +14,21 @@ import { COIN_SCORE, GAME_TIMEOUT, METALLIC_BLOCK_TILE, PLAYER_START_X } from '.
 import { EnemyGroup } from './enemy-group';
 import { GamePad } from './game-pad';
 import { Keyboard } from './keyboard';
+import { ModifierGroup } from './modifiers-group';
 import { SoundEffects } from './music';
-import { PowerUpsGroup } from './power-ups-group';
-import { World, WorldLayers } from './world';
+import { PowerUpGroup } from './power-up-group';
+import { World } from './world';
 
 // TODO: Refactor
 
 // TODO: Fix finish line for small size
 
 export type Key = Phaser.Input.Keyboard.Key;
-export type Destinations = { [id: string]: Destination };
-export type Destination = any;
 
 export interface Room {
   x: number;
   width: number;
   sky: string; // TODO: Rename to background
-}
-export enum Modifiers {
-  Pipe = 'pipe',
-  Destination = 'dest',
-  Room = 'room',
 }
 
 export interface Timer {
@@ -67,12 +61,13 @@ export class GameScene extends BaseScene {
 
   // Objects
   enemies: EnemyGroup;
-  powerUps: PowerUpsGroup;
+  powerUps: PowerUpGroup;
+  modifiers: ModifierGroup;
 
   // OLD
 
   private pluginsLodaded: boolean;
-  readonly destinations: Destinations = {};
+
   readonly rooms: Room[] = [];
 
   fireballs: Phaser.GameObjects.Group; // TODO: Make private
@@ -105,9 +100,9 @@ export class GameScene extends BaseScene {
     this.soundEffects = new SoundEffects(this);
 
     this.enemies = new EnemyGroup(this, this.world);
-    this.powerUps = new PowerUpsGroup(this, this.world);
+    this.powerUps = new PowerUpGroup(this, this.world);
+    this.modifiers = new ModifierGroup(this, this.world);
 
-    this.createModifiers();
     this.createBlocks();
     this.createFireballs();
     this.createHUD();
@@ -116,77 +111,6 @@ export class GameScene extends BaseScene {
 
     // If the game ended while physics was disabled
     this.physics.world.resume();
-  }
-
-  private createModifiers() {
-    // TODO: Split powerups and modifiers in different layers
-
-    this.world.getLayer(WorldLayers.Modifiers).objects.forEach((modifier: TiledGameObject) => {
-      let tile, type;
-
-      this.consolidateProperties(modifier);
-      type = modifier.properties.type;
-
-      // TODO: Move modifiers to a separate file in /modifiers and /powerUps
-      switch (type) {
-        case Modifiers.Pipe:
-          // Adds info on where to go from a pipe under the modifier
-          for (let x = 0; x < modifier.width / TILE_SIZE; x++) {
-            for (let y = 0; y < modifier.height / TILE_SIZE; y++) {
-              tile = this.world.getTileAt(modifier.x / TILE_SIZE + x, modifier.y / TILE_SIZE + y);
-              tile.properties.dest = parseInt(modifier.properties.goto);
-              tile.properties.direction = modifier.properties.direction;
-              tile.properties.pipe = true;
-            }
-          }
-
-          break;
-        case Modifiers.Destination:
-          const id = modifier.properties.id;
-          const direction = modifier.properties.direction;
-
-          // Calculate coordinates where the player should appear
-          let x: number = 0;
-          let y: number = 0;
-
-          switch (direction) {
-            case PipeDirection.Right:
-              x = modifier.width;
-              y = modifier.height / 2;
-              break;
-            case PipeDirection.Left:
-              x = 0;
-              y = modifier.height / 2;
-              break;
-            case PipeDirection.Up:
-              x = modifier.width / 2;
-              y = 0;
-              break;
-            case PipeDirection.Down:
-              x = modifier.width / 2;
-              y = -modifier.height;
-              break;
-          }
-
-          // Adds a destination so that a pipe can find it
-          this.destinations[id] = {
-            x: modifier.x + x,
-            y: modifier.y + y,
-            top: modifier.y < TILE_SIZE,
-            direction: direction,
-          };
-          break;
-        case Modifiers.Room:
-          // Adds a 'room' that is just info on bounds so that we can add sections below pipes
-          // in an level just using one tilemap.
-          this.rooms.push({
-            x: modifier.x,
-            width: modifier.width,
-            sky: modifier.properties.sky,
-          });
-          break;
-      }
-    });
   }
 
   private createBlocks() {
