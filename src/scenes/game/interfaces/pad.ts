@@ -1,27 +1,22 @@
 import { PadAnimations } from '../../../animations';
 import { TILE_SIZE } from '../../../config';
+import { Colors, Depth } from '../../../helpers';
 import { ActionState, PlayerStates } from '../../../models';
-import { GameScene } from '../game-scene';
+import { GameScene } from '../scene';
 
-const GAME_PAD_DEPTH = 100;
 const GAME_PAD_ALPHA = 0.9;
-const BUTTON_ACTIVE_COLOR = 0xff4d4d;
 
 const BUTTON_SIZE = 3 * TILE_SIZE;
 const PADDING = TILE_SIZE / 2;
 
 export class GamePad {
-  private gamePad: Partial<ActionState> = {};
-  private rightButton: Phaser.GameObjects.Sprite;
-  private leftButton: Phaser.GameObjects.Sprite;
-  private upButton: Phaser.GameObjects.Sprite;
-  private fireButton: Phaser.GameObjects.Sprite;
+  private readonly gamePad: Partial<ActionState> = {};
+  private readonly rightButton: Phaser.GameObjects.Sprite;
+  private readonly leftButton: Phaser.GameObjects.Sprite;
+  private readonly upButton: Phaser.GameObjects.Sprite;
+  private readonly fireButton: Phaser.GameObjects.Sprite;
 
   constructor(private scene: GameScene) {
-    this.init();
-  }
-
-  private init() {
     if (!this.show()) {
       return; // Don't add pad if not needed
     }
@@ -45,11 +40,11 @@ export class GamePad {
     [this.rightButton, this.leftButton, this.upButton, this.fireButton].forEach((button) =>
       button
         .setScrollFactor(0, 0)
-        .setDepth(GAME_PAD_DEPTH)
+        .setDepth(Depth.HUD)
         .setAlpha(GAME_PAD_ALPHA)
         .setInteractive({ useHandCursor: true })
         .setDisplaySize(BUTTON_SIZE, BUTTON_SIZE)
-        .on('pointerdown', () => button.setTint(BUTTON_ACTIVE_COLOR))
+        .on('pointerdown', () => button.setTint(Colors.Red))
         .on('pointerup', () => button.clearTint())
     );
 
@@ -84,6 +79,6 @@ export class GamePad {
       return; // Don't update pad if not needed
     }
 
-    this.fireButton.setAlpha(this.scene.mario.playerState === PlayerStates.Fire ? GAME_PAD_ALPHA : 0);
+    this.fireButton.setAlpha(this.scene.player.isPlayerState(PlayerStates.Fire) ? GAME_PAD_ALPHA : 0);
   }
 }

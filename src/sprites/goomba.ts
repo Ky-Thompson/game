@@ -1,14 +1,14 @@
 import { GoombaAnimations } from '../animations';
+import { GameScene } from '../scenes';
 import { Enemy } from './enemy';
 
+const KILLED_TIMEOUT: number = 500;
+
 export class Goomba extends Enemy {
-  static KILLED_TIMEOUT: number = 500;
-
   private killedTime: number = 0;
-  readonly type = GoombaAnimations.Default;
 
-  constructor(config) {
-    super(config);
+  constructor(scene: GameScene, x: number, y: number) {
+    super(scene, x, y);
     this.animate();
   }
 
@@ -17,7 +17,7 @@ export class Goomba extends Enemy {
   }
 
   update(time: number, delta: number) {
-    if (!this.isActivated) {
+    if (!this.isActivated()) {
       return;
     }
 
@@ -36,7 +36,7 @@ export class Goomba extends Enemy {
     }
 
     // Collide with Player
-    this.currentScene.physics.world.overlap(this, this.currentScene.mario, () => this.playerHit());
+    this.scene.physics.world.overlap(this, this.scene.player, () => this.playerHit());
 
     // The enemy stopped, better try to walk in the other direction.
     if (this.body.velocity.x === 0) {
@@ -46,9 +46,9 @@ export class Goomba extends Enemy {
   }
 
   playerHit() {
-    if (this.isVerticalHit) {
+    if (this.isVerticalHit()) {
       // Player jumps on the enemy
-      this.player.enemyBounce(this);
+      this.scene.player.enemyBounce(this);
       this.flatten();
       this.kill();
       this.updatePoints();
@@ -60,6 +60,6 @@ export class Goomba extends Enemy {
 
   private flatten() {
     this.animate(GoombaAnimations.Flattened);
-    this.killedTime = Goomba.KILLED_TIMEOUT; // Keep goomba flat for a time, then remove it.
+    this.killedTime = KILLED_TIMEOUT; // Keep goomba flat for a time, then remove it.
   }
 }

@@ -12,7 +12,8 @@ import { Colors } from '../../helpers'; // TODO: Fix ../..
 import { Players } from '../../models';
 import { BaseScene } from '../base';
 import { TitleScene } from '../title';
-import { PROGRESS_BAR_HEIGHT } from './constants';
+
+const PROGRESS_BAR_HEIGHT = 120;
 
 export class BootScene extends BaseScene {
   static readonly SceneKey = 'BootScene';

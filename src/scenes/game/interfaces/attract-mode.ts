@@ -1,5 +1,5 @@
 import { ActionState, GameOptions } from '../../../models';
-import { GameScene } from '../game-scene';
+import { GameScene } from '../scene';
 
 const MAX_ATTRACT_MODE_TIME = 14000;
 
@@ -41,7 +41,29 @@ export class AttractMode {
   }
 
   update(delta: number) {
+    // TODO: Move to class
+    if (!this.active) {
+      return;
+    }
+
     this.time += delta;
+
+    const { height } = this.scene.gameConfig();
+    if (this.scene.player.y > height || this.hasEnded()) {
+      this.reset();
+      this.scene.player.x = this.scene.start.x;
+      this.scene.setRegistry(GameOptions.RestartScene, true);
+      return;
+    }
+
+    if (this.isNewFrame()) {
+      this.goNextFrame();
+      const { x, y, vx, vy } = this.getCurrentFrame();
+
+      this.scene.player.x = x;
+      this.scene.player.y = y;
+      this.scene.player.body.setVelocity(vx, vy);
+    }
   }
 
   hasEnded(): boolean {

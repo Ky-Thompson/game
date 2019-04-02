@@ -5,13 +5,17 @@ export abstract class BaseScene extends Phaser.Scene {
     super(config);
   }
 
-  // Game properties
+  /**
+   * Game properties
+   */
 
   gameConfig(): Phaser.Boot.Config {
     return this.sys.game.config;
   }
 
-  // Registry for global settings
+  /**
+   * Registry for global settings
+   */
 
   getRegistry(option: GameOptions) {
     return this.registry.get(String(option));
@@ -21,7 +25,9 @@ export abstract class BaseScene extends Phaser.Scene {
     return this.registry.set(String(option), value);
   }
 
-  // Helpers to handle Tiled tiles
+  /**
+   * Helpers to handle Tiled tiles
+   */
 
   getTilesetProperties(tile: TiledGameObject, tileset: Phaser.Tilemaps.Tileset): TileProperties {
     return tileset.tileProperties[tile.gid - 1];

@@ -1,19 +1,15 @@
 import { TILE_SIZE } from '../../../config';
 import { TiledGameObject } from '../../../models';
 import { PowerUp } from '../../../sprites';
-import { GameScene } from '../game-scene';
+import { GameScene } from '../scene';
 import { World, WorldLayers } from '../sprite-groups';
 
 export class PowerUpGroup {
-  private group: Phaser.GameObjects.Group;
-  private mapLayer: Phaser.Tilemaps.ObjectLayer;
-  private tileset: Phaser.Tilemaps.Tileset;
+  private readonly group: Phaser.GameObjects.Group;
+  private readonly mapLayer: Phaser.Tilemaps.ObjectLayer;
+  private readonly tileset: Phaser.Tilemaps.Tileset;
 
   constructor(private scene: GameScene, private world: World) {
-    this.init();
-  }
-
-  private init() {
     this.mapLayer = this.world.getLayer(WorldLayers.PowerUps);
     this.tileset = this.world.getTileset();
     this.group = this.scene.add.group();

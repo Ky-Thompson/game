@@ -1,15 +1,11 @@
 import { ActionKeys, ActionState } from '../../../models';
-import { GameScene } from '../game-scene';
+import { GameScene } from '../scene';
 import { GamePad } from './pad';
 
 export class Keyboard {
-  private keys: ActionKeys;
+  private readonly keys: ActionKeys;
 
   constructor(private scene: GameScene, private gamePad: GamePad) {
-    this.init();
-  }
-
-  private init() {
     this.keys = {
       jump: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP),
       jump2: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),

@@ -1,4 +1,4 @@
-import { GameScene } from '../game-scene';
+import { GameScene } from '../scene';
 
 export enum MusicPlaylist {
   Song89 = '89',
@@ -11,10 +11,6 @@ export class SoundEffects {
   private track: number = 0;
 
   constructor(private scene: GameScene) {
-    this.init();
-  }
-
-  private init() {
     if (!this.scene.attractMode.isActive()) {
       this.playMusic();
     }

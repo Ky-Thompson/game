@@ -1,7 +1,7 @@
 import { FONT, TILE_SIZE } from '../../../config';
 import { Colors } from '../../../helpers';
 import { GAME_TIMEOUT, HURRY_TIME, TIME_FACTOR } from '../constants';
-import { GameScene } from '../game-scene';
+import { GameScene } from '../scene';
 
 const MS_TO_S = 1000;
 const FONT_SIZE = TILE_SIZE / 2;
@@ -11,23 +11,19 @@ const TIME_TEXT_PADDING = 3;
 const TIME_TEXT = 'TIME';
 
 export class HUD {
-  private playerText: Phaser.GameObjects.BitmapText;
-  private scoreText: Phaser.GameObjects.BitmapText;
+  private readonly playerText: Phaser.GameObjects.BitmapText;
+  private readonly scoreText: Phaser.GameObjects.BitmapText;
   private score: number = 0;
 
-  private timeText: Phaser.GameObjects.BitmapText;
-  private timerText: Phaser.GameObjects.BitmapText;
+  private readonly timeText: Phaser.GameObjects.BitmapText;
+  private readonly timerText: Phaser.GameObjects.BitmapText;
   private time: number = GAME_TIMEOUT * MS_TO_S;
   private displayedTime: number = GAME_TIMEOUT;
   private hurry: boolean = false;
 
   constructor(private scene: GameScene) {
-    this.init();
-  }
-
-  private init() {
     this.playerText = this.scene.add
-      .bitmapText(HUD_PADDING, TILE_SIZE / 2, FONT, this.scene.mario.playerType.toUpperCase(), FONT_SIZE)
+      .bitmapText(HUD_PADDING, TILE_SIZE / 2, FONT, this.scene.player.getPlayerType().toUpperCase(), FONT_SIZE)
       .setScrollFactor(0, 0);
     this.scoreText = this.scene.add
       .bitmapText(HUD_PADDING, TILE_SIZE, FONT, ''.padEnd(SCORE_TEXT_PADDING, '0'), FONT_SIZE)
@@ -71,15 +67,17 @@ export class HUD {
       if (this.hurry) {
         // Alternate colors each time
         if (this.displayedTime % 2) {
+          this.timeText.setTint(Colors.Red);
           this.timerText.setTint(Colors.Red);
         } else {
+          this.timeText.clearTint();
           this.timerText.clearTint();
         }
       }
 
       // Timeout
       if (this.displayedTime < 1) {
-        this.scene.mario.die();
+        this.scene.player.die();
         this.hurry = false;
         this.timerText.clearTint();
         this.scene.soundEffects.setMusicRate(1);

@@ -1,21 +1,16 @@
-import { SPRITES_KEY } from '../../../animations';
 import { TiledGameObject } from '../../../models';
-import { BounceBrick, Enemy, Fire } from '../../../sprites';
+import { BounceBrick, Enemy, Fireball } from '../../../sprites';
 import { Goomba } from '../../../sprites/goomba';
 import { Turtle } from '../../../sprites/turtle';
-import { GameScene } from '../game-scene';
+import { GameScene } from '../scene';
 import { World, WorldLayers } from '../sprite-groups';
 
 export class EnemyGroup {
-  private group: Phaser.GameObjects.Group;
-  private mapLayer: Phaser.Tilemaps.ObjectLayer;
-  private tileset: Phaser.Tilemaps.Tileset;
+  private readonly group: Phaser.GameObjects.Group;
+  private readonly mapLayer: Phaser.Tilemaps.ObjectLayer;
+  private readonly tileset: Phaser.Tilemaps.Tileset;
 
   constructor(private scene: GameScene, private world: World) {
-    this.init();
-  }
-
-  private init() {
     this.mapLayer = this.world.getLayer(WorldLayers.Enemies);
     this.tileset = this.world.getTileset();
     this.group = this.scene.add.group();
@@ -25,10 +20,10 @@ export class EnemyGroup {
 
       switch (tileProperties.name) {
         case 'goomba': // TODO: Refactor sprite to be generic
-          this.group.add(new Goomba({ scene: this.scene, key: 'sprites16', x: enemy.x, y: enemy.y }));
+          this.group.add(new Goomba(this.scene, enemy.x, enemy.y));
           break;
         case 'turtle':
-          this.group.add(new Turtle({ scene: this.scene, key: SPRITES_KEY, x: enemy.x, y: enemy.y }));
+          this.group.add(new Turtle(this.scene, enemy.x, enemy.y));
           break;
       }
     });
@@ -61,7 +56,7 @@ export class EnemyGroup {
     });
   }
 
-  overlapFire(fire: Fire) {
+  overlapFire(fire: Fireball) {
     Array.from(this.group.children.entries).forEach((enemy: Enemy) => {
       this.scene.physics.world.overlap(fire, enemy, () => {
         fire.explode();

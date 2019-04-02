@@ -1,41 +1,33 @@
+import { SPRITES_KEY } from '../animations';
 import { Body } from '../models';
 import { GameScene } from '../scenes';
-import { Mario } from './mario';
+
+const DEFAULT_BODY: Body = { width: 24, height: 24, x: 3, y: 8 };
+const INITIAL_POSITION_Y: number = 32;
+const INITIAL_POSITION_X: number = 64;
+const VERTICAL_COLLISION_THRESHOLD: number = 10;
+const KILLED_VELOCITY_Y: number = -400;
+const KILLED_SCORE: number = 100;
+const BASE_DIRECTION_VELOCITY: number = -100;
 
 /**
  * Generic enemy class that extends Phaser sprites.
  * Classes for enemy types extend this class.
  */
 export abstract class Enemy extends Phaser.GameObjects.Sprite {
-  static DEFAULT_BODY: Body = { width: 24, height: 24, x: 3, y: 8 };
-  static INITIAL_POSITION_Y: number = 32;
-  static INITIAL_POSITION_X: number = 64;
-  static VERTICAL_COLLISION_THRESHOLD: number = 10;
-  static KILLED_VELOCITY_Y: number = -400;
-  static KILLED_SCORE: number = 100;
-  static BASE_DIRECTION_VELOCITY: number = -100;
-
-  protected readonly currentScene: GameScene;
-  protected direction: number = Enemy.BASE_DIRECTION_VELOCITY;
+  protected direction: number = BASE_DIRECTION_VELOCITY;
   private activated: boolean = false;
   private alive: boolean = true;
   private hasBeenSeen: boolean = false;
   private dropped: boolean = false;
-  abstract type;
   body: Phaser.Physics.Arcade.Body;
 
-  constructor(config) {
-    // TODO: Use interface for config
-    super(config.scene, config.x, config.y - Enemy.INITIAL_POSITION_Y, config.key);
+  constructor(public scene: GameScene, x: number, y: number) {
+    super(scene, x, y - INITIAL_POSITION_Y, SPRITES_KEY);
 
-    this.currentScene = config.scene;
-    this.currentScene.physics.world.enable(this);
-    this.currentScene.add.existing(this);
+    scene.physics.world.enable(this);
+    scene.add.existing(this);
 
-    this.init();
-  }
-
-  private init() {
     // Start still and wait until needed
     this.body
       .setVelocity(0, 0)
@@ -44,30 +36,28 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
 
     this.body.allowGravity = false;
 
-    this.setBody(Enemy.DEFAULT_BODY);
+    this.setBody(DEFAULT_BODY);
   }
 
   protected setBody(body: Partial<Body>) {
-    body = { ...Enemy.DEFAULT_BODY, ...(body || {}) };
+    body = { ...DEFAULT_BODY, ...(body || {}) };
     this.body.setSize(body.width, body.height);
     this.body.offset.set(body.x, body.y);
   }
 
-  protected get player(): Mario {
-    return this.currentScene.mario;
-  }
+  protected isActivated(): boolean {
+    const { height } = this.scene.gameConfig();
 
-  protected get isActivated(): boolean {
     // Check if it is alive
     if (!this.alive) {
-      if (this.y > this.currentScene.sys.game.config.height * 2) {
+      if (this.y > height * 2) {
         this.remove();
       }
     }
 
     // Check if it's being seen now and if so, activate it
     if (!this.hasBeenSeen) {
-      if (this.x < this.currentScene.cameras.main.scrollX + this.currentScene.sys.game.canvas.width + Enemy.INITIAL_POSITION_X) {
+      if (this.x < this.scene.cameras.main.scrollX + this.scene.sys.game.canvas.width + INITIAL_POSITION_X) {
         this.hasBeenSeen = true;
         this.body.velocity.x = this.direction;
         this.body.allowGravity = true;
@@ -78,35 +68,36 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
     return this.body && this.activated;
   }
 
-  protected get isVerticalHit(): boolean {
-    if (!this.player.alive) {
+  protected isVerticalHit(): boolean {
+    if (!this.scene.player.isAlive()) {
       return false;
     }
 
     // Check if a collision between the enemy and Mario is from above.
-    const verticalSpeed: boolean = this.player.body.velocity.y >= 0;
-    const verticalCollision: boolean = this.player.body.y + this.player.body.height - this.body.y < Enemy.VERTICAL_COLLISION_THRESHOLD;
+    const verticalSpeed: boolean = this.scene.player.body.velocity.y >= 0;
+    const verticalCollision: boolean =
+      this.scene.player.body.y + this.scene.player.body.height - this.body.y < VERTICAL_COLLISION_THRESHOLD;
 
     return verticalSpeed && verticalCollision;
   }
 
   protected collideGround() {
     if (!this.dropped) {
-      this.currentScene.world.collide(this);
+      this.scene.world.collide(this);
     }
   }
 
   protected hurtPlayer() {
-    if (this.alive && this.player.alive) {
-      this.player.hurtBy(this);
+    if (this.alive && this.scene.player.isAlive()) {
+      this.scene.player.hurtBy(this);
     }
   }
 
   abstract update(time: number, delta: number): void;
 
   updatePoints() {
-    this.currentScene.hud.updateScore(Enemy.KILLED_SCORE);
-    this.currentScene.sound.playAudioSprite('sfx', 'smb_stomp');
+    this.scene.hud.updateScore(KILLED_SCORE);
+    this.scene.sound.playAudioSprite('sfx', 'smb_stomp');
   }
 
   kill(drop: boolean = false) {
@@ -117,7 +108,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
     this.alive = false;
 
     if (drop) {
-      this.body.setVelocityY(Enemy.KILLED_VELOCITY_Y); // Make it fall
+      this.body.setVelocityY(KILLED_VELOCITY_Y); // Make it fall
       this.flipY = true;
       this.dropped = true;
     } else {
@@ -129,7 +120,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
   }
 
   remove() {
-    this.currentScene.enemies.remove(this);
+    this.scene.enemies.remove(this);
     this.destroy();
   }
 }

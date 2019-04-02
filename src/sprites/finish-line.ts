@@ -1,7 +1,7 @@
 import { TileAnimations } from '../animations';
 import { TILE_SIZE } from '../config';
 import { PlayerActions, TiledGameObject } from '../models';
-import { GameScene } from '../scenes';
+import { GameScene, TitleScene } from '../scenes';
 
 enum FinishLineSteps {
   Climb = 'climb',
@@ -33,7 +33,7 @@ export class FinishLine {
   }
 
   update(delta: number) {
-    if (this.scene.mario.x > this.finishLineTile.x && this.active) {
+    if (this.scene.player.x > this.finishLineTile.x && this.active) {
       this.removeFlag();
       this.scene.physics.world.pause();
     }
@@ -45,8 +45,8 @@ export class FinishLine {
         this.scene.soundEffects.pauseMusic();
         this.scene.sound.playAudioSprite('sfx', 'smb_flagpole');
 
-        this.scene.mario.animate(PlayerActions.Climb);
-        this.scene.mario.x = this.finishLineTile.x;
+        this.scene.player.animate(PlayerActions.Climb);
+        this.scene.player.x = this.finishLineTile.x;
 
         this.scene.tweens.add({
           targets: this.sprite,
@@ -56,12 +56,10 @@ export class FinishLine {
         });
 
         this.scene.tweens.add({
-          targets: this.scene.mario,
-          y: this.finishLineTile.y + this.finishLineTile.height - this.scene.mario.body.height,
+          targets: this.scene.player,
+          y: this.finishLineTile.y + this.finishLineTile.height - this.scene.player.body.height,
           duration: PLAYER_ANIMATION_DURATION,
-          onComplete: () => {
-            this.scene.mario.flipX = false;
-          },
+          onComplete: () => (this.scene.player.flipX = false),
         });
         break;
 
@@ -69,11 +67,11 @@ export class FinishLine {
         let sound: any = this.scene.sound.addAudioSprite('sfx');
         sound.play('smb_stage_clear');
 
-        this.scene.mario.animate(PlayerActions.Walk, true);
+        this.scene.player.animate(PlayerActions.Walk, true);
 
-        this.scene.mario.flipX = false;
+        this.scene.player.flipX = false;
         this.scene.tweens.add({
-          targets: this.scene.mario,
+          targets: this.scene.player,
           x: this.finishLineTile.x + WALK_DISTANCE,
           duration: PLAYER_ANIMATION_DURATION,
           onComplete: () => this.removeFlag(FinishLineSteps.Disappear),
@@ -82,10 +80,10 @@ export class FinishLine {
 
       case FinishLineSteps.Disappear:
         this.scene.tweens.add({
-          targets: this.scene.mario,
+          targets: this.scene.player,
           alpha: 0,
           duration: DISAPPEAR_ANIMATION_DURATION,
-          onComplete: () => this.scene.scene.start('TitleScene'),
+          onComplete: () => this.scene.scene.start(TitleScene.SceneKey), // TODO: Refactor scene.scene
         });
         break;
     }

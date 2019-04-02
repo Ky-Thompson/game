@@ -1,4 +1,4 @@
-import { PowerUpAnimations } from '../animations';
+import { PowerUpAnimations, SPRITES_KEY } from '../animations';
 import { TILE_SIZE } from '../config';
 import { Body, PlayerStates } from '../models';
 import { GameScene } from '../scenes';
@@ -11,50 +11,41 @@ export enum PowerUps {
   Star = 'star',
 }
 
-// Split in different classes
+const DIMENSIONS: Body = { width: 24, height: 24, x: 3, y: 8 };
+const VELOCITY_X = 140;
+const ACTIVATE_VELOCITY_Y = -300;
+const ANIMATION_DURATION = 500;
+const FLOWER_DEPTH = -100;
+const COIN_MOVEMENT_Y = 100;
+const STAR_VELOCITY_Y = -600;
+const POWER_UP_SCORE: number = 100; // TODO: Move somewhere else
+
+// TODO: Split in different classes or simplify
 
 export class PowerUp extends Phaser.GameObjects.Sprite {
-  static DIMENSIONS: Body = { width: 24, height: 24, x: 3, y: 8 };
-  static VELOCITY_X = 140;
-  static ACTIVATE_VELOCITY_Y = -300;
-  static ANIMATION_DURATION = 500;
-  static FLOWER_DEPTH = -100;
-  static COIN_MOVEMENT_Y = 100;
-  static STAR_VELOCITY_Y = -600;
-  static POWER_UP_SCORE: number = 100;
-
-  protected readonly currentScene: GameScene;
   private direction: number;
-  type: PowerUps;
 
-  constructor(config) {
-    // TODO: Use interface
-    super(config.scene, config.x, config.y, config.key);
+  constructor(public scene: GameScene, x: number, y: number, public type: PowerUps) {
+    super(scene, x, y, SPRITES_KEY);
 
-    this.currentScene = config.scene;
-    config.scene.physics.world.enable(this);
-    config.scene.add.existing(this);
+    scene.physics.world.enable(this);
+    scene.add.existing(this);
 
-    this.init(config.type, config.x);
-    this.activate();
-  }
-
-  private init(type: PowerUps, x: number) {
-    this.type = type;
-
-    if (this.currentScene.mario.x < x + TILE_SIZE / 2) {
-      this.direction = PowerUp.VELOCITY_X; // Player on the right -> power up bounces right
+    if (this.scene.player.x < x + TILE_SIZE / 2) {
+      this.direction = VELOCITY_X; // Player on the right -> power up bounces right
     } else {
-      this.direction = -PowerUp.VELOCITY_X; // Player on the right -> power up bounces left
+      this.direction = -VELOCITY_X; // Player on the right -> power up bounces left
     }
     this.body.velocity.x = this.direction;
 
-    this.body.setSize(PowerUp.DIMENSIONS.width, PowerUp.DIMENSIONS.height);
-    this.body.offset.set(PowerUp.DIMENSIONS.x, PowerUp.DIMENSIONS.y);
+    this.body.setSize(DIMENSIONS.width, DIMENSIONS.height);
+    this.body.offset.set(DIMENSIONS.x, DIMENSIONS.y);
+
+    this.activate();
   }
 
   private activate() {
-    if (this.type === PowerUps.Mushroom && this.currentScene.mario.playerState !== PlayerStates.Default) {
+    if (this.type === PowerUps.Mushroom && !this.scene.player.isPlayerState(PlayerStates.Default)) {
       this.type = PowerUps.Flower;
     }
 
@@ -62,29 +53,29 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     switch (this.type) {
       case PowerUps.Mushroom:
       case PowerUps.Life:
-        this.body.velocity.y = -PowerUp.ACTIVATE_VELOCITY_Y;
+        this.body.velocity.y = -ACTIVATE_VELOCITY_Y;
         break;
 
       case PowerUps.Flower:
-        this.setDepth(PowerUp.FLOWER_DEPTH);
+        this.setDepth(FLOWER_DEPTH);
         this.body.allowGravity = false;
         this.body.setVelocity(0, 0);
         this.direction = 0;
         this.y += TILE_SIZE;
-        this.currentScene.tweens.add({
+        this.scene.tweens.add({
           targets: this,
           y: this.y - TILE_SIZE,
-          duration: PowerUp.ANIMATION_DURATION,
+          duration: ANIMATION_DURATION,
         });
         break;
 
       case PowerUps.Coin:
         this.body.setVelocity(0, 0);
         this.body.allowGravity = false;
-        this.currentScene.tweens.add({
+        this.scene.tweens.add({
           targets: this,
-          y: this.y - PowerUp.COIN_MOVEMENT_Y,
-          duration: PowerUp.ANIMATION_DURATION,
+          y: this.y - COIN_MOVEMENT_Y,
+          duration: ANIMATION_DURATION,
           onComplete: () => this.destroy(),
         });
         break;
@@ -93,11 +84,11 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     // Play sounds
     switch (this.type) {
       case PowerUps.Coin:
-        this.currentScene.sound.playAudioSprite('sfx', 'smb_coin'); // TODO: Refactor
+        this.scene.sound.playAudioSprite('sfx', 'smb_coin'); // TODO: Refactor
         break;
       default:
-        this.currentScene.sound.playAudioSprite('sfx', 'smb_powerup_appears');
-        this.currentScene.powerUps.add(this);
+        this.scene.sound.playAudioSprite('sfx', 'smb_powerup_appears');
+        this.scene.powerUps.add(this);
     }
 
     // Play animation
@@ -123,7 +114,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
   update() {
     // Check if power up needs to be destroyed
     if (this.alpha === 0) {
-      this.currentScene.powerUps.remove(this);
+      this.scene.powerUps.remove(this);
       this.destroy();
       return;
     }
@@ -132,8 +123,8 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
       return;
     }
 
-    this.currentScene.world.collide(this);
-    this.currentScene.physics.world.overlap(this, this.currentScene.mario, () => this.collected());
+    this.scene.world.collide(this);
+    this.scene.physics.world.overlap(this, this.scene.player, () => this.collected());
 
     // Invert direction
     if (this.body.velocity.x === 0) {
@@ -144,29 +135,29 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     // Bounce
     if (this.type === PowerUps.Star) {
       if (this.body.blocked.down) {
-        this.body.velocity.y = PowerUp.STAR_VELOCITY_Y;
+        this.body.velocity.y = STAR_VELOCITY_Y;
       }
     }
   }
 
   private collected() {
-    if (this.type === PowerUps.Flower && this.currentScene.mario.playerState === PlayerStates.Default) {
+    if (this.type === PowerUps.Flower && this.scene.player.isPlayerState(PlayerStates.Default)) {
       this.type = PowerUps.Mushroom;
     }
 
     switch (this.type) {
       case PowerUps.Flower:
-        this.currentScene.mario.playerState = PlayerStates.Fire;
+        this.scene.player.setPlayerState(PlayerStates.Fire);
         this.scene.sound.playAudioSprite('sfx', 'smb_powerup'); // TODO: Refactor
         break;
       case PowerUps.Mushroom:
         // Power up will not be removed until next loop after physics is running again
-        // (physics is paused by this.currentScene.mario.resize), until then we'll just hide it.
-        this.currentScene.mario.resize(true);
+        // (physics is paused by this.scene.mario.resize), until then we'll just hide it.
+        this.scene.player.resize(true);
         this.scene.sound.playAudioSprite('sfx', 'smb_powerup');
         break;
       case PowerUps.Star:
-        this.currentScene.mario.activateStar();
+        this.scene.player.activateStar();
         this.scene.sound.playAudioSprite('sfx', 'smb_powerup');
         break;
       case PowerUps.Life:
@@ -175,7 +166,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     }
 
     // Get points
-    this.currentScene.hud.updateScore(PowerUp.POWER_UP_SCORE);
+    this.scene.hud.updateScore(POWER_UP_SCORE);
     this.alpha = 0;
   }
 }

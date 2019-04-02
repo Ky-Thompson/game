@@ -7409,6 +7409,24 @@
           "width": 32,
           "x": 6336,
           "y": 96
+        },
+        {
+          "height": 32,
+          "id": 175,
+          "name": "",
+          "properties": [
+            {
+              "name": "type",
+              "type": "string",
+              "value": "start"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 32,
+          "x": 192,
+          "y": 288
         }
       ],
       "opacity": 1,
@@ -7833,7 +7851,7 @@
     }
   ],
   "nextlayerid": 6,
-  "nextobjectid": 175,
+  "nextobjectid": 176,
   "orientation": "orthogonal",
   "properties": [
     {

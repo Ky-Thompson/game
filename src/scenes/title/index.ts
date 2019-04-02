@@ -1,1 +1,1 @@
-export * from './title-scene';
+export * from './scene';

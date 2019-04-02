@@ -1,38 +1,31 @@
+import { TILES_KEY } from '../animations';
 import { TILE_SIZE } from '../config';
 import { TiledGameObject } from '../models';
 import { GameScene } from '../scenes';
 
-export const BLOCK_TILE = 44; // Use properties
+const BLOCK_TILE = 44; // TODO: Use properties
+const HIDDEN_X = -200;
+const ANIMATION_DURATION = 100;
 
-export enum BrickAnimations {
+enum BrickAnimations {
   Brick = 'brickTile',
   Block = 'blockTile',
 }
 
-// TODO: Rename file to bounce-brik
 export class BounceBrick extends Phaser.GameObjects.Sprite {
-  static HIDDEN_X = -200;
-  static ANIMATION_DURATION = 100;
-  protected readonly currentScene: GameScene;
+  constructor(public scene: GameScene) {
+    super(scene, HIDDEN_X, 0, TILES_KEY);
 
-  constructor(config) {
-    super(config.scene, BounceBrick.HIDDEN_X, 0, 'tiles');
+    scene.add.existing(this);
+    scene.physics.world.enable(this);
 
-    this.currentScene = config.scene;
-    config.scene.add.existing(this);
-    config.scene.physics.world.enable(this);
-
-    this.init();
-  }
-
-  private init() {
     this.alpha = 0;
     this.body.allowGravity = false;
     this.play(BrickAnimations.Brick);
   }
 
   update() {
-    this.currentScene.enemies.overlapBrick(this);
+    this.scene.enemies.overlapBrick(this);
   }
 
   restart(tile: TiledGameObject) {
@@ -47,17 +40,17 @@ export class BounceBrick extends Phaser.GameObjects.Sprite {
     this.y = tile.y * TILE_SIZE + TILE_SIZE / 2;
 
     // Bounce it
-    this.currentScene.tweens.add({
+    this.scene.tweens.add({
       targets: this,
       y: this.y - TILE_SIZE / 2,
       yoyo: true,
-      duration: BounceBrick.ANIMATION_DURATION,
+      duration: ANIMATION_DURATION,
       onUpdate: () => this.update(),
       onComplete: () => {
         // Reveal original tile and hide this animation
         tile.alpha = 1;
         this.alpha = 0;
-        this.x = BounceBrick.HIDDEN_X;
+        this.x = HIDDEN_X;
       },
     });
   }
