@@ -1,21 +1,12 @@
 import * as AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.js';
 
 import { TILE_SIZE } from '../../config';
-import { GameOptions, Players, TileCallbacks, TiledGameObject } from '../../models';
-import { BlockEmitter, FinishLine } from '../../sprites';
-import { BounceBrick } from '../../sprites/brick';
-import { Mario } from '../../sprites/mario';
-import { PowerUp, PowerUps } from '../../sprites/power-up';
-import { Turtle } from '../../sprites/turtle';
+import { GameOptions, Players, PowerUps, TileCallbacks, TiledGameObject } from '../../models';
+import { BlockEmitter, BounceBrick, FinishLine, Mario, PowerUp, Turtle } from '../../sprites';
 import { BaseScene } from '../base';
-import { AttractMode } from './attract-mode';
 import { COIN_SCORE, METALLIC_BLOCK_TILE, PLAYER_START_X } from './constants';
-import { HUD } from './hud';
-import { Keyboard } from './keyboard';
-import { SoundEffects } from './music';
-import { GamePad } from './pad';
-import { EnemyGroup, FireballsGroup, ModifierGroup, PowerUpGroup } from './sprite-groups';
-import { World } from './world';
+import { AttractMode, GamePad, HUD, Keyboard, SoundEffects } from './interfaces';
+import { EnemyGroup, FireballsGroup, ModifierGroup, PowerUpGroup, World } from './sprite-groups';
 
 // TODO: Refactor
 

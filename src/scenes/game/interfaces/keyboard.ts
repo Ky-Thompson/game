@@ -1,5 +1,5 @@
-import { ActionKeys, ActionState } from '../../models';
-import { GameScene } from './game-scene';
+import { ActionKeys, ActionState } from '../../../models';
+import { GameScene } from '../game-scene';
 import { GamePad } from './pad';
 
 export class Keyboard {

@@ -1,7 +1,7 @@
-import { PadAnimations } from '../../animations';
-import { TILE_SIZE } from '../../config';
-import { ActionState, PlayerStates } from '../../models';
-import { GameScene } from './game-scene';
+import { PadAnimations } from '../../../animations';
+import { TILE_SIZE } from '../../../config';
+import { ActionState, PlayerStates } from '../../../models';
+import { GameScene } from '../game-scene';
 
 const GAME_PAD_DEPTH = 100;
 const GAME_PAD_ALPHA = 0.9;

@@ -1,5 +1,5 @@
-import { SKY_HEIGHT, Tilemap } from '../../models';
-import { GameScene } from './game-scene';
+import { SKY_HEIGHT, Tilemap } from '../../../models';
+import { GameScene } from '../game-scene';
 
 export enum WorldLayers {
   Enemies = 'enemies',

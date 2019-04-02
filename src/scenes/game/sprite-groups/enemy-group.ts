@@ -4,7 +4,7 @@ import { BounceBrick, Enemy, Fire } from '../../../sprites';
 import { Goomba } from '../../../sprites/goomba';
 import { Turtle } from '../../../sprites/turtle';
 import { GameScene } from '../game-scene';
-import { World, WorldLayers } from '../world';
+import { World, WorldLayers } from '../sprite-groups';
 
 export class EnemyGroup {
   private group: Phaser.GameObjects.Group;

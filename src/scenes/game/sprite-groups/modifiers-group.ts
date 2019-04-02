@@ -1,7 +1,7 @@
 import { TILE_SIZE } from '../../../config';
 import { TiledGameObject } from '../../../models';
 import { GameScene } from '../game-scene';
-import { World, WorldLayers } from '../world';
+import { World, WorldLayers } from '../sprite-groups';
 
 export enum Modifiers {
   Pipe = 'pipe',

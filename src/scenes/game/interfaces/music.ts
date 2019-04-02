@@ -1,4 +1,4 @@
-import { GameScene } from './game-scene';
+import { GameScene } from '../game-scene';
 
 export enum MusicPlaylist {
   Song89 = '89',

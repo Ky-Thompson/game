@@ -1,7 +1,7 @@
-import { FONT, TILE_SIZE } from '../../config';
-import { Colors } from '../../helpers';
-import { GAME_TIMEOUT, HURRY_TIME, TIME_FACTOR } from './constants';
-import { GameScene } from './game-scene';
+import { FONT, TILE_SIZE } from '../../../config';
+import { Colors } from '../../../helpers';
+import { GAME_TIMEOUT, HURRY_TIME, TIME_FACTOR } from '../constants';
+import { GameScene } from '../game-scene';
 
 const MS_TO_S = 1000;
 const FONT_SIZE = TILE_SIZE / 2;

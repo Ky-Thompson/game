@@ -2,7 +2,7 @@ import { TILE_SIZE } from '../../../config';
 import { TiledGameObject } from '../../../models';
 import { PowerUp } from '../../../sprites';
 import { GameScene } from '../game-scene';
-import { World, WorldLayers } from '../world';
+import { World, WorldLayers } from '../sprite-groups';
 
 export class PowerUpGroup {
   private group: Phaser.GameObjects.Group;

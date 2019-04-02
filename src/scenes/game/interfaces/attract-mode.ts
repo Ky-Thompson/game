@@ -1,5 +1,5 @@
-import { ActionState, GameOptions } from '../../models';
-import { GameScene } from './game-scene';
+import { ActionState, GameOptions } from '../../../models';
+import { GameScene } from '../game-scene';
 
 const MAX_ATTRACT_MODE_TIME = 14000;
 
