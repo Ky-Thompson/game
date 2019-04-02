@@ -88,8 +88,8 @@ module.exports.buildSprites = async function() {
   await texturePacker(
     texturePackerPath,
     './src/assets/sprites',
-    './dist/assets/sprites/mario-sprites.png',
-    './dist/assets/sprites/mario-sprites.json'
+    './dist/assets/sprites/game-sprites.png',
+    './dist/assets/sprites/game-sprites.json'
   );
 
   return true;

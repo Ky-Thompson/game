@@ -1,6 +1,7 @@
-import { TitleAnimations } from '../../animations';
-import { FONT } from '../../config';
-import { GameOptions } from '../../models';
+import { TitleAnimations } from '@game/animations';
+import { FONT } from '@game/config';
+import { GameOptions } from '@game/models';
+
 import { BaseScene } from '../base';
 import { GameScene } from '../game';
 import { START_SIZE, START_TEXT, START_X, START_Y, TITLE_BLINK_TIME, TITLE_Y } from './constants';

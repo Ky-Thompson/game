@@ -1,17 +1,17 @@
-import { ActionState, GameOptions } from '../../../models';
+import { ActionState, GameOptions } from '@game/models';
+
 import { GameScene } from '../scene';
 
 const MAX_ATTRACT_MODE_TIME = 14000;
 
-// TODO: Move to models
-// TODO: Make new recording
-export interface AttractModeFrame {
+// TODO: Implement AI for attract mode
+interface AttractModeFrame {
   time: number;
   x: number;
   y: number;
   vx: number;
   vy: number;
-  keys: Partial<ActionState>; // TODO: Use keys instead of actions
+  actions: Partial<ActionState>;
 }
 
 export class AttractMode {
@@ -41,7 +41,6 @@ export class AttractMode {
   }
 
   update(delta: number) {
-    // TODO: Move to class
     if (!this.active) {
       return;
     }
@@ -80,7 +79,7 @@ export class AttractMode {
   }
 
   getCurrentFrame(): AttractModeFrame {
-    return { time: 0, x: 0, y: 0, vx: 0, vy: 0, keys: {} };
+    return { time: 0, x: 0, y: 0, vx: 0, vy: 0, actions: {} };
     //return this.recording[this.current];
   }
 }

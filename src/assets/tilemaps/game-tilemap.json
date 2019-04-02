@@ -7161,9 +7161,9 @@
               "value": "down"
             },
             {
-              "name": "id",
-              "type": "string",
-              "value": "2"
+              "name": "pipeId",
+              "type": "int",
+              "value": 2
             },
             {
               "name": "type",
@@ -7190,8 +7190,8 @@
             },
             {
               "name": "goto",
-              "type": "string",
-              "value": "2"
+              "type": "int",
+              "value": 2
             },
             {
               "name": "type",
@@ -7201,7 +7201,7 @@
           ],
           "rotation": 0,
           "type": "",
-          "visible": true,
+          "visible": false,
           "width": 64,
           "x": 896,
           "y": 352
@@ -7241,8 +7241,8 @@
             },
             {
               "name": "goto",
-              "type": "string",
-              "value": "2"
+              "type": "int",
+              "value": 2
             },
             {
               "name": "type",
@@ -7263,9 +7263,9 @@
           "name": "",
           "properties": [
             {
-              "name": "sky",
+              "name": "backgroundColor",
               "type": "string",
-              "value": "#6888ff"
+              "value": "#33A5FF"
             },
             {
               "name": "type",
@@ -7292,8 +7292,8 @@
             },
             {
               "name": "goto",
-              "type": "string",
-              "value": "4"
+              "type": "int",
+              "value": 4
             },
             {
               "name": "type",
@@ -7319,9 +7319,9 @@
               "value": "up"
             },
             {
-              "name": "id",
-              "type": "string",
-              "value": "3"
+              "name": "pipeId",
+              "type": "int",
+              "value": 3
             },
             {
               "name": "type",
@@ -7348,8 +7348,8 @@
             },
             {
               "name": "goto",
-              "type": "string",
-              "value": "3"
+              "type": "int",
+              "value": 3
             },
             {
               "name": "type",
@@ -7375,9 +7375,9 @@
               "value": "down"
             },
             {
-              "name": "id",
-              "type": "string",
-              "value": "4"
+              "name": "pipeId",
+              "type": "int",
+              "value": 4
             },
             {
               "name": "type",
@@ -7569,7 +7569,7 @@
       ],
       "opacity": 1,
       "type": "objectgroup",
-      "visible": false,
+      "visible": true,
       "x": 0,
       "y": 0
     },
@@ -7867,11 +7867,11 @@
     {
       "columns": 11,
       "firstgid": 1,
-      "image": "../images/super-mario.png",
+      "image": "../images/game-sprites.png",
       "imageheight": 180,
       "imagewidth": 396,
       "margin": 2,
-      "name": "SuperMarioBros-World1-1",
+      "name": "tileset",
       "spacing": 4,
       "tilecount": 55,
       "tileheight": 32,
@@ -7882,7 +7882,7 @@
             {
               "name": "name",
               "type": "string",
-              "value": "coin"
+              "value": "candy"
             }
           ]
         },

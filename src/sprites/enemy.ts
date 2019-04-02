@@ -1,14 +1,18 @@
-import { SPRITES_KEY } from '../animations';
-import { Body } from '../models';
-import { GameScene } from '../scenes';
+import { SPRITES_KEY } from '@game/animations';
+import { Body, Scores, Sounds } from '@game/models';
+import { GameScene } from '@game/scenes';
 
 const DEFAULT_BODY: Body = { width: 24, height: 24, x: 3, y: 8 };
 const INITIAL_POSITION_Y: number = 32;
 const INITIAL_POSITION_X: number = 64;
 const VERTICAL_COLLISION_THRESHOLD: number = 10;
 const KILLED_VELOCITY_Y: number = -400;
-const KILLED_SCORE: number = 100;
 const BASE_DIRECTION_VELOCITY: number = -100;
+
+export enum EnemyTypes {
+  Goomba = 'goomba',
+  Turtle = 'turtle',
+}
 
 /**
  * Generic enemy class that extends Phaser sprites.
@@ -73,7 +77,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
       return false;
     }
 
-    // Check if a collision between the enemy and Mario is from above.
+    // Check if a collision between the enemy and player is from above.
     const verticalSpeed: boolean = this.scene.player.body.velocity.y >= 0;
     const verticalCollision: boolean =
       this.scene.player.body.y + this.scene.player.body.height - this.body.y < VERTICAL_COLLISION_THRESHOLD;
@@ -93,11 +97,11 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
     }
   }
 
-  abstract update(time: number, delta: number): void;
+  abstract update(delta: number): void;
 
   updatePoints() {
-    this.scene.hud.updateScore(KILLED_SCORE);
-    this.scene.sound.playAudioSprite('sfx', 'smb_stomp');
+    this.scene.hud.updateScore(Scores.Enemy);
+    this.scene.soundEffects.playEffect(Sounds.Stomp);
   }
 
   kill(drop: boolean = false) {

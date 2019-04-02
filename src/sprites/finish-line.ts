@@ -1,7 +1,7 @@
-import { TileAnimations } from '../animations';
-import { TILE_SIZE } from '../config';
-import { PlayerActions, TiledGameObject } from '../models';
-import { GameScene, TitleScene } from '../scenes';
+import { TileAnimations } from '@game/animations';
+import { TILE_SIZE } from '@game/config';
+import { PlayerActions, Sounds, TiledGameObject } from '@game/models';
+import { GameScene } from '@game/scenes';
 
 enum FinishLineSteps {
   Climb = 'climb',
@@ -43,7 +43,7 @@ export class FinishLine {
     switch (step) {
       case FinishLineSteps.Climb:
         this.scene.soundEffects.pauseMusic();
-        this.scene.sound.playAudioSprite('sfx', 'smb_flagpole');
+        this.scene.soundEffects.playEffect(Sounds.FlagPole);
 
         this.scene.player.animate(PlayerActions.Climb);
         this.scene.player.x = this.finishLineTile.x;
@@ -64,8 +64,7 @@ export class FinishLine {
         break;
 
       case FinishLineSteps.Walk:
-        let sound: any = this.scene.sound.addAudioSprite('sfx');
-        sound.play('smb_stage_clear');
+        this.scene.soundEffects.playEffect(Sounds.StageClear);
 
         this.scene.player.animate(PlayerActions.Walk, true);
 
@@ -83,7 +82,7 @@ export class FinishLine {
           targets: this.scene.player,
           alpha: 0,
           duration: DISAPPEAR_ANIMATION_DURATION,
-          onComplete: () => this.scene.scene.start(TitleScene.SceneKey), // TODO: Refactor scene.scene
+          onComplete: () => this.scene.restart(),
         });
         break;
     }

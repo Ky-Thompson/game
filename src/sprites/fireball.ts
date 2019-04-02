@@ -1,6 +1,6 @@
-import { FireAnimations } from '../animations';
-import { Body } from '../models';
-import { GameScene } from '../scenes';
+import { FireAnimations } from '@game/animations';
+import { Body, Sounds } from '@game/models';
+import { GameScene } from '@game/scenes';
 
 const DIMENSIONS: Body = { width: 16, height: 16, x: 0, y: 0 };
 const VELOCITY_X = 800;
@@ -26,7 +26,7 @@ export class Fireball extends Phaser.GameObjects.Sprite {
     this.on('animationcomplete', onAnimationComplete, this);
   }
 
-  update(time: number, delta: number) {
+  update() {
     if (!this.active) {
       return;
     }
@@ -41,7 +41,7 @@ export class Fireball extends Phaser.GameObjects.Sprite {
     }
 
     if (this.body.velocity.x === 0) {
-      this.scene.sound.playAudioSprite('sfx', 'smb_bump'); // TODO: Refactor
+      this.scene.soundEffects.playEffect(Sounds.Bump);
       this.explode();
     }
   }
@@ -61,6 +61,6 @@ export class Fireball extends Phaser.GameObjects.Sprite {
     this.setVisible(true);
 
     this.play(FireAnimations.Fly);
-    this.scene.sound.playAudioSprite('sfx', 'smb_fireball'); // TODO: Refactor
+    this.scene.soundEffects.playEffect(Sounds.Fireball);
   }
 }

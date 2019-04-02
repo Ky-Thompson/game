@@ -1,8 +1,8 @@
-import * as AnimatedTiles from 'phaser-animated-tiles/dist/AnimatedTiles.js';
+import { ActionState, TiledGameObject } from '@game/models';
+import { BlockEmitter, BounceBrick, FinishLine, Player } from '@game/sprites';
 
-import { TiledGameObject } from '../../models';
-import { BlockEmitter, BounceBrick, FinishLine, Player } from '../../sprites';
 import { BaseScene } from '../base';
+import { TitleScene } from '../title';
 import { AttractMode, GamePad, HUD, Keyboard, SoundEffects } from './interfaces';
 import { EnemyGroup, FireballsGroup, ModifierGroup, PowerUpGroup, World } from './sprite-groups';
 
@@ -10,7 +10,6 @@ export class GameScene extends BaseScene {
   static readonly SceneKey = 'GameScene';
 
   // Game
-  private pluginsLodaded: boolean;
   attractMode: AttractMode;
   private gamePad: GamePad;
   private keyboard: Keyboard;
@@ -33,14 +32,6 @@ export class GameScene extends BaseScene {
 
   constructor() {
     super({ key: GameScene.SceneKey });
-  }
-
-  preload() {
-    if (!this.pluginsLodaded) {
-      // TODO: Use enum, rename or fix
-      this.load.scenePlugin('animatedTiles', AnimatedTiles, 'animatedTiles', 'animatedTiles');
-      this.pluginsLodaded = true;
-    }
   }
 
   create() {
@@ -75,18 +66,26 @@ export class GameScene extends BaseScene {
 
   update(time: number, delta: number) {
     this.attractMode.update(delta);
-    this.fireballs.update(time, delta);
+    this.fireballs.update();
 
     if (this.physics.world.isPaused) {
       return;
     }
 
+    this.world.update();
     this.finishLine.update(delta);
     this.hud.update(delta);
-    this.enemies.update(time, delta); // TODO: Remove time from all
-    this.powerUps.update(time, delta);
+    this.enemies.update(delta);
+    this.powerUps.update();
 
-    this.player.update(time, delta, this.attractMode.isActive() ? this.attractMode.getCurrentFrame().keys : this.keyboard.getActions());
+    const actions: Partial<ActionState> = this.attractMode.isActive()
+      ? this.attractMode.getCurrentFrame().actions
+      : this.keyboard.getActions();
+    this.player.update(delta, actions);
     this.gamePad.update();
+  }
+
+  restart() {
+    this.scene.start(TitleScene.SceneKey);
   }
 }

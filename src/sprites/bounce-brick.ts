@@ -1,9 +1,7 @@
-import { TILES_KEY } from '../animations';
-import { TILE_SIZE } from '../config';
-import { TiledGameObject } from '../models';
-import { GameScene } from '../scenes';
+import { TILE_SIZE } from '@game/config';
+import { TiledGameObject, Tilemap, TilemapIds } from '@game/models';
+import { GameScene } from '@game/scenes';
 
-const BLOCK_TILE = 44; // TODO: Use properties
 const HIDDEN_X = -200;
 const ANIMATION_DURATION = 100;
 
@@ -14,7 +12,7 @@ enum BrickAnimations {
 
 export class BounceBrick extends Phaser.GameObjects.Sprite {
   constructor(public scene: GameScene) {
-    super(scene, HIDDEN_X, 0, TILES_KEY);
+    super(scene, HIDDEN_X, 0, Tilemap.TilesetKey);
 
     scene.add.existing(this);
     scene.physics.world.enable(this);
@@ -34,7 +32,7 @@ export class BounceBrick extends Phaser.GameObjects.Sprite {
     this.alpha = 1;
 
     // Play animation
-    this.play(tile.index === BLOCK_TILE ? BrickAnimations.Block : BrickAnimations.Brick);
+    this.play(tile.index === TilemapIds.BlockTile ? BrickAnimations.Block : BrickAnimations.Brick);
 
     this.x = tile.x * TILE_SIZE + TILE_SIZE / 2;
     this.y = tile.y * TILE_SIZE + TILE_SIZE / 2;

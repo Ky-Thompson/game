@@ -1,5 +1,5 @@
 export enum PowerUps {
-  Coin = 'candy',
+  Candy = 'candy',
   Mushroom = 'mushroom',
   Flower = 'flower',
   Life = '1up',

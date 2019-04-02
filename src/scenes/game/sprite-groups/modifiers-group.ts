@@ -1,31 +1,8 @@
-import { TILE_SIZE } from '../../../config';
-import { TiledGameObject } from '../../../models';
+import { TILE_SIZE } from '@game/config';
+import { Modifiers, PipeDestination, PipeDestinations, PipeDirection, TiledGameObject } from '@game/models';
+
 import { GameScene } from '../scene';
-import { World, WorldLayers } from '../sprite-groups';
-
-export enum Modifiers {
-  Pipe = 'pipe',
-  Destination = 'dest',
-  Room = 'room',
-  Start = 'start',
-  FinishLine = 'finishLine',
-}
-
-export enum PipeDirection {
-  Up = 'up',
-  Down = 'down',
-  Left = 'left',
-  Right = 'right',
-}
-
-export type PipeDestinations = { [id: number]: PipeDestination };
-
-export type PipeDestination = {
-  x: number;
-  y: number;
-  top: boolean;
-  direction: PipeDirection;
-};
+import { World, WorldLayers } from './world';
 
 export class ModifierGroup {
   private readonly mapLayer: Phaser.Tilemaps.ObjectLayer;
@@ -65,18 +42,17 @@ export class ModifierGroup {
     // Adds info on where to go from a pipe under the modifier
     for (let x = 0; x < modifier.width / TILE_SIZE; x++) {
       for (let y = 0; y < modifier.height / TILE_SIZE; y++) {
-        const tile: Phaser.Tilemaps.Tile = this.world.getTileAt(modifier.x / TILE_SIZE + x, modifier.y / TILE_SIZE + y);
-        // TODO: Use enum
-        tile.properties['dest'] = parseInt(modifier.properties.goto);
-        tile.properties['direction'] = modifier.properties.direction;
-        tile.properties['pipe'] = true;
+        const tile: TiledGameObject = <any>this.world.getTileAt(modifier.x / TILE_SIZE + x, modifier.y / TILE_SIZE + y);
+        tile.properties.goto = modifier.properties.goto;
+        tile.properties.direction = modifier.properties.direction;
+        tile.properties.pipe = true;
       }
     }
   }
 
   private processDestination(modifier: TiledGameObject) {
-    const id = modifier.properties.id;
-    const direction = modifier.properties.direction;
+    const pipeId: number = modifier.properties.pipeId;
+    const direction: PipeDirection = modifier.properties.direction;
 
     // Calculate coordinates where the player should appear
     let x: number = 0;
@@ -102,7 +78,7 @@ export class ModifierGroup {
     }
 
     // Adds a destination so that a pipe can find it
-    this.destinations[id] = {
+    this.destinations[pipeId] = {
       x: modifier.x + x,
       y: modifier.y + y,
       top: modifier.y < TILE_SIZE,
@@ -116,7 +92,7 @@ export class ModifierGroup {
     this.scene.world.addRoom({
       x: modifier.x,
       width: modifier.width,
-      sky: modifier.properties.sky,
+      backgroundColor: modifier.properties.backgroundColor,
     });
   }
 

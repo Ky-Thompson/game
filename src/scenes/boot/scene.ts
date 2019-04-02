@@ -7,9 +7,9 @@ import {
   makeTileAnimations,
   makeTitleAnimations,
   makeTurtleAnimations,
-} from '../../animations';
-import { Colors } from '../../helpers'; // TODO: Fix ../..
-import { Players } from '../../models';
+} from '@game/animations';
+import { Colors, Players } from '@game/models';
+
 import { BaseScene } from '../base';
 import { TitleScene } from '../title';
 
@@ -61,7 +61,6 @@ export class BootScene extends BaseScene {
     makeTitleAnimations(this);
     makeTileAnimations(this);
 
-    makePlayerAnimations(this, Players.Mario);
     makePlayerAnimations(this, Players.Caleb);
     makePlayerAnimations(this, Players.Sophia);
     makeFireAnimations(this);

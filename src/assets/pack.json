@@ -9,7 +9,7 @@
       {
         "type": "spritesheet",
         "key": "tiles",
-        "url": "assets/images/super-mario.png",
+        "url": "assets/images/game-sprites.png",
         "frameConfig": {
           "frameWidth": 32,
           "frameHeight": 32,
@@ -18,9 +18,9 @@
       },
       {
         "type": "atlas",
-        "key": "mario-sprites",
-        "textureURL": "assets/sprites/mario-sprites.png",
-        "atlasURL": "assets/sprites/mario-sprites.json"
+        "key": "game-sprites",
+        "textureURL": "assets/sprites/game-sprites.png",
+        "atlasURL": "assets/sprites/game-sprites.json"
       },
       {
         "type": "bitmapFont",
@@ -31,7 +31,7 @@
       {
         "type": "tilemapTiledJSON",
         "key": "map",
-        "url": "assets/tilemaps/super-mario.json"
+        "url": "assets/tilemaps/game-tilemap.json"
       },
       {
         "type": "json",

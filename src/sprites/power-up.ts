@@ -1,15 +1,7 @@
-import { PowerUpAnimations, SPRITES_KEY } from '../animations';
-import { TILE_SIZE } from '../config';
-import { Body, PlayerStates } from '../models';
-import { GameScene } from '../scenes';
-
-export enum PowerUps {
-  Coin = 'candy',
-  Mushroom = 'mushroom',
-  Flower = 'flower',
-  Life = '1up',
-  Star = 'star',
-}
+import { PowerUpAnimations, SPRITES_KEY } from '@game/animations';
+import { TILE_SIZE } from '@game/config';
+import { Body, PlayerStates, PowerUps, Scores, Sounds } from '@game/models';
+import { GameScene } from '@game/scenes';
 
 const DIMENSIONS: Body = { width: 24, height: 24, x: 3, y: 8 };
 const VELOCITY_X = 140;
@@ -18,7 +10,6 @@ const ANIMATION_DURATION = 500;
 const FLOWER_DEPTH = -100;
 const COIN_MOVEMENT_Y = 100;
 const STAR_VELOCITY_Y = -600;
-const POWER_UP_SCORE: number = 100; // TODO: Move somewhere else
 
 // TODO: Split in different classes or simplify
 
@@ -69,7 +60,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
         });
         break;
 
-      case PowerUps.Coin:
+      case PowerUps.Candy:
         this.body.setVelocity(0, 0);
         this.body.allowGravity = false;
         this.scene.tweens.add({
@@ -83,18 +74,18 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
 
     // Play sounds
     switch (this.type) {
-      case PowerUps.Coin:
-        this.scene.sound.playAudioSprite('sfx', 'smb_coin'); // TODO: Refactor
+      case PowerUps.Candy:
+        this.scene.soundEffects.playEffect(Sounds.Candy);
         break;
       default:
-        this.scene.sound.playAudioSprite('sfx', 'smb_powerup_appears');
+        this.scene.soundEffects.playEffect(Sounds.PowerUpAppears);
         this.scene.powerUps.add(this);
     }
 
     // Play animation
     switch (this.type) {
-      case PowerUps.Coin:
-        this.anims.play(PowerUpAnimations.Coin);
+      case PowerUps.Candy:
+        this.anims.play(PowerUpAnimations.Candy);
         break;
       case PowerUps.Mushroom:
         this.anims.play(PowerUpAnimations.Mushroom);
@@ -148,25 +139,25 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     switch (this.type) {
       case PowerUps.Flower:
         this.scene.player.setPlayerState(PlayerStates.Fire);
-        this.scene.sound.playAudioSprite('sfx', 'smb_powerup'); // TODO: Refactor
+        this.scene.soundEffects.playEffect(Sounds.PowerUp);
         break;
       case PowerUps.Mushroom:
         // Power up will not be removed until next loop after physics is running again
-        // (physics is paused by this.scene.mario.resize), until then we'll just hide it.
+        // (physics is paused by this.scene.player.resize), until then we'll just hide it.
         this.scene.player.resize(true);
-        this.scene.sound.playAudioSprite('sfx', 'smb_powerup');
+        this.scene.soundEffects.playEffect(Sounds.PowerUp);
         break;
       case PowerUps.Star:
         this.scene.player.activateStar();
-        this.scene.sound.playAudioSprite('sfx', 'smb_powerup');
+        this.scene.soundEffects.playEffect(Sounds.PowerUp);
         break;
       case PowerUps.Life:
-        this.scene.sound.playAudioSprite('sfx', 'smb_1-up');
+        this.scene.soundEffects.playEffect(Sounds.Life);
         break;
     }
 
     // Get points
-    this.scene.hud.updateScore(POWER_UP_SCORE);
+    this.scene.hud.updateScore(Scores.PowerUp);
     this.alpha = 0;
   }
 }

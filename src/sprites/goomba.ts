@@ -1,5 +1,6 @@
-import { GoombaAnimations } from '../animations';
-import { GameScene } from '../scenes';
+import { GoombaAnimations } from '@game/animations';
+import { GameScene } from '@game/scenes';
+
 import { Enemy } from './enemy';
 
 const KILLED_TIMEOUT: number = 500;
@@ -16,7 +17,7 @@ export class Goomba extends Enemy {
     this.anims.play(animation);
   }
 
-  update(time: number, delta: number) {
+  update(delta: number) {
     if (!this.isActivated()) {
       return;
     }

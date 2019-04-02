@@ -1,6 +1,7 @@
-import { TurtleAnimations } from '../animations';
-import { Body, TiledGameObject } from '../models';
-import { GameScene } from '../scenes';
+import { TurtleAnimations } from '@game/animations';
+import { Body, Sounds, TiledGameObject } from '@game/models';
+import { GameScene } from '@game/scenes';
+
 import { Enemy } from './enemy';
 
 const DIMENSIONS: Partial<Body> = { x: 2, y: 24 };
@@ -55,12 +56,12 @@ export class Turtle extends Enemy {
 
       // Set the turtle shell and start to slide
       if (!this.sliding || (this.sliding && this.body.velocity.x === 0)) {
-        this.scene.sound.playAudioSprite('sfx', 'smb_kick');
+        this.scene.soundEffects.playEffect(Sounds.Kick);
 
         this.direction = SLIDE_VELOCITY * (this.scene.player.x < this.x ? 1 : -1);
         this.body.velocity.x = this.direction;
       } else {
-        this.scene.sound.playAudioSprite('sfx', 'smb_stomp');
+        this.scene.soundEffects.playEffect(Sounds.Stomp);
 
         this.direction = 0;
         this.body.velocity.x = 0;
@@ -72,7 +73,7 @@ export class Turtle extends Enemy {
     } else {
       // Player hit
       if (this.sliding && this.body.velocity.x === 0) {
-        this.scene.sound.playAudioSprite('sfx', 'smb_kick');
+        this.scene.soundEffects.playEffect(Sounds.Kick);
 
         this.direction = SLIDE_VELOCITY;
         this.body.velocity.x = SLIDE_VELOCITY;

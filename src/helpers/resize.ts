@@ -1,4 +1,4 @@
-import { GAME_HEIGHT, GAME_WIDTH } from '../config';
+import { GAME_HEIGHT, GAME_WIDTH } from '@game/config';
 
 export const resizeGame = () => {
   const canvas: HTMLCanvasElement = document.querySelector('canvas');

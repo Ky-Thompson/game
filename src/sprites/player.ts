@@ -1,8 +1,7 @@
-import { getPlayerAnimationKey } from '../animations';
-import { Colors } from '../helpers';
-import { ActionState, Body, PlayerActions, Players, PlayerStates, TiledGameObject } from '../models';
-import { GameScene, TitleScene } from '../scenes';
-import { PipeDirection } from '../scenes/game/sprite-groups';
+import { getPlayerAnimationKey } from '@game/animations';
+import { ActionState, Body, Colors, PipeDirection, PlayerActions, Players, PlayerStates, Sounds, TiledGameObject } from '@game/models';
+import { GameScene } from '@game/scenes';
+
 import { Enemy } from './enemy';
 
 const DEFAULT_BODY: Body = { width: 20, height: 20, x: 6, y: 12 };
@@ -44,7 +43,6 @@ export class Player extends Phaser.GameObjects.Sprite {
   private starStep: number = 0;
   private fireCoolDownTimer: number = 0;
 
-  // TODO: Use start tile modifier for x and y
   constructor(public scene: GameScene, x: number, y: number) {
     super(scene, x, y, Players.Caleb);
 
@@ -94,7 +92,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     }
   }
 
-  update(time: number, delta: number, keys: Partial<ActionState>) {
+  update(delta: number, keys: Partial<ActionState>) {
     this.checkOutsideGame();
 
     // Don't do updates while entering the pipe or being dead
@@ -118,7 +116,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     const { height } = this.scene.gameConfig();
 
     if (this.y > height * 2) {
-      this.scene.scene.start(TitleScene.SceneKey); // Really superdead, has been falling for a while. TODO: Refactor scene.scene
+      this.scene.restart(); // Really superdead, has been falling for a while.
     } else if (this.y > height && this.alive) {
       this.die();
     }
@@ -271,9 +269,9 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     if (!this.jumping) {
       if (this.playerState === PlayerStates.Default) {
-        this.scene.sound.playAudioSprite('sfx', 'smb_jump-small'); // TODO: Refactor play into scene
+        this.scene.soundEffects.playEffect(Sounds.JumpSmall);
       } else {
-        this.scene.sound.playAudioSprite('sfx', 'smb_jump-super');
+        this.scene.soundEffects.playEffect(Sounds.JumpSuper);
       }
 
       this.jumpTimer = JUMP_TIME;
@@ -317,7 +315,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   }
 
   enemyBounce(enemy: Enemy) {
-    // Force Mario y-position up a bit (on top of the enemy) to avoid getting killed by neigbouring enemy before being able to bounce
+    // Force Player y-position up a bit (on top of the enemy) to avoid getting killed by neighboring enemy before being able to bounce
     this.body.y = enemy.body.y - this.body.height;
     this.body.setVelocityY(JUMP_VELOCITY);
   }
@@ -332,10 +330,10 @@ export class Player extends Phaser.GameObjects.Sprite {
       enemy.kill(true);
       enemy.updatePoints();
     } else if (this.wasHurtTimer <= 0) {
-      // Mario get's hurt
+      // Player get's hurt
       if (this.playerState !== PlayerStates.Default) {
         this.resize(false);
-        this.scene.sound.playAudioSprite('sfx', 'smb_pipe');
+        this.scene.soundEffects.playEffect(Sounds.Pipe);
         this.wasHurtTimer = WAS_HURT_TIME;
       } else {
         this.die();
@@ -346,7 +344,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   die() {
     this.scene.soundEffects.pauseMusic();
     this.animate(PlayerActions.Death);
-    this.scene.sound.playAudioSprite('sfx', 'smb_mariodie');
+    this.scene.soundEffects.playEffect(Sounds.Die);
     this.body.setAcceleration(0);
     this.body.setVelocity(0, DEATH_VELOCITY);
     this.alive = false;
@@ -355,7 +353,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   enterPipe(destinationTileId: number, pipeDirection: PipeDirection) {
     // TODO:  fix enter to right
     this.animate(PlayerActions.Bend);
-    this.scene.sound.playAudioSprite('sfx', 'smb_pipe');
+    this.scene.soundEffects.playEffect(Sounds.Die);
 
     this.enteringPipe = true;
     this.body.setVelocity(0);

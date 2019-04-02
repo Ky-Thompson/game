@@ -1,6 +1,6 @@
-import { FONT, TILE_SIZE } from '../../../config';
-import { Colors } from '../../../helpers';
-import { GAME_TIMEOUT, HURRY_TIME, TIME_FACTOR } from '../constants';
+import { FONT, GAME_TIMEOUT, HURRY_TIME, TILE_SIZE, TIME_FACTOR } from '@game/config';
+import { Colors, Scores, Sounds } from '@game/models';
+
 import { GameScene } from '../scene';
 
 const MS_TO_S = 1000;
@@ -58,7 +58,7 @@ export class HUD {
       if (this.displayedTime < HURRY_TIME && !this.hurry) {
         this.hurry = true;
         this.scene.soundEffects.pauseMusic();
-        this.scene.soundEffects.playEffect('smb_warning', () => {
+        this.scene.soundEffects.playEffect(Sounds.Warning, () => {
           this.scene.soundEffects.resumeMusic();
           this.scene.soundEffects.setMusicRate(1.5);
         });
@@ -87,7 +87,7 @@ export class HUD {
     }
   }
 
-  updateScore(score: number) {
+  updateScore(score: Scores) {
     this.score += score;
     this.scoreText.setText(String(this.score).padStart(SCORE_TEXT_PADDING, '0'));
   }

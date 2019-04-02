@@ -1,4 +1,4 @@
-import { TILE_SIZE } from '../../config';
+import { TILE_SIZE } from '@game/config';
 
 export const TITLE_BLINK_TIME = 500;
 export const TITLE_Y = TILE_SIZE * 5;

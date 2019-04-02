@@ -1,8 +1,9 @@
-import { TILE_SIZE } from '../../../config';
-import { TiledGameObject } from '../../../models';
-import { PowerUp } from '../../../sprites';
+import { TILE_SIZE } from '@game/config';
+import { PowerUps, TiledGameObject } from '@game/models';
+import { PowerUp } from '@game/sprites';
+
 import { GameScene } from '../scene';
-import { World, WorldLayers } from '../sprite-groups';
+import { World, WorldLayers } from './world';
 
 export class PowerUpGroup {
   private readonly group: Phaser.GameObjects.Group;
@@ -16,9 +17,8 @@ export class PowerUpGroup {
 
     this.mapLayer.objects.forEach((powerUp: TiledGameObject) => {
       const tileProperties = this.scene.getTilesetProperties(powerUp, this.tileset);
-      // TODO: Use enums for 'powerUp', 'callback', 'questionMark'
-      const tile: Phaser.Tilemaps.Tile = this.world.getTileAt(powerUp.x / TILE_SIZE, powerUp.y / TILE_SIZE - 1);
-      tile.properties['powerUp'] = tileProperties.name;
+      const tile: TiledGameObject = <any>this.world.getTileAt(powerUp.x / TILE_SIZE, powerUp.y / TILE_SIZE - 1);
+      tile.properties.powerUp = <PowerUps>tileProperties.name;
     });
   }
 
@@ -26,7 +26,7 @@ export class PowerUpGroup {
     this.group.add(powerUp);
   }
 
-  update(time: number, delta: number) {
+  update() {
     Array.from(this.group.children.entries).forEach((powerUp: PowerUp) => {
       powerUp.update();
     });

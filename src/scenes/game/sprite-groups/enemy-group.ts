@@ -1,9 +1,8 @@
-import { TiledGameObject } from '../../../models';
-import { BounceBrick, Enemy, Fireball } from '../../../sprites';
-import { Goomba } from '../../../sprites/goomba';
-import { Turtle } from '../../../sprites/turtle';
+import { TiledGameObject } from '@game/models';
+import { BounceBrick, Enemy, EnemyTypes, Fireball, Goomba, Turtle } from '@game/sprites';
+
 import { GameScene } from '../scene';
-import { World, WorldLayers } from '../sprite-groups';
+import { World, WorldLayers } from './world';
 
 export class EnemyGroup {
   private readonly group: Phaser.GameObjects.Group;
@@ -19,19 +18,19 @@ export class EnemyGroup {
       const tileProperties = this.scene.getTilesetProperties(enemy, this.tileset);
 
       switch (tileProperties.name) {
-        case 'goomba': // TODO: Refactor sprite to be generic
+        case EnemyTypes.Goomba:
           this.group.add(new Goomba(this.scene, enemy.x, enemy.y));
           break;
-        case 'turtle':
+        case EnemyTypes.Turtle:
           this.group.add(new Turtle(this.scene, enemy.x, enemy.y));
           break;
       }
     });
   }
 
-  update(time: number, delta: number) {
+  update(delta: number) {
     Array.from(this.group.children.entries).forEach((enemy: Enemy) => {
-      enemy.update(time, delta);
+      enemy.update(delta);
     });
   }
 

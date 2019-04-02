@@ -1,5 +1,5 @@
-import { SPRITES_KEY } from '../animations';
-import { GameScene } from '../scenes';
+import { SPRITES_KEY } from '@game/animations';
+import { GameScene } from '@game/scenes';
 
 enum BlockEmitterAnimations {
   Brick = 'brick',

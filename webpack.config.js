@@ -1,6 +1,7 @@
 const { join, resolve } = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const root = resolve(__dirname);
 
@@ -23,6 +24,7 @@ module.exports = {
     alias: {
       phaser: join(root, 'node_modules/phaser/dist/phaser.min.js'),
     },
+    plugins: [new TsconfigPathsPlugin()],
   },
   plugins: [
     new webpack.DefinePlugin({

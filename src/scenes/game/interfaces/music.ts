@@ -1,3 +1,5 @@
+import { AUDIO_SPRITE_KEY, Sounds } from '@game/models';
+
 import { GameScene } from '../scene';
 
 export enum MusicPlaylist {
@@ -43,9 +45,8 @@ export class SoundEffects {
     }
   }
 
-  // TODO: Use enum for audio sprite
-  playEffect(key: string, onEnded: Function = () => {}) {
-    const sound: any = this.scene.sound.addAudioSprite('sfx'); // TODO: Fix type
+  playEffect(key: Sounds, onEnded: Function = () => {}) {
+    const sound: any = this.scene.sound.addAudioSprite(AUDIO_SPRITE_KEY);
 
     sound.on('ended', () => {
       sound.destroy();

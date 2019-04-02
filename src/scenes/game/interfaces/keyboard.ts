@@ -1,4 +1,5 @@
-import { ActionKeys, ActionState } from '../../../models';
+import { ActionKeys, ActionState } from '@game/models';
+
 import { GameScene } from '../scene';
 import { GamePad } from './pad';
 

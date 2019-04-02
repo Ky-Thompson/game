@@ -1,4 +1,5 @@
-import { PlayerActions, Players, PlayerStates } from '../models';
+import { PlayerActions, Players, PlayerStates } from '@game/models';
+
 import { SPRITES_KEY } from './sprites';
 
 export const getPlayerAnimationKey = (
@@ -32,7 +33,7 @@ export const makePlayerAnimations = (scene: Phaser.Scene, player: Players) => {
     // Jump, Stand, Turn and bend actions animation: one frame each
     const movementActions: PlayerActions[] = [PlayerActions.Stand, PlayerActions.Jump, PlayerActions.Turn, PlayerActions.Bend];
     movementActions.forEach((action: PlayerActions) => {
-      // No bend animation when Mario is small
+      // No bend animation when Player is small
       if (action === PlayerActions.Bend && state === PlayerStates.Default) {
         return;
       }

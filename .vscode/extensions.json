@@ -8,6 +8,7 @@
     "felixrieseberg.vsc-travis-ci-status",
     "hdg.live-html-previewer",
     "msjsdiag.debugger-for-chrome",
-    "mike-co.import-sorter"
+    "mike-co.import-sorter",
+    "gruntfuggly.todo-tree"
   ]
 }

@@ -1,7 +1,7 @@
 import { SPRITES_KEY } from './sprites';
 
 export enum PowerUpAnimations {
-  Coin = 'candy/spin', // TODO: Rename coin by candy
+  Candy = 'candy/spin',
   Mushroom = 'powerup/mushroom',
   Flower = 'powerup/flower',
   Life = 'powerup/1up',
@@ -11,8 +11,8 @@ export enum PowerUpAnimations {
 export const makePowerUpAnimations = (scene: Phaser.Scene) => {
   // Coin
   scene.anims.create({
-    key: PowerUpAnimations.Coin,
-    frames: scene.anims.generateFrameNames(SPRITES_KEY, { prefix: PowerUpAnimations.Coin, start: 1, end: 4 }),
+    key: PowerUpAnimations.Candy,
+    frames: scene.anims.generateFrameNames(SPRITES_KEY, { prefix: PowerUpAnimations.Candy, start: 1, end: 4 }),
     frameRate: 15,
     repeat: -1,
     repeatDelay: 0,

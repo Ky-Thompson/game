@@ -1,5 +1,4 @@
 export enum Players {
-  Mario = 'mario',
   Caleb = 'caleb',
   Sophia = 'sophia',
 }

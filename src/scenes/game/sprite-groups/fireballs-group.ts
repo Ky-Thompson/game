@@ -1,4 +1,5 @@
-import { Fireball } from '../../../sprites';
+import { Fireball } from '@game/sprites';
+
 import { GameScene } from '../scene';
 
 export class FireballsGroup {
@@ -16,9 +17,9 @@ export class FireballsGroup {
     return this.group.get();
   }
 
-  update(time: number, delta: number) {
+  update() {
     Array.from(this.group.children.entries).forEach((fireball: Fireball) => {
-      fireball.update(time, delta);
+      fireball.update();
     });
   }
 }

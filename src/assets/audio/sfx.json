@@ -21,7 +21,7 @@
       "end": 7.214693877551021,
       "loop": false
     },
-    "smb_coin": {
+    "smb_candy": {
       "start": 9,
       "end": 9.945487528344671,
       "loop": false
@@ -61,7 +61,7 @@
       "end": 27.181179138321994,
       "loop": false
     },
-    "smb_mariodie": {
+    "smb_playerdie": {
       "start": 29,
       "end": 31.712290249433106,
       "loop": false

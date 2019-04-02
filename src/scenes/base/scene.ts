@@ -1,4 +1,4 @@
-import { GameOptions, TiledGameObject, TileProperties } from '../../models';
+import { GameOptions, TiledGameObject, TileProperties } from '@game/models';
 
 export abstract class BaseScene extends Phaser.Scene {
   constructor(config: Phaser.Scenes.Settings.Config) {
@@ -30,6 +30,6 @@ export abstract class BaseScene extends Phaser.Scene {
    */
 
   getTilesetProperties(tile: TiledGameObject, tileset: Phaser.Tilemaps.Tileset): TileProperties {
-    return tileset.tileProperties[tile.gid - 1];
+    return tileset.tileProperties[tile.gid - 1] as TileProperties;
   }
 }
