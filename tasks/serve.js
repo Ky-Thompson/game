@@ -1,4 +1,3 @@
-var gulp = require('gulp');
 var browserSync = require('browser-sync').create();
 
 module.exports.serve = () => {
@@ -12,6 +11,6 @@ module.exports.serve = () => {
     reloadDebounce: 100,
     reloadOnRestart: true,
     notify: false,
-    ocalOnly: true,
+    localOnly: true,
   });
 };

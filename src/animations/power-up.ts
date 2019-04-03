@@ -5,7 +5,7 @@ export enum PowerUpAnimations {
   Mushroom = 'powerup/mushroom',
   Flower = 'powerup/flower',
   Life = 'powerup/1up',
-  Star = 'powerup/star',
+  Butterfly = 'powerup/butterfly',
 }
 
 export const makePowerUpAnimations = (scene: Phaser.Scene) => {
@@ -27,10 +27,10 @@ export const makePowerUpAnimations = (scene: Phaser.Scene) => {
     });
   });
 
-  // Star
+  // Butterfly
   scene.anims.create({
-    key: PowerUpAnimations.Star,
-    frames: scene.anims.generateFrameNames(SPRITES_KEY, { prefix: PowerUpAnimations.Star, start: 1, end: 4 }),
+    key: PowerUpAnimations.Butterfly,
+    frames: scene.anims.generateFrameNames(SPRITES_KEY, { prefix: PowerUpAnimations.Butterfly, start: 1, end: 4 }),
     frameRate: 30,
     repeat: -1,
     repeatDelay: 0,

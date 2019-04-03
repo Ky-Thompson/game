@@ -3,5 +3,5 @@ export enum PowerUps {
   Mushroom = 'mushroom',
   Flower = 'flower',
   Life = '1up',
-  Star = 'star',
+  Butterfly = 'butterfly',
 }

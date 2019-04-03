@@ -15,8 +15,8 @@ const JUMP_VELOCITY = -400;
 const JUMP_TIME = 300;
 const BEND_VELOCITY = 200;
 const FIRE_COOLDOWN = 300;
-const STAR_TINTS = [Colors.White, Colors.Red, Colors.White, Colors.Green, Colors.White, Colors.Blue];
-const STAR_TIME = 10000;
+const SUPER_TINTS = [Colors.White, Colors.Red, Colors.White, Colors.Green, Colors.White, Colors.Blue];
+const SUPER_TIME = 10000;
 const WAS_HURT_ALPHA = 0.2;
 const WAS_HURT_TIME = 2000;
 const DEATH_VELOCITY = -600;
@@ -38,9 +38,9 @@ export class Player extends Phaser.GameObjects.Sprite {
   private jumping: boolean = false;
   private bending: boolean = false;
   private enteringPipe: boolean = false;
-  private starActive: boolean = false;
-  private starTimer: number = 0;
-  private starStep: number = 0;
+  private superActive: boolean = false;
+  private superTimer: number = 0;
+  private superStep: number = 0;
   private fireCoolDownTimer: number = 0;
 
   body: Phaser.Physics.Arcade.Body;
@@ -193,15 +193,15 @@ export class Player extends Phaser.GameObjects.Sprite {
   }
 
   private updateStar(delta: number) {
-    if (this.starActive) {
-      if (this.starTimer <= 0) {
-        this.starActive = false;
-        this.starStep = 0;
-        this.tint = STAR_TINTS[0];
+    if (this.superActive) {
+      if (this.superTimer <= 0) {
+        this.superActive = false;
+        this.superStep = 0;
+        this.tint = SUPER_TINTS[0];
       } else {
-        this.starTimer -= delta;
-        this.starStep = ++this.starStep % STAR_TINTS.length;
-        this.tint = STAR_TINTS[this.starStep];
+        this.superTimer -= delta;
+        this.superStep = ++this.superStep % SUPER_TINTS.length;
+        this.tint = SUPER_TINTS[this.superStep];
       }
     }
   }
@@ -312,8 +312,8 @@ export class Player extends Phaser.GameObjects.Sprite {
   }
 
   activateStar() {
-    this.starActive = true;
-    this.starTimer = STAR_TIME;
+    this.superActive = true;
+    this.superTimer = SUPER_TIME;
   }
 
   enemyBounce(enemy: Enemy) {
@@ -327,7 +327,7 @@ export class Player extends Phaser.GameObjects.Sprite {
       return;
     }
 
-    if (this.starActive) {
+    if (this.superActive) {
       // Player has super-powers, enemy dies
       enemy.kill(true);
       enemy.updatePoints();

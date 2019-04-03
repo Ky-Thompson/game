@@ -9,7 +9,9 @@ const ACTIVATE_VELOCITY_Y = -300;
 const ANIMATION_DURATION = 500;
 const FLOWER_DEPTH = -100;
 const COIN_MOVEMENT_Y = 100;
-const STAR_VELOCITY_Y = -600;
+const BUTTERFLY_VELOCITY_Y = -600;
+
+const BUTTERFLY_DIMENSIONS: Body = { width: 32, height: 30, x: 0, y: 1 };
 
 // TODO: Split in different classes or simplify
 
@@ -30,8 +32,18 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     }
     this.body.velocity.x = this.direction;
 
-    this.body.setSize(DIMENSIONS.width, DIMENSIONS.height);
-    this.body.offset.set(DIMENSIONS.x, DIMENSIONS.y);
+    let dimensions: Body;
+
+    switch (this.type) {
+      case PowerUps.Butterfly:
+        dimensions = BUTTERFLY_DIMENSIONS;
+        break;
+      default:
+        dimensions = DIMENSIONS;
+    }
+
+    this.body.setSize(dimensions.width, dimensions.height);
+    this.body.offset.set(dimensions.x, dimensions.y);
 
     this.activate();
   }
@@ -45,7 +57,11 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     switch (this.type) {
       case PowerUps.Mushroom:
       case PowerUps.Life:
-        this.body.velocity.y = -ACTIVATE_VELOCITY_Y;
+        this.body.velocity.y = ACTIVATE_VELOCITY_Y;
+        break;
+
+      case PowerUps.Butterfly:
+        this.body.velocity.y = BUTTERFLY_VELOCITY_Y;
         break;
 
       case PowerUps.Flower:
@@ -97,15 +113,16 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
       case PowerUps.Life:
         this.anims.play(PowerUpAnimations.Life);
         break;
-      case PowerUps.Star:
-        this.anims.play(PowerUpAnimations.Star);
+      case PowerUps.Butterfly:
+        this.anims.play(PowerUpAnimations.Butterfly);
         break;
     }
   }
 
   update() {
     // Check if power up needs to be destroyed
-    if (this.alpha === 0) {
+    const { height } = this.scene.gameConfig();
+    if (this.alpha === 0 || this.y > height * 2) {
       this.scene.powerUps.remove(this);
       this.destroy();
       return;
@@ -125,9 +142,9 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     }
 
     // Bounce
-    if (this.type === PowerUps.Star) {
+    if (this.type === PowerUps.Butterfly) {
       if (this.body.blocked.down) {
-        this.body.velocity.y = STAR_VELOCITY_Y;
+        this.body.velocity.y = BUTTERFLY_VELOCITY_Y;
       }
     }
   }
@@ -148,7 +165,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
         this.scene.player.resize(true);
         this.scene.soundEffects.playEffect(Sounds.PowerUp);
         break;
-      case PowerUps.Star:
+      case PowerUps.Butterfly:
         this.scene.player.activateStar();
         this.scene.soundEffects.playEffect(Sounds.PowerUp);
         break;
