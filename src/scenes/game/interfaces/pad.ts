@@ -1,4 +1,4 @@
-import { PadAnimations } from '@game/animations';
+import { PadAnimations, SPRITES_KEY } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
 import { ActionState, Colors, Depth, PlayerStates } from '@game/models';
 
@@ -32,10 +32,10 @@ export class GamePad {
     const FIRE_BUTTON_X = UP_BUTTON_X + BUTTON_SIZE + PADDING;
     const FIRE_BUTTON_Y = RIGHT_BUTTON_Y;
 
-    this.rightButton = this.scene.add.sprite(RIGHT_BUTTON_X, RIGHT_BUTTON_Y).play(PadAnimations.Right);
-    this.leftButton = this.scene.add.sprite(LEFT_BUTTON_X, LEFT_BUTTON_Y).play(PadAnimations.Left);
-    this.upButton = this.scene.add.sprite(UP_BUTTON_X, UP_BUTTON_Y).play(PadAnimations.Up);
-    this.fireButton = this.scene.add.sprite(FIRE_BUTTON_X, FIRE_BUTTON_Y).play(PadAnimations.A);
+    this.rightButton = this.scene.add.sprite(RIGHT_BUTTON_X, RIGHT_BUTTON_Y, SPRITES_KEY).play(PadAnimations.Right);
+    this.leftButton = this.scene.add.sprite(LEFT_BUTTON_X, LEFT_BUTTON_Y, SPRITES_KEY).play(PadAnimations.Left);
+    this.upButton = this.scene.add.sprite(UP_BUTTON_X, UP_BUTTON_Y, SPRITES_KEY).play(PadAnimations.Up);
+    this.fireButton = this.scene.add.sprite(FIRE_BUTTON_X, FIRE_BUTTON_Y, SPRITES_KEY).play(PadAnimations.A);
 
     [this.rightButton, this.leftButton, this.upButton, this.fireButton].forEach((button) =>
       button

@@ -1,14 +1,12 @@
 /// <reference path="./phaser.d.ts"/>
 import 'phaser';
 
-import { GAME_HEIGHT, GAME_WIDTH } from './config';
+import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE } from './config';
 import { resizeGame, setFullscreen } from './helpers';
 import { BootScene, GameScene, TitleScene } from './scenes';
 
 const config: GameConfig = {
   type: Phaser.AUTO,
-  pixelArt: true,
-  roundPixels: true,
   width: GAME_WIDTH,
   height: GAME_HEIGHT,
   parent: 'game',
@@ -17,12 +15,20 @@ const config: GameConfig = {
     arcade: {
       gravity: { y: 1600 },
       debug: false,
+      tileBias: TILE_SIZE,
     },
+  },
+  render: {
+    pixelArt: true,
+    antialias: false,
+    roundPixels: true,
+    powerPreference: 'high-performance',
   },
   input: {
     activePointers: 6,
   },
   scene: [BootScene, TitleScene, GameScene],
+  disableContextMenu: true,
 };
 
 export class Game extends Phaser.Game {

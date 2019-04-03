@@ -1,4 +1,4 @@
-import { TitleAnimations } from '@game/animations';
+import { SPRITES_KEY, TitleAnimations } from '@game/animations';
 import { FONT } from '@game/config';
 import { GameOptions } from '@game/models';
 
@@ -58,7 +58,7 @@ export class TitleScene extends BaseScene {
 
   createTitle() {
     const { width } = this.gameConfig();
-    const title: Phaser.GameObjects.Sprite = this.add.sprite(width / 2, TITLE_Y);
+    const title: Phaser.GameObjects.Sprite = this.add.sprite(width / 2, TITLE_Y, SPRITES_KEY);
     title.play(TitleAnimations.Title);
 
     this.startSprite = this.add.bitmapText(START_X, START_Y, FONT, START_TEXT, START_SIZE);

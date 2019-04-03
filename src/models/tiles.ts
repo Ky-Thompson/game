@@ -2,7 +2,7 @@ import { Modifiers } from './modifers';
 import { PipeDirection } from './pipes';
 import { PowerUps } from './power-up';
 
-export interface TiledGameObject extends Phaser.GameObjects.GameObject, Phaser.GameObjects.Sprite {
+export interface TiledGameObject extends Phaser.GameObjects.Sprite {
   gid?: number;
   id?: number;
   index?: number;

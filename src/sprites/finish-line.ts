@@ -1,4 +1,4 @@
-import { TileAnimations } from '@game/animations';
+import { SPRITES_KEY, TileAnimations } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
 import { PlayerActions, Sounds, TiledGameObject } from '@game/models';
 import { GameScene } from '@game/scenes';
@@ -24,7 +24,7 @@ export class FinishLine {
 
   private init() {
     const { x, y } = this.finishLineTile;
-    this.sprite = this.scene.add.sprite(x, y + TILE_SIZE);
+    this.sprite = this.scene.add.sprite(x, y + TILE_SIZE, SPRITES_KEY);
     this.sprite.play(TileAnimations.Flag);
   }
 

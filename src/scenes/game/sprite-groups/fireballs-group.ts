@@ -7,7 +7,7 @@ export class FireballsGroup {
 
   constructor(private scene: GameScene) {
     this.group = this.scene.add.group({
-      classType: Fireball,
+      classType: <any>Fireball,
       maxSize: 10,
       runChildUpdate: false, // Due to https://github.com/photonstorm/phaser/issues/3724
     });

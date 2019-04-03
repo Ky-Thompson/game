@@ -1,10 +1,10 @@
 const chalk = require('chalk');
 const webpack = require('webpack');
-const webpackConfig = require('../webpack.config');
+const { webpackConfig, DEVELOPMENT_MODE, PRODUCTION_MODE } = require('../webpack.config');
 
 module.exports.buildScripts = () =>
   new Promise((resolve, reject) => {
-    webpack({ ...webpackConfig, mode: 'production' }, (error, stats) => {
+    webpack(webpackConfig(PRODUCTION_MODE), (error, stats) => {
       if (error) {
         console.log(chalk.red(error));
         reject();
@@ -19,7 +19,7 @@ const watchOptions = { aggregateTimeout: 300, poll: undefined };
 
 module.exports.watchScripts = () =>
   new Promise((resolve, reject) => {
-    webpack({ ...webpackConfig, mode: 'development' }).watch(watchOptions, (error, stats) => {
+    webpack(webpackConfig(DEVELOPMENT_MODE)).watch(watchOptions, (error, stats) => {
       if (error) {
         console.log(chalk.red(error));
         reject();

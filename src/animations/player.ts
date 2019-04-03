@@ -12,13 +12,13 @@ export const getPlayerAnimationKey = (
 
 export const makePlayerAnimations = (scene: Phaser.Scene, player: Players) => {
   // Common properties for all animations
-  const frameRate: Partial<AnimationConfig> = {
+  const frameRate: Partial<Phaser.Animations.Types.Animation> = {
     frameRate: 10,
     repeat: -1,
     repeatDelay: 0,
   };
 
-  // Loop in Default, Super and Fire
+  // Loop in Default, Big and Fire
   for (const playerState in PlayerStates) {
     const state: PlayerStates = <PlayerStates>PlayerStates[playerState];
 
@@ -68,11 +68,11 @@ export const makePlayerAnimations = (scene: Phaser.Scene, player: Players) => {
     getPlayerAnimationKey(player, PlayerActions.Half),
     getPlayerAnimationKey(player, PlayerActions.Stand),
     getPlayerAnimationKey(player, PlayerActions.Half),
-    getPlayerAnimationKey(player, PlayerActions.Stand, PlayerStates.Super),
+    getPlayerAnimationKey(player, PlayerActions.Stand, PlayerStates.Big),
     getPlayerAnimationKey(player, PlayerActions.Half),
-    getPlayerAnimationKey(player, PlayerActions.Stand, PlayerStates.Super),
+    getPlayerAnimationKey(player, PlayerActions.Stand, PlayerStates.Big),
   ];
-  const frames: AnimationFrameConfig[] = growFrames.map((frame) => ({ frame, key: SPRITES_KEY }));
+  const frames: Phaser.Animations.Types.AnimationFrame[] = growFrames.map((frame) => ({ frame, key: SPRITES_KEY }));
 
   const growKey: string = getPlayerAnimationKey(player, PlayerActions.Grow);
   scene.anims.create({

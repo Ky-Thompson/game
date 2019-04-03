@@ -72,7 +72,6 @@ export class GameScene extends BaseScene {
       return;
     }
 
-    this.world.update();
     this.finishLine.update(delta);
     this.hud.update(delta);
     this.enemies.update(delta);

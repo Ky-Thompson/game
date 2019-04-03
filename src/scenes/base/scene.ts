@@ -1,5 +1,10 @@
 import { GameOptions, TiledGameObject, TileProperties } from '@game/models';
 
+export interface GameConfig extends Phaser.Core.Config {
+  height: number;
+  width: number;
+}
+
 export abstract class BaseScene extends Phaser.Scene {
   constructor(config: Phaser.Scenes.Settings.Config) {
     super(config);
@@ -9,8 +14,8 @@ export abstract class BaseScene extends Phaser.Scene {
    * Game properties
    */
 
-  gameConfig(): Phaser.Boot.Config {
-    return this.sys.game.config;
+  gameConfig(): GameConfig {
+    return <any>this.sys.game.config;
   }
 
   /**

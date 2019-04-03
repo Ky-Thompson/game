@@ -42,10 +42,10 @@ export class ModifierGroup {
     // Adds info on where to go from a pipe under the modifier
     for (let x = 0; x < modifier.width / TILE_SIZE; x++) {
       for (let y = 0; y < modifier.height / TILE_SIZE; y++) {
-        const tile: TiledGameObject = <any>this.world.getTileAt(modifier.x / TILE_SIZE + x, modifier.y / TILE_SIZE + y);
-        tile.properties.goto = modifier.properties.goto;
-        tile.properties.direction = modifier.properties.direction;
-        tile.properties.pipe = true;
+        const tile: Phaser.Tilemaps.Tile = this.world.getTileAt(modifier.x / TILE_SIZE + x, modifier.y / TILE_SIZE + y);
+        tile.properties['goto'] = modifier.properties.goto;
+        tile.properties['direction'] = modifier.properties.direction;
+        tile.properties['pipe'] = true;
       }
     }
   }

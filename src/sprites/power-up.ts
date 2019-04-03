@@ -15,6 +15,7 @@ const STAR_VELOCITY_Y = -600;
 
 export class PowerUp extends Phaser.GameObjects.Sprite {
   private direction: number;
+  body: Phaser.Physics.Arcade.Body;
 
   constructor(public scene: GameScene, x: number, y: number, public type: PowerUps) {
     super(scene, x, y, SPRITES_KEY);

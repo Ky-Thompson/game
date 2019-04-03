@@ -4,7 +4,7 @@ import { GameScene } from '@game/scenes';
 import { Enemy } from './enemy';
 
 const KILLED_TIMEOUT: number = 500;
-
+// TODO: Remove goomba, use liar
 export class Goomba extends Enemy {
   private killedTime: number = 0;
 

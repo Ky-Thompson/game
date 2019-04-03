@@ -11,6 +11,8 @@ enum BrickAnimations {
 }
 
 export class BounceBrick extends Phaser.GameObjects.Sprite {
+  body: Phaser.Physics.Arcade.Body;
+
   constructor(public scene: GameScene) {
     super(scene, HIDDEN_X, 0, Tilemap.TilesetKey);
 

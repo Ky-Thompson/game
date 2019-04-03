@@ -22,7 +22,7 @@ export class BlockEmitter {
   private init() {
     this.particles = this.scene.add.particles(SPRITES_KEY);
     this.particles.createEmitter({
-      frames: [BlockEmitterAnimations.Brick],
+      frame: [BlockEmitterAnimations.Brick],
       gravityY: BLOCK_EMITTER_GRAVITY,
       lifespan: BLOCK_EMITTER_LIFE_SPAN,
       speed: BLOCK_EMITTER_SPEED,

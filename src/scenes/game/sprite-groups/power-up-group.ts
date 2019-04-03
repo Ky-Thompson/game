@@ -17,8 +17,8 @@ export class PowerUpGroup {
 
     this.mapLayer.objects.forEach((powerUp: TiledGameObject) => {
       const tileProperties = this.scene.getTilesetProperties(powerUp, this.tileset);
-      const tile: TiledGameObject = <any>this.world.getTileAt(powerUp.x / TILE_SIZE, powerUp.y / TILE_SIZE - 1);
-      tile.properties.powerUp = <PowerUps>tileProperties.name;
+      const tile: Phaser.Tilemaps.Tile = this.world.getTileAt(powerUp.x / TILE_SIZE, powerUp.y / TILE_SIZE - 1);
+      tile.properties['powerUp'] = <PowerUps>tileProperties.name;
     });
   }
 

@@ -24,6 +24,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
   private alive: boolean = true;
   private hasBeenSeen: boolean = false;
   private dropped: boolean = false;
+
   body: Phaser.Physics.Arcade.Body;
 
   constructor(public scene: GameScene, x: number, y: number) {

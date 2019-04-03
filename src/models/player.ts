@@ -18,6 +18,6 @@ export enum PlayerActions {
 
 export enum PlayerStates {
   Default = '',
-  Super = 'Super',
+  Big = 'Big',
   Fire = 'Fire',
 }

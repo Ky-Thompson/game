@@ -43,6 +43,8 @@ export class Player extends Phaser.GameObjects.Sprite {
   private starStep: number = 0;
   private fireCoolDownTimer: number = 0;
 
+  body: Phaser.Physics.Arcade.Body;
+
   constructor(public scene: GameScene, x: number, y: number) {
     super(scene, x, y, Players.Caleb);
 
@@ -271,7 +273,7 @@ export class Player extends Phaser.GameObjects.Sprite {
       if (this.playerState === PlayerStates.Default) {
         this.scene.soundEffects.playEffect(Sounds.JumpSmall);
       } else {
-        this.scene.soundEffects.playEffect(Sounds.JumpSuper);
+        this.scene.soundEffects.playEffect(Sounds.JumpBig);
       }
 
       this.jumpTimer = JUMP_TIME;
@@ -287,7 +289,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   resize(large: boolean) {
     if (large) {
       this.large();
-      this.playerState = PlayerStates.Super;
+      this.playerState = PlayerStates.Big;
       this.play(getPlayerAnimationKey(this.playerType, PlayerActions.Grow));
     } else {
       this.small();
@@ -304,7 +306,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   }
 
   private large() {
-    this.y -= SUPER_BODY.height - DEFAULT_BODY.height - (SUPER_BODY.y - DEFAULT_BODY.y); // Adjust sprite new position
+    this.y += SUPER_BODY.y - DEFAULT_BODY.y; // Adjust sprite new position
     this.body.setSize(SUPER_BODY.width, SUPER_BODY.height);
     this.body.offset.set(SUPER_BODY.x, SUPER_BODY.y);
   }
@@ -345,7 +347,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.scene.soundEffects.pauseMusic();
     this.animate(PlayerActions.Death);
     this.scene.soundEffects.playEffect(Sounds.Die);
-    this.body.setAcceleration(0);
+    this.body.setAcceleration(0, 0);
     this.body.setVelocity(0, DEATH_VELOCITY);
     this.alive = false;
   }
@@ -357,7 +359,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     this.enteringPipe = true;
     this.body.setVelocity(0);
-    this.body.setAcceleration(0);
+    this.body.setAcceleration(0, 0);
     this.setDepth(ENTER_PIPE_DEPTH);
 
     let pipeX: number = 0;

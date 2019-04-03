@@ -1,16 +1,5 @@
 import { TILE_SIZE } from '@game/config';
-import {
-  Depth,
-  PlayerStates,
-  PowerUps,
-  Scores,
-  SKY_HEIGHT,
-  Sounds,
-  TileCallbacks,
-  TiledGameObject,
-  Tilemap,
-  TilemapIds,
-} from '@game/models';
+import { Depth, PlayerStates, PowerUps, Scores, Sounds, TileCallbacks, TiledGameObject, Tilemap, TilemapIds } from '@game/models';
 import { Player, PowerUp, Turtle } from '@game/sprites';
 
 import { GameScene } from '../scene';
@@ -41,7 +30,7 @@ export class World {
   private readonly tileset: Phaser.Tilemaps.Tileset;
   private readonly backgroundLayer: Phaser.Tilemaps.StaticTilemapLayer;
   private readonly groundLayer: Phaser.Tilemaps.DynamicTilemapLayer;
-  private readonly background: Phaser.GameObjects.TileSprite;
+  private readonly background: Phaser.GameObjects.Sprite;
   private readonly rooms: Room[] = [];
 
   constructor(private scene: GameScene) {
@@ -50,7 +39,11 @@ export class World {
     this.tileset = this.tilemap.addTilesetImage(Tilemap.TilesetName, Tilemap.TilesetKey);
     this.backgroundLayer = this.tilemap.createStaticLayer(Tilemap.BackgroundLayerKey, this.tileset, 0, 0);
     this.groundLayer = this.tilemap.createDynamicLayer(Tilemap.WorldLayerKey, this.tileset, 0, 0);
-    this.background = this.scene.add.tileSprite(0, 0, this.backgroundLayer.width, SKY_HEIGHT, Tilemap.SkyKey).setDepth(Depth.Background);
+
+    this.background = this.scene.add.sprite(0, 0, Tilemap.SkyKey).setDepth(Depth.Background);
+    this.background.setPosition(this.background.width / 2, this.background.height / 2);
+    const scrollFactorX: number = this.background.width / this.groundLayer.width;
+    this.background.setScrollFactor(scrollFactorX, 0);
 
     this.scene.physics.world.bounds.width = this.groundLayer.width;
     this.groundLayer.setCollisionByExclusion([-1], true);
@@ -69,7 +62,7 @@ export class World {
   }
 
   removeTileAt(x: number, y: number) {
-    this.tilemap.removeTileAt(x, y, true, true, <any>this.groundLayer);
+    this.tilemap.removeTileAt(x, y, true, true, this.groundLayer);
   }
 
   size(): WorldSize {
@@ -95,10 +88,6 @@ export class World {
         this.scene.cameras.main.setBackgroundColor(room.backgroundColor);
       }
     });
-  }
-
-  update() {
-    this.background.tilePositionX += BACKGROUND_SPEED_X;
   }
 
   collide(sprite: Phaser.GameObjects.Sprite, collideCallback?: ArcadePhysicsCallback) {
