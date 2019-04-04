@@ -4,9 +4,10 @@ import { GameScene } from '../scene';
 
 export enum MusicPlaylist {
   Song89 = '89',
+  Bethel = 'bethel',
 }
 
-export const PLAYLIST: MusicPlaylist[] = [MusicPlaylist.Song89];
+export const PLAYLIST: MusicPlaylist[] = [MusicPlaylist.Song89, MusicPlaylist.Bethel];
 
 export class SoundEffects {
   private music: Phaser.Sound.BaseSound;
@@ -28,7 +29,8 @@ export class SoundEffects {
       this.track = (this.track + 1) % PLAYLIST.length;
 
       this.music = this.scene.sound.add(PLAYLIST[this.track]);
-      this.music.once('ended', () => this.playMusic());
+
+      this.music.once('complete', () => this.playMusic());
       this.music.play();
     } catch (e) {}
   }
