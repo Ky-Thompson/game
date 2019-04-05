@@ -8,9 +8,9 @@ const DEFAULT_BODY: Body = { width: 20, height: 20, x: 6, y: 12 };
 const SUPER_BODY: Body = { width: 20, height: 44, x: 6, y: 20 };
 const ACCELERATION = 1200;
 const MIN_VELOCITY_X = 20;
-const MIN_VELOCITY_Y = 30;
+const MIN_VELOCITY_Y = 40;
 const MAX_VELOCITY_X = 400;
-const MAX_VELOCITY_Y = 1000;
+const MAX_VELOCITY_Y = 800;
 const JUMP_VELOCITY = -400;
 const JUMP_TIME = 300;
 const BEND_VELOCITY = 200;
@@ -42,6 +42,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   private superTimer: number = 0;
   private superStep: number = 0;
   private fireCoolDownTimer: number = 0;
+  private lastVelocityY: number[] = [];
 
   body: Phaser.Physics.Arcade.Body;
 
@@ -142,7 +143,12 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     let animation: PlayerActions = PlayerActions.Stand;
 
-    if (Math.abs(this.body.velocity.y) > MIN_VELOCITY_Y && !this.body.blocked.down) {
+    // When jumping at the top of the jump, there is a flickr in the animation. This check that the player is really stopped in Y axis
+    this.lastVelocityY.push(this.body.velocity.y);
+    this.lastVelocityY = this.lastVelocityY.slice(-5);
+    const stoppedY = this.lastVelocityY.map((velY) => Math.abs(velY) < MIN_VELOCITY_Y).reduce((prev, curr) => curr && prev, true);
+
+    if ((!stoppedY && !this.body.blocked.down) || input.jump) {
       // Jumping
       animation = PlayerActions.Jump;
     } else if (this.body.velocity.x !== 0 || input.left || input.right) {

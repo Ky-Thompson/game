@@ -15,7 +15,7 @@ const config: GameConfig = {
     arcade: {
       gravity: { y: 1600 },
       debug: false,
-      tileBias: TILE_SIZE,
+      tileBias: TILE_SIZE * 2,
     },
   },
   render: {

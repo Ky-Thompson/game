@@ -7,6 +7,10 @@ export const getPlayerAnimationKey = (
   playerAction: PlayerActions,
   playerState: PlayerStates = PlayerStates.Default
 ): string => {
+  if (playerAction === PlayerActions.Death) {
+    playerState = PlayerStates.Default; // Death only is in default state
+  }
+
   return `${player}/${playerAction}${playerState}`;
 };
 
