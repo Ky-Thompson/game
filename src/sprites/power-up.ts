@@ -156,7 +156,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
 
     switch (this.type) {
       case PowerUps.Flower:
-        this.scene.player.setPlayerState(PlayerStates.Fire);
+        this.scene.player.setPlayerState(PlayerStates.Super);
         this.scene.soundEffects.playEffect(Sounds.PowerUp);
         break;
       case PowerUps.Mushroom:

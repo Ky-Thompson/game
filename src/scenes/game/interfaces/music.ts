@@ -50,7 +50,7 @@ export class SoundEffects {
   playEffect(key: Sounds, onEnded: Function = () => {}) {
     const sound: any = this.scene.sound.addAudioSprite(AUDIO_SPRITE_KEY);
 
-    sound.on('ended', () => {
+    sound.on('complete', () => {
       sound.destroy();
       onEnded();
     });

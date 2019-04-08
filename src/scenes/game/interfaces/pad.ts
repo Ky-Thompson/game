@@ -79,6 +79,6 @@ export class GamePad {
       return; // Don't update pad if not needed
     }
 
-    this.fireButton.setAlpha(this.scene.player.isPlayerState(PlayerStates.Fire) ? GAME_PAD_ALPHA : 0);
+    this.fireButton.setAlpha(this.scene.player.isPlayerState(PlayerStates.Super) ? GAME_PAD_ALPHA : 0);
   }
 }
