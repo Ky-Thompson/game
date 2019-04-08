@@ -5,12 +5,12 @@ module.exports.serve = () => {
     server: {
       baseDir: './dist',
     },
-    files: ['./dist/*', './dist/**/*'],
+    files: ['./dist/*.*', './dist/**/*.*'],
     watch: true,
-    reloadDelay: 1000,
+    reloadDelay: 500,
     reloadDebounce: 100,
     reloadOnRestart: true,
-    notify: false,
+    notify: true,
     localOnly: true,
   });
 };

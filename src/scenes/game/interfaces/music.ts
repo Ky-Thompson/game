@@ -4,18 +4,16 @@ import { GameScene } from '../scene';
 
 export enum MusicPlaylist {
   Song89 = '89',
+  Bethel = 'bethel',
 }
 
-export const PLAYLIST: MusicPlaylist[] = [MusicPlaylist.Song89];
+export const PLAYLIST: MusicPlaylist[] = [MusicPlaylist.Song89, MusicPlaylist.Bethel];
 
 export class SoundEffects {
   private music: Phaser.Sound.BaseSound;
-  private track: number = 0;
 
   constructor(private scene: GameScene) {
-    if (!this.scene.attractMode.isActive()) {
-      this.playMusic();
-    }
+    this.playMusic();
   }
 
   private playMusic() {
@@ -25,11 +23,15 @@ export class SoundEffects {
         this.music.destroy();
       }
 
-      this.track = (this.track + 1) % PLAYLIST.length;
+      (<any>this.scene.sound).sounds
+        .filter((sound) => PLAYLIST.indexOf(sound.key) !== -1)
+        .forEach((sound) => {
+          sound.stop();
+          sound.destroy();
+        });
 
-      this.music = this.scene.sound.add(PLAYLIST[this.track]);
-      this.music.once('ended', () => this.playMusic());
-      this.music.play();
+      this.music = this.scene.sound.add(this.scene.attractMode.isActive() ? MusicPlaylist.Bethel : MusicPlaylist.Song89);
+      this.music.play('', { loop: true });
     } catch (e) {}
   }
 
@@ -48,7 +50,7 @@ export class SoundEffects {
   playEffect(key: Sounds, onEnded: Function = () => {}) {
     const sound: any = this.scene.sound.addAudioSprite(AUDIO_SPRITE_KEY);
 
-    sound.on('ended', () => {
+    sound.on('complete', () => {
       sound.destroy();
       onEnded();
     });

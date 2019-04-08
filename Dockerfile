@@ -1,10 +1,6 @@
 FROM node:8.14.0
 
 # Install dependencies
-RUN echo "deb mirror://mirrors.ubuntu.com/mirrors.txt trusty main restricted universe multiverse" > /etc/apt/sources.list && \
-  echo "deb mirror://mirrors.ubuntu.com/mirrors.txt trusty-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
-  echo "deb mirror://mirrors.ubuntu.com/mirrors.txt trusty-security main restricted universe multiverse" >> /etc/apt/sources.list && \
-  DEBIAN_FRONTEND=noninteractive apt-get update
 RUN apt-get update -q \
   && apt-get install -y -q --no-install-recommends wget software-properties-common libglu1-mesa libglib2.0-0 libstdc++6 \
   && rm -rf /var/lib/apt/lists/*
