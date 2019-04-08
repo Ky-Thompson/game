@@ -29,7 +29,7 @@ const ENTER_PIPE_START_Y = -200;
 export class Player extends Phaser.GameObjects.Sprite {
   private lastPlayerKey: boolean = false; // TODO: Remove once player selection is in place
   private alive: boolean = true;
-  private playerType: Players = Players.Caleb;
+  private playerType: Players = Players.Sophia;
   private playerState: PlayerStates = PlayerStates.Default;
 
   private wasHurtTimer: number = 0;
