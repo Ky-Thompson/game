@@ -13,7 +13,7 @@
         "frameConfig": {
           "frameWidth": 32,
           "frameHeight": 32,
-          "spacing": 4
+          "spacing": 0
         }
       },
       {
