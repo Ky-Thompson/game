@@ -31,7 +31,7 @@ export class BootScene extends BaseScene {
    * Methods for the scene
    */
 
-  createProgressBar() {
+  private createProgressBar() {
     const progress: Phaser.GameObjects.Graphics = this.add.graphics();
     const { height, width } = this.gameConfig();
 
@@ -52,11 +52,11 @@ export class BootScene extends BaseScene {
    * Assets and animations
    */
 
-  loadAssets() {
+  private loadAssets() {
     this.load.pack('preload', 'assets/pack.json', 'preload');
   }
 
-  makeAnimations() {
+  private makeAnimations() {
     makePadAnimations(this);
     makeTitleAnimations(this);
     makeTileAnimations(this);
