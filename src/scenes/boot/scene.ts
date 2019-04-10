@@ -8,6 +8,7 @@ import {
   makeTitleAnimations,
   makeTurtleAnimations,
 } from '@game/animations';
+import { resizeGame } from '@game/helpers';
 import { Colors, Players } from '@game/models';
 
 import { BaseScene } from '../base';
@@ -34,6 +35,8 @@ export class BootScene extends BaseScene {
   private createProgressBar() {
     const progress: Phaser.GameObjects.Graphics = this.add.graphics();
     const { height, width } = this.gameConfig();
+
+    resizeGame();
 
     this.load.on('progress', (value: number) => {
       progress.clear();

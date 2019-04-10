@@ -257,6 +257,12 @@ export class Player extends Phaser.GameObjects.Sprite {
       // If in the air, don't run
       this.run(0);
     }
+
+    if (this.x < this.body.width) {
+      this.x = this.body.width;
+      this.body.setVelocityX(0);
+      this.run(0);
+    }
   }
 
   private updateJump(delta: number, jump: boolean) {

@@ -1,4 +1,4 @@
-import { PowerUpAnimations, SPRITES_KEY } from '@game/animations';
+import { getCandyAnimationKey, PowerUpAnimations, SPRITES_KEY } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
 import { Body, PlayerStates, PowerUps, Scores, Sounds } from '@game/models';
 import { GameScene } from '@game/scenes';
@@ -8,10 +8,13 @@ const VELOCITY_X = 140;
 const ACTIVATE_VELOCITY_Y = -300;
 const ANIMATION_DURATION = 500;
 const FLOWER_DEPTH = -100;
-const COIN_MOVEMENT_Y = 100;
+const CANDY_MOVEMENT_Y = 100;
 const BUTTERFLY_VELOCITY_Y = -600;
 
+const CANDY_DIMENSIONS: Body = { width: 28, height: 32, x: 0, y: 0 };
 const BUTTERFLY_DIMENSIONS: Body = { width: 32, height: 30, x: 0, y: 1 };
+const ROBOT_DIMENSIONS: Body = { width: 32, height: 32, x: 0, y: 0 };
+const ROBOT_VELOCITY_X = 80;
 
 // TODO: Split in different classes or simplify
 
@@ -30,13 +33,24 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     } else {
       this.direction = -VELOCITY_X; // Player on the right -> power up bounces left
     }
+
+    if (this.type === PowerUps.Robot) {
+      this.direction = ROBOT_VELOCITY_X;
+    }
+
     this.body.velocity.x = this.direction;
 
     let dimensions: Body;
 
     switch (this.type) {
+      case PowerUps.Candy:
+        dimensions = CANDY_DIMENSIONS;
+        break;
       case PowerUps.Butterfly:
         dimensions = BUTTERFLY_DIMENSIONS;
+        break;
+      case PowerUps.Robot:
+        dimensions = ROBOT_DIMENSIONS;
         break;
       default:
         dimensions = DIMENSIONS;
@@ -56,7 +70,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     // Configure power up depending on type
     switch (this.type) {
       case PowerUps.Mushroom:
-      case PowerUps.Life:
+      case PowerUps.Robot:
         this.body.velocity.y = ACTIVATE_VELOCITY_Y;
         break;
 
@@ -82,7 +96,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
         this.body.allowGravity = false;
         this.scene.tweens.add({
           targets: this,
-          y: this.y - COIN_MOVEMENT_Y,
+          y: this.y - CANDY_MOVEMENT_Y,
           duration: ANIMATION_DURATION,
           onComplete: () => this.destroy(),
         });
@@ -102,7 +116,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     // Play animation
     switch (this.type) {
       case PowerUps.Candy:
-        this.anims.play(PowerUpAnimations.Candy);
+        this.anims.play(getCandyAnimationKey());
         break;
       case PowerUps.Mushroom:
         this.anims.play(PowerUpAnimations.Mushroom);
@@ -110,8 +124,8 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
       case PowerUps.Flower:
         this.anims.play(PowerUpAnimations.Flower);
         break;
-      case PowerUps.Life:
-        this.anims.play(PowerUpAnimations.Life);
+      case PowerUps.Robot:
+        this.anims.play(PowerUpAnimations.Robot);
         break;
       case PowerUps.Butterfly:
         this.anims.play(PowerUpAnimations.Butterfly);
@@ -139,6 +153,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     if (this.body.velocity.x === 0) {
       this.direction = -this.direction;
       this.body.velocity.x = this.direction;
+      this.flipX = this.direction < 0;
     }
 
     // Bounce
@@ -169,7 +184,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
         this.scene.player.activateStar();
         this.scene.soundEffects.playEffect(Sounds.PowerUp);
         break;
-      case PowerUps.Life:
+      case PowerUps.Robot:
         this.scene.soundEffects.playEffect(Sounds.Life);
         break;
     }

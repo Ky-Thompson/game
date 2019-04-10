@@ -26,6 +26,8 @@
       image-rendering: crisp-edges;
       -ms-interpolation-mode: nearest-neighbor;
       image-rendering: pixelated;
+      touch-action: none;
+      overflow: hidden;
     }
 
     body {
@@ -77,6 +79,10 @@
       /* properties */
       width: 100vw;
       height: 100vh;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
     }
 
     /* deeper elements */

@@ -7431,7 +7431,7 @@
       ],
       "opacity": 1,
       "type": "objectgroup",
-      "visible": false,
+      "visible": true,
       "x": 0,
       "y": 0
     },
@@ -7440,18 +7440,6 @@
       "id": 5,
       "name": "power-ups",
       "objects": [
-        {
-          "gid": 3,
-          "height": 32,
-          "id": 177,
-          "name": "",
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "width": 32,
-          "x": 672,
-          "y": 320
-        },
         {
           "gid": 3,
           "height": 32,
@@ -7703,11 +7691,71 @@
           "width": 32,
           "x": 3008,
           "y": 64
+        },
+        {
+          "gid": 4,
+          "height": 32,
+          "id": 231,
+          "name": "",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 32,
+          "x": 672,
+          "y": 320
+        },
+        {
+          "gid": 2,
+          "height": 32,
+          "id": 232,
+          "name": "",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 32,
+          "x": 640,
+          "y": 192
+        },
+        {
+          "gid": 2,
+          "height": 32,
+          "id": 233,
+          "name": "",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 32,
+          "x": 672,
+          "y": 192
+        },
+        {
+          "gid": 2,
+          "height": 32,
+          "id": 234,
+          "name": "",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 32,
+          "x": 736,
+          "y": 192
+        },
+        {
+          "gid": 2,
+          "height": 32,
+          "id": 235,
+          "name": "",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 32,
+          "x": 768,
+          "y": 192
         }
       ],
       "opacity": 1,
       "type": "objectgroup",
-      "visible": false,
+      "visible": true,
       "x": 0,
       "y": 0
     },
@@ -7983,13 +8031,13 @@
       ],
       "opacity": 1,
       "type": "objectgroup",
-      "visible": false,
+      "visible": true,
       "x": 0,
       "y": 0
     }
   ],
   "nextlayerid": 6,
-  "nextobjectid": 231,
+  "nextobjectid": 236,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.2.1",
@@ -8033,7 +8081,7 @@
             {
               "name": "name",
               "type": "string",
-              "value": "1up"
+              "value": "robot"
             }
           ]
         },

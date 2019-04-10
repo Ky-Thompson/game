@@ -1,8 +1,8 @@
-import { PowerUpAnimations, SPRITES_KEY } from '@game/animations';
+import { getCandyAnimationKey, SPRITES_KEY } from '@game/animations';
 import { Body, Scores, Sounds } from '@game/models';
 import { GameScene } from '@game/scenes';
 
-const DIMENSIONS: Partial<Body> = { width: 32, height: 32 }; // TODO: Refactor and unify
+const DIMENSIONS: Partial<Body> = { width: 28, height: 32 }; // TODO: Refactor and unify
 
 export class Candy extends Phaser.GameObjects.Sprite {
   body: Phaser.Physics.Arcade.Body;
@@ -14,7 +14,7 @@ export class Candy extends Phaser.GameObjects.Sprite {
     scene.add.existing(this);
 
     this.body.allowGravity = false;
-    this.play(PowerUpAnimations.Candy);
+    this.play(getCandyAnimationKey());
     this.body.setSize(DIMENSIONS.width, DIMENSIONS.height);
   }
 
