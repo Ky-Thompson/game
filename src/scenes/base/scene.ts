@@ -18,6 +18,12 @@ export abstract class BaseScene extends Phaser.Scene {
     return <any>this.sys.game.config;
   }
 
+  isMobile(): boolean {
+    const isAndroid: boolean = !!navigator.userAgent.match(/Android/i);
+    const isIOS: boolean = !!navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    return isAndroid || isIOS;
+  }
+
   /**
    * Registry for global settings
    */
@@ -36,5 +42,15 @@ export abstract class BaseScene extends Phaser.Scene {
 
   getTilesetProperties(tile: TiledGameObject, tileset: Phaser.Tilemaps.Tileset): TileProperties {
     return tileset.tileProperties[tile.gid - 1] as TileProperties;
+  }
+
+  consolidateProperties(tile: TiledGameObject) {
+    if (Array.isArray(tile.properties)) {
+      const properties = {};
+      tile.properties.forEach((prop) => {
+        properties[prop.name] = prop.value;
+      });
+      tile.properties = properties;
+    }
   }
 }

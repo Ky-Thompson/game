@@ -15,7 +15,7 @@ export class ModifierGroup {
     this.mapLayer = this.world.getLayer(WorldLayers.Modifiers);
 
     this.mapLayer.objects.forEach((modifier: TiledGameObject) => {
-      this.consolidateProperties(modifier);
+      this.scene.consolidateProperties(modifier);
       const type: Modifiers = modifier.properties.type;
 
       switch (type) {
@@ -94,16 +94,6 @@ export class ModifierGroup {
       width: modifier.width,
       backgroundColor: modifier.properties.backgroundColor,
     });
-  }
-
-  private consolidateProperties(tile: TiledGameObject) {
-    if (Array.isArray(tile.properties)) {
-      const properties = {};
-      tile.properties.forEach((prop) => {
-        properties[prop.name] = prop.value;
-      });
-      tile.properties = properties;
-    }
   }
 
   getDestination(id: number): PipeDestination {

@@ -20,7 +20,7 @@ export enum TileCallbacks {
 }
 
 export type TileProperties = {
-  name?: string;
+  name?: string; // TODO: Type
   type?: Modifiers;
   backgroundColor?: string;
   powerUp?: PowerUps;
@@ -41,7 +41,8 @@ export enum Tilemap {
 }
 
 export enum TilemapIds {
-  BlockTile = 44,
+  BrickTile = 11,
+  BlockTile = 14,
 }
 
 export const SKY_HEIGHT = 1000;

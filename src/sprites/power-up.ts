@@ -133,7 +133,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     }
 
     this.scene.world.collide(this);
-    this.scene.physics.world.overlap(this, this.scene.player, () => this.collected());
+    this.scene.physics.world.overlap(this, this.scene.player, () => this.collect());
 
     // Invert direction
     if (this.body.velocity.x === 0) {
@@ -149,7 +149,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
     }
   }
 
-  private collected() {
+  private collect() {
     if (this.type === PowerUps.Flower && this.scene.player.isPlayerState(PlayerStates.Default)) {
       this.type = PowerUps.Mushroom;
     }

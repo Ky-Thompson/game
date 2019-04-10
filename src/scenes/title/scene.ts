@@ -104,6 +104,10 @@ export class TitleScene extends BaseScene {
       duration: PLAYER_SELECT_DURATION,
     });
 
+    if (this.isMobile()) {
+      this.playerSprite.setAlpha(0);
+    }
+
     // Create Caleb sprite
     const caleb: Phaser.GameObjects.Sprite = this.add.sprite(width / 2 - PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
     const calebAnimation = getPlayerAnimationKey(Players.Caleb, PlayerActions.Stand, PlayerStates.Big);

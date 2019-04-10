@@ -1,5 +1,6 @@
 export * from './block-emitter';
 export * from './bounce-brick';
+export * from './candy';
 export * from './enemy';
 export * from './finish-line';
 export * from './fireball';
