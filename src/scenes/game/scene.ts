@@ -62,7 +62,7 @@ export class GameScene extends BaseScene {
 
     // The camera should follow the player
     this.cameras.main.startFollow(this.player);
-    // this.cameras.main.roundPixels = true;
+    this.cameras.main.roundPixels = true;
 
     this.physics.world.resume(); // If the game ended while physics was disabled
   }

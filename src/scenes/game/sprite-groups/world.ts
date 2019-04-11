@@ -26,7 +26,6 @@ export interface Room {
 export class World {
   private readonly tilemap: Phaser.Tilemaps.Tilemap;
   private readonly tileset: Phaser.Tilemaps.Tileset;
-  private readonly backgroundLayer: Phaser.Tilemaps.StaticTilemapLayer;
   private readonly groundLayer: Phaser.Tilemaps.DynamicTilemapLayer;
   private readonly background: Phaser.GameObjects.Sprite;
   private readonly rooms: Room[] = [];
@@ -35,7 +34,6 @@ export class World {
     this.tilemap = this.scene.make.tilemap({ key: Tilemap.MapKey });
 
     this.tileset = this.tilemap.addTilesetImage(Tilemap.TilesetName, Tilemap.TilesetKey);
-    this.backgroundLayer = this.tilemap.createStaticLayer(Tilemap.BackgroundLayerKey, this.tileset, 0, 0);
     this.groundLayer = this.tilemap.createDynamicLayer(Tilemap.WorldLayerKey, this.tileset, 0, 0);
 
     this.background = this.scene.add.sprite(0, 0, Tilemap.SkyKey).setDepth(Depth.Background);
@@ -48,7 +46,7 @@ export class World {
     }
 
     this.scene.physics.world.bounds.width = this.groundLayer.width;
-    this.groundLayer.setCollisionByExclusion([-1], true);
+    this.groundLayer.setCollisionByProperty({ collide: true });
   }
 
   getLayer(name: WorldLayers): Phaser.Tilemaps.ObjectLayer {

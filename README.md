@@ -1,6 +1,6 @@
 # Caleb and Sophia Adventures
 
-[![Logo](https://raw.githubusercontent.com/caleb-sophia-madrid/game/master/reference/caleb-sophia.jpg)](https://caleb-sophia-madrid.github.io/game/)
+[![Logo](https://raw.githubusercontent.com/caleb-sophia-madrid/game/master/reference/logos/caleb-sophia.jpg)](https://caleb-sophia-madrid.github.io/game/)
 
 [![Build Status](https://travis-ci.org/caleb-sophia-madrid/game.svg?branch=master)](https://travis-ci.org/caleb-sophia-madrid/game)
 
