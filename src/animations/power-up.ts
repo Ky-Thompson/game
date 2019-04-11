@@ -1,30 +1,59 @@
 import { SPRITES_KEY } from './sprites';
 
 export enum PowerUpAnimations {
-  Candy = 'candy/spin',
+  Candy = 'candy',
   Mushroom = 'powerup/mushroom',
   Flower = 'powerup/flower',
-  Life = 'powerup/1up',
+  Robot = 'powerup/robot',
   Butterfly = 'powerup/butterfly',
 }
 
+export enum CandyColors {
+  Red = 'red',
+  Green = 'green',
+  Yellow = 'yellow',
+  Blue = 'blue',
+  Orange = 'orange',
+}
+
+const CANDY_COLORS: CandyColors[] = Object.keys(CandyColors).map((color) => CandyColors[color]);
+
+export const getCandyAnimationKey = (candyColor?: CandyColors): string => {
+  if (!candyColor) {
+    const randomColorIndex = Math.floor(Math.random() * CANDY_COLORS.length);
+    candyColor = CANDY_COLORS[randomColorIndex];
+  }
+
+  return `${PowerUpAnimations.Candy}/${candyColor}`;
+};
+
 export const makePowerUpAnimations = (scene: Phaser.Scene) => {
-  // Coin
-  scene.anims.create({
-    key: PowerUpAnimations.Candy,
-    frames: scene.anims.generateFrameNames(SPRITES_KEY, { prefix: PowerUpAnimations.Candy, start: 1, end: 4 }),
-    frameRate: 15,
-    repeat: -1,
-    repeatDelay: 0,
+  // Candy
+  CANDY_COLORS.forEach((candyColor) => {
+    const candyKey = getCandyAnimationKey(candyColor);
+
+    scene.anims.create({
+      key: candyKey,
+      frames: scene.anims.generateFrameNames(SPRITES_KEY, { prefix: candyKey, start: 1, end: 6 }),
+      frameRate: 15,
+      repeat: -1,
+      repeatDelay: 0,
+    });
   });
 
   // Mushroom and life
-  const staticPowerUps = [PowerUpAnimations.Life, PowerUpAnimations.Mushroom];
-  staticPowerUps.forEach((animation) => {
-    scene.anims.create({
-      key: animation,
-      frames: [{ frame: animation, key: SPRITES_KEY }],
-    });
+  scene.anims.create({
+    key: PowerUpAnimations.Mushroom,
+    frames: [{ frame: PowerUpAnimations.Mushroom, key: SPRITES_KEY }],
+  });
+
+  // Robot
+  scene.anims.create({
+    key: PowerUpAnimations.Robot,
+    frames: scene.anims.generateFrameNames(SPRITES_KEY, { prefix: PowerUpAnimations.Robot, start: 1, end: 3 }),
+    frameRate: 10,
+    repeat: -1,
+    repeatDelay: 0,
   });
 
   // Butterfly

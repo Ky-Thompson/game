@@ -23,8 +23,6 @@ export interface Room {
   backgroundColor: string;
 }
 
-const BACKGROUND_SPEED_X = 1;
-
 export class World {
   private readonly tilemap: Phaser.Tilemaps.Tilemap;
   private readonly tileset: Phaser.Tilemaps.Tileset;
@@ -44,6 +42,10 @@ export class World {
     this.background.setPosition(this.background.width / 2, this.background.height / 2);
     const scrollFactorX: number = this.background.width / this.groundLayer.width;
     this.background.setScrollFactor(scrollFactorX, 0);
+
+    if (this.scene.attractMode.isActive()) {
+      this.background.setAlpha(0);
+    }
 
     this.scene.physics.world.bounds.width = this.groundLayer.width;
     this.groundLayer.setCollisionByExclusion([-1], true);
@@ -117,7 +119,7 @@ export class World {
     if (tile.properties.callback) {
       switch (tile.properties.callback) {
         case TileCallbacks.QuestionMark:
-          tile.index = TilemapIds.BlockTile; // Shift to a metallic block
+          tile.index = TilemapIds.BlockTile + 1; // Shift to a metallic block
           this.scene.bounceBrick.restart(tile); // Bounce it a bit
           delete tile.properties.callback;
           tile.setCollision(true); // Invincible blocks are only collidable from above, but everywhere once revealed

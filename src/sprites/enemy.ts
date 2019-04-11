@@ -5,7 +5,7 @@ import { GameScene } from '@game/scenes';
 const DEFAULT_BODY: Body = { width: 24, height: 24, x: 3, y: 8 };
 const INITIAL_POSITION_Y: number = 32;
 const INITIAL_POSITION_X: number = 64;
-const VERTICAL_COLLISION_THRESHOLD: number = 10;
+const VERTICAL_COLLISION_THRESHOLD: number = 20;
 const KILLED_VELOCITY_Y: number = -400;
 const BASE_DIRECTION_VELOCITY: number = -100;
 

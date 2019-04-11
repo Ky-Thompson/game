@@ -5,8 +5,9 @@ module.exports.serve = () => {
     server: {
       baseDir: './dist',
     },
-    files: ['./dist/*.*', './dist/**/*.*'],
+    files: ['./dist/**/*'],
     watch: true,
+    watchEvents: ['change', 'add', 'unlink', 'addDir', 'unlinkDir'],
     reloadDelay: 500,
     reloadDebounce: 100,
     reloadOnRestart: true,

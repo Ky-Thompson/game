@@ -64,10 +64,7 @@ export class GamePad {
   }
 
   private show() {
-    const isAndroid: Boolean = !!navigator.userAgent.match(/Android/i);
-    const isIOS: Boolean = !!navigator.userAgent.match(/iPhone|iPad|iPod/i);
-    const needsPad: Boolean = isAndroid || isIOS;
-    return !this.scene.attractMode.isActive() && needsPad;
+    return !this.scene.attractMode.isActive() && this.scene.isMobile();
   }
 
   getActions(): Partial<ActionState> {

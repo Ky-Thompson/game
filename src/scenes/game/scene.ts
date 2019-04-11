@@ -1,3 +1,4 @@
+import { resizeGame } from '@game/helpers';
 import { ActionState, TiledGameObject } from '@game/models';
 import { BlockEmitter, BounceBrick, FinishLine, Player } from '@game/sprites';
 
@@ -35,6 +36,8 @@ export class GameScene extends BaseScene {
   }
 
   create() {
+    resizeGame();
+
     this.attractMode = new AttractMode(this);
     this.gamePad = new GamePad(this);
     this.keyboard = new Keyboard(this, this.gamePad);
@@ -59,7 +62,7 @@ export class GameScene extends BaseScene {
 
     // The camera should follow the player
     this.cameras.main.startFollow(this.player);
-    this.cameras.main.roundPixels = true;
+    // this.cameras.main.roundPixels = true;
 
     this.physics.world.resume(); // If the game ended while physics was disabled
   }

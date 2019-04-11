@@ -1,5 +1,16 @@
 import { getPlayerAnimationKey } from '@game/animations';
-import { ActionState, Body, Colors, PipeDirection, PlayerActions, Players, PlayerStates, Sounds, TiledGameObject } from '@game/models';
+import {
+  ActionState,
+  Body,
+  Colors,
+  GameOptions,
+  PipeDirection,
+  PlayerActions,
+  Players,
+  PlayerStates,
+  Sounds,
+  TiledGameObject,
+} from '@game/models';
 import { GameScene } from '@game/scenes';
 
 import { Enemy } from './enemy';
@@ -29,7 +40,7 @@ const ENTER_PIPE_START_Y = -200;
 export class Player extends Phaser.GameObjects.Sprite {
   private lastPlayerKey: boolean = false; // TODO: Remove once player selection is in place
   private alive: boolean = true;
-  private playerType: Players = Players.Caleb;
+  private playerType: Players;
   private playerState: PlayerStates = PlayerStates.Default;
 
   private wasHurtTimer: number = 0;
@@ -48,6 +59,8 @@ export class Player extends Phaser.GameObjects.Sprite {
 
   constructor(public scene: GameScene, x: number, y: number) {
     super(scene, x, y, Players.Caleb);
+
+    this.updatePlayerType();
 
     scene.physics.world.enable(this);
     scene.add.existing(this);
@@ -74,6 +87,15 @@ export class Player extends Phaser.GameObjects.Sprite {
 
   getPlayerType(): Players {
     return this.playerType;
+  }
+
+  private updatePlayerType() {
+    const playerType: Players = this.scene.getRegistry(GameOptions.Player) || Players.Caleb;
+
+    if (this.playerType !== playerType) {
+      this.playerType = playerType;
+      this.animate();
+    }
   }
 
   isPlayerState(playerState: PlayerStates): boolean {
@@ -104,6 +126,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     }
 
     this.collideGround();
+    this.updatePlayerType();
     this.updateAnimation(keys);
     this.updateSuper(delta, keys.fire);
     this.updateStar(delta);
@@ -232,6 +255,12 @@ export class Player extends Phaser.GameObjects.Sprite {
       }
     } else if (!this.body.blocked.down) {
       // If in the air, don't run
+      this.run(0);
+    }
+
+    if (this.x < this.body.width) {
+      this.x = this.body.width;
+      this.body.setVelocityX(0);
       this.run(0);
     }
   }

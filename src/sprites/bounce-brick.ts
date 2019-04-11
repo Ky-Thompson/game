@@ -34,7 +34,7 @@ export class BounceBrick extends Phaser.GameObjects.Sprite {
     this.alpha = 1;
 
     // Play animation
-    this.play(tile.index === TilemapIds.BlockTile ? BrickAnimations.Block : BrickAnimations.Brick);
+    this.play(tile.index === TilemapIds.BlockTile + 1 ? BrickAnimations.Block : BrickAnimations.Brick);
 
     this.x = tile.x * TILE_SIZE + TILE_SIZE / 2;
     this.y = tile.y * TILE_SIZE + TILE_SIZE / 2;

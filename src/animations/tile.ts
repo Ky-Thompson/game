@@ -1,4 +1,4 @@
-import { Tilemap } from '@game/models';
+import { Tilemap, TilemapIds } from '@game/models';
 
 import { SPRITES_KEY } from './sprites';
 
@@ -12,13 +12,19 @@ export const makeTileAnimations = (scene: Phaser.Scene) => {
   // Brick
   scene.anims.create({
     key: TileAnimations.Brick,
-    frames: scene.anims.generateFrameNumbers(Tilemap.TilesetKey, { start: 14, end: 14, first: 14 }),
+    frames: scene.anims.generateFrameNumbers(Tilemap.TilesetKey, {
+      start: TilemapIds.BrickTile,
+      end: TilemapIds.BrickTile,
+    }),
   });
 
   // Block
   scene.anims.create({
     key: TileAnimations.Block,
-    frames: scene.anims.generateFrameNumbers(Tilemap.TilesetKey, { start: 43, end: 43, first: 43 }),
+    frames: scene.anims.generateFrameNumbers(Tilemap.TilesetKey, {
+      start: TilemapIds.BlockTile,
+      end: TilemapIds.BlockTile,
+    }),
   });
 
   // Flag
