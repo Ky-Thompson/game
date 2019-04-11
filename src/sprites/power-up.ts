@@ -1,13 +1,12 @@
 import { getCandyAnimationKey, PowerUpAnimations, SPRITES_KEY } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
-import { Body, PlayerStates, PowerUps, Scores, Sounds } from '@game/models';
+import { Body, Depth, PlayerStates, PowerUps, Scores, Sounds } from '@game/models';
 import { GameScene } from '@game/scenes';
 
 const DIMENSIONS: Body = { width: 24, height: 24, x: 3, y: 8 };
 const VELOCITY_X = 140;
 const ACTIVATE_VELOCITY_Y = -300;
 const ANIMATION_DURATION = 500;
-const FLOWER_DEPTH = -100;
 const CANDY_MOVEMENT_Y = 100;
 const BUTTERFLY_VELOCITY_Y = -600;
 
@@ -79,7 +78,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
         break;
 
       case PowerUps.Flower:
-        this.setDepth(FLOWER_DEPTH);
+        this.setDepth(Depth.Flower);
         this.body.allowGravity = false;
         this.body.setVelocity(0, 0);
         this.direction = 0;

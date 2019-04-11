@@ -1,5 +1,5 @@
-import { TILE_SIZE } from '@game/config';
-import { Depth, PlayerStates, PowerUps, Scores, Sounds, TileCallbacks, TiledGameObject, Tilemap, TilemapIds } from '@game/models';
+import { SUNSET_DURATION, TILE_SIZE } from '@game/config';
+import { Colors, Depth, PlayerStates, PowerUps, Scores, Sounds, TileCallbacks, TiledGameObject, Tilemap, TilemapIds } from '@game/models';
 import { Player, PowerUp, Turtle } from '@game/sprites';
 
 import { GameScene } from '../scene';
@@ -24,29 +24,51 @@ export interface Room {
 }
 
 export class World {
-  private readonly tilemap: Phaser.Tilemaps.Tilemap;
-  private readonly tileset: Phaser.Tilemaps.Tileset;
-  private readonly groundLayer: Phaser.Tilemaps.DynamicTilemapLayer;
-  private readonly background: Phaser.GameObjects.Sprite;
+  private tilemap: Phaser.Tilemaps.Tilemap;
+  private tileset: Phaser.Tilemaps.Tileset;
+  private groundLayer: Phaser.Tilemaps.DynamicTilemapLayer;
+  private sunset: Phaser.GameObjects.Graphics;
+  private clouds: Phaser.GameObjects.Sprite;
   private readonly rooms: Room[] = [];
 
   constructor(private scene: GameScene) {
+    this.createWorld();
+    this.createSky();
+  }
+
+  private createWorld() {
     this.tilemap = this.scene.make.tilemap({ key: Tilemap.MapKey });
 
     this.tileset = this.tilemap.addTilesetImage(Tilemap.TilesetName, Tilemap.TilesetKey);
     this.groundLayer = this.tilemap.createDynamicLayer(Tilemap.WorldLayerKey, this.tileset, 0, 0);
 
-    this.background = this.scene.add.sprite(0, 0, Tilemap.SkyKey).setDepth(Depth.Background);
-    this.background.setPosition(this.background.width / 2, this.background.height / 2);
-    const scrollFactorX: number = this.background.width / this.groundLayer.width;
-    this.background.setScrollFactor(scrollFactorX, 0);
-
-    if (this.scene.attractMode.isActive()) {
-      this.background.setAlpha(0);
-    }
-
     this.scene.physics.world.bounds.width = this.groundLayer.width;
     this.groundLayer.setCollisionByProperty({ collide: true });
+  }
+
+  private createSky() {
+    const { height, width } = this.scene.gameConfig();
+
+    // Create the sky background color
+    this.sunset = this.scene.add
+      .graphics({ x: 0, y: 0 })
+      .setDepth(Depth.Sunset)
+      .setScrollFactor(0, 0)
+      .setAlpha(0);
+    this.sunset.fillGradientStyle(Colors.Blue, Colors.Blue, Colors.Orange, Colors.Orange);
+    this.sunset.fillRect(0, 0, width, height);
+
+    // Create the clouds
+    this.clouds = this.scene.add.sprite(0, 0, Tilemap.SkyKey).setDepth(Depth.Clouds);
+    this.clouds.setPosition(this.clouds.width / 2, this.clouds.height / 2);
+    const scrollFactorX: number = this.clouds.width / this.groundLayer.width;
+    this.clouds.setScrollFactor(scrollFactorX, 0);
+
+    if (this.scene.attractMode.isActive()) {
+      this.clouds.setAlpha(0);
+    } else {
+      this.scene.tweens.add({ targets: this.sunset, alpha: 0.9, delay: SUNSET_DURATION, duration: SUNSET_DURATION });
+    }
   }
 
   getLayer(name: WorldLayers): Phaser.Tilemaps.ObjectLayer {
@@ -117,7 +139,7 @@ export class World {
     if (tile.properties.callback) {
       switch (tile.properties.callback) {
         case TileCallbacks.QuestionMark:
-          tile.index = TilemapIds.BlockTile + 1; // Shift to a metallic block
+          tile.index = TilemapIds.BlockTile + 1; // Shift to a metallic block TODO: Avoid using +1
           this.scene.bounceBrick.restart(tile); // Bounce it a bit
           delete tile.properties.callback;
           tile.setCollision(true); // Invincible blocks are only collidable from above, but everywhere once revealed

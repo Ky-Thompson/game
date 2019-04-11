@@ -6,5 +6,7 @@ export const FONT = 'font';
 
 // Game
 export const GAME_TIMEOUT = 150;
+export const MS_TO_S = 1000;
 export const HURRY_TIME = 50;
 export const TIME_FACTOR = 2;
+export const SUNSET_DURATION = (GAME_TIMEOUT * MS_TO_S) / (TIME_FACTOR * 3);

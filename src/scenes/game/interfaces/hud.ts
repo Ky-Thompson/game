@@ -1,9 +1,8 @@
-import { FONT, GAME_TIMEOUT, HURRY_TIME, TILE_SIZE, TIME_FACTOR } from '@game/config';
+import { FONT, GAME_TIMEOUT, HURRY_TIME, MS_TO_S, TILE_SIZE, TIME_FACTOR } from '@game/config';
 import { Colors, Scores, Sounds } from '@game/models';
 
 import { GameScene } from '../scene';
 
-const MS_TO_S = 1000;
 const FONT_SIZE = TILE_SIZE / 2;
 const HUD_PADDING = TILE_SIZE * 2;
 const SCORE_TEXT_PADDING = 5;

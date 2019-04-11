@@ -3697,7 +3697,7 @@
             {
               "name": "backgroundColor",
               "type": "string",
-              "value": "#33A5FF"
+              "value": "#33a5ff"
             },
             {
               "name": "type",
@@ -3863,7 +3863,7 @@
       ],
       "opacity": 1,
       "type": "objectgroup",
-      "visible": false,
+      "visible": true,
       "x": 0,
       "y": 0
     },
@@ -4187,7 +4187,7 @@
       ],
       "opacity": 1,
       "type": "objectgroup",
-      "visible": false,
+      "visible": true,
       "x": 0,
       "y": 0
     },
@@ -4463,7 +4463,7 @@
       ],
       "opacity": 1,
       "type": "objectgroup",
-      "visible": false,
+      "visible": true,
       "x": 0,
       "y": 0
     }
