@@ -4,7 +4,7 @@ import { GameScene } from '@game/scenes';
 
 import { Enemy } from './enemy';
 
-const DIMENSIONS: Partial<Body> = { x: 2, y: 24 };
+const DIMENSIONS: Body = { width: 24, height: 24, x: 2, y: 24 };
 const SLIDE_VELOCITY: number = 300;
 
 export class Turtle extends Enemy {
@@ -13,9 +13,13 @@ export class Turtle extends Enemy {
   constructor(scene: GameScene, x: number, y: number) {
     super(scene, x, y);
 
-    this.anims.play(TurtleAnimations.Default);
     this.flipX = true;
     this.setBody(DIMENSIONS);
+    this.animate();
+  }
+
+  private animate(animation: TurtleAnimations = TurtleAnimations.Default) {
+    this.anims.play(animation);
   }
 
   update() {
@@ -68,7 +72,7 @@ export class Turtle extends Enemy {
       }
 
       this.sliding = true;
-      this.play(TurtleAnimations.Shell);
+      this.animate(TurtleAnimations.Shell);
       this.scene.player.enemyBounce(this);
     } else {
       // Player hit

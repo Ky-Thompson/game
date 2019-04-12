@@ -1,7 +1,7 @@
 import {
   makeBibleAnimations,
-  makeGoombaAnimations,
   makeHUDAnimations,
+  makeLiarAnimations,
   makePadAnimations,
   makePlayerAnimations,
   makePowerUpAnimations,
@@ -70,7 +70,7 @@ export class BootScene extends BaseScene {
     makePlayerAnimations(this, Players.Sophia);
     makeBibleAnimations(this);
 
-    makeGoombaAnimations(this);
+    makeLiarAnimations(this);
     makeTurtleAnimations(this);
     makePowerUpAnimations(this);
   }

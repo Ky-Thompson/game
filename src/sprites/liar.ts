@@ -1,19 +1,23 @@
-import { GoombaAnimations } from '@game/animations';
+import { LiarAnimations } from '@game/animations';
+import { Body } from '@game/models';
 import { GameScene } from '@game/scenes';
 
 import { Enemy } from './enemy';
 
+const DIMENSIONS: Body = { width: 28, height: 20, x: 2, y: 12 };
 const KILLED_TIMEOUT: number = 500;
-// TODO: Remove goomba, use liar
-export class Goomba extends Enemy {
+
+export class Liar extends Enemy {
   private killedTime: number = 0;
 
   constructor(scene: GameScene, x: number, y: number) {
     super(scene, x, y);
+    this.flipX = true;
+    this.setBody(DIMENSIONS);
     this.animate();
   }
 
-  private animate(animation: GoombaAnimations = GoombaAnimations.Default) {
+  private animate(animation: LiarAnimations = LiarAnimations.Default) {
     this.anims.play(animation);
   }
 
@@ -43,6 +47,7 @@ export class Goomba extends Enemy {
     if (this.body.velocity.x === 0) {
       this.direction = -this.direction;
       this.body.velocity.x = this.direction;
+      this.flipX = this.direction < 0;
     }
   }
 
@@ -60,7 +65,7 @@ export class Goomba extends Enemy {
   }
 
   private flatten() {
-    this.animate(GoombaAnimations.Flattened);
-    this.killedTime = KILLED_TIMEOUT; // Keep goomba flat for a time, then remove it.
+    this.animate(LiarAnimations.Flattened);
+    this.killedTime = KILLED_TIMEOUT; // Keep liar flat for a time, then remove it.
   }
 }

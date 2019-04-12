@@ -1,5 +1,5 @@
 import { TiledGameObject } from '@game/models';
-import { Bible, BounceBrick, Enemy, EnemyTypes, Goomba, Turtle } from '@game/sprites';
+import { Bible, BounceBrick, Enemy, EnemyTypes, Liar, Turtle } from '@game/sprites';
 
 import { GameScene } from '../scene';
 import { World, WorldLayers } from './world';
@@ -18,8 +18,8 @@ export class EnemyGroup {
       const tileProperties = this.scene.getTilesetProperties(enemy, this.tileset);
 
       switch (tileProperties.name) {
-        case EnemyTypes.Goomba:
-          this.group.add(new Goomba(this.scene, enemy.x, enemy.y));
+        case EnemyTypes.Liar:
+          this.group.add(new Liar(this.scene, enemy.x, enemy.y));
           break;
         case EnemyTypes.Turtle:
           this.group.add(new Turtle(this.scene, enemy.x, enemy.y));

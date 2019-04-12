@@ -2,7 +2,6 @@ import { SPRITES_KEY } from '@game/animations';
 import { Body, Scores, Sounds } from '@game/models';
 import { GameScene } from '@game/scenes';
 
-const DEFAULT_BODY: Body = { width: 24, height: 24, x: 3, y: 8 };
 const INITIAL_POSITION_Y: number = 32;
 const INITIAL_POSITION_X: number = 64;
 const VERTICAL_COLLISION_THRESHOLD: number = 20;
@@ -10,7 +9,7 @@ const KILLED_VELOCITY_Y: number = -400;
 const BASE_DIRECTION_VELOCITY: number = -100;
 
 export enum EnemyTypes {
-  Goomba = 'goomba',
+  Liar = 'liar',
   Turtle = 'turtle',
 }
 
@@ -40,12 +39,9 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
       .setCollideWorldBounds(false);
 
     this.body.allowGravity = false;
-
-    this.setBody(DEFAULT_BODY);
   }
 
-  protected setBody(body: Partial<Body>) {
-    body = { ...DEFAULT_BODY, ...(body || {}) };
+  protected setBody(body: Body) {
     this.body.setSize(body.width, body.height);
     this.body.offset.set(body.x, body.y);
   }
