@@ -1,5 +1,6 @@
 export * from './bible';
 export * from './goomba';
+export * from './hud';
 export * from './pad';
 export * from './player';
 export * from './power-up';

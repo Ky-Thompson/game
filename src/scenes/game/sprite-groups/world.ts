@@ -4,6 +4,7 @@ import { Player, PowerUp, Turtle } from '@game/sprites';
 
 import { GameScene } from '../scene';
 
+// TODO: Review and refactor constants / enums
 export enum WorldLayers {
   Enemies = 'enemies',
   PowerUps = 'power-ups',
@@ -28,6 +29,7 @@ export class World {
   private tileset: Phaser.Tilemaps.Tileset;
   private groundLayer: Phaser.Tilemaps.DynamicTilemapLayer;
   private sunset: Phaser.GameObjects.Graphics;
+  private twilight: Phaser.GameObjects.Graphics;
   private clouds: Phaser.GameObjects.Sprite;
   private readonly rooms: Room[] = [];
 
@@ -52,11 +54,19 @@ export class World {
     // Create the sky background color
     this.sunset = this.scene.add
       .graphics({ x: 0, y: 0 })
-      .setDepth(Depth.Sunset)
+      .setDepth(Depth.Twilight)
       .setScrollFactor(0, 0)
-      .setAlpha(0);
-    this.sunset.fillGradientStyle(Colors.Blue, Colors.Blue, Colors.Orange, Colors.Orange);
-    this.sunset.fillRect(0, 0, width, height);
+      .setAlpha(0)
+      .fillGradientStyle(0x33a5ff, 0x33a5ff, Colors.SkyYellow, Colors.SkyYellow)
+      .fillRect(0, 0, width, height);
+
+    this.twilight = this.scene.add
+      .graphics({ x: 0, y: 0 })
+      .setDepth(Depth.Twilight)
+      .setScrollFactor(0, 0)
+      .setAlpha(0)
+      .fillGradientStyle(Colors.Blue, Colors.Blue, Colors.Orange, Colors.Orange)
+      .fillRect(0, 0, width, height);
 
     // Create the clouds
     this.clouds = this.scene.add.sprite(0, 0, Tilemap.SkyKey).setDepth(Depth.Clouds);
@@ -67,7 +77,8 @@ export class World {
     if (this.scene.attractMode.isActive()) {
       this.clouds.setAlpha(0);
     } else {
-      this.scene.tweens.add({ targets: this.sunset, alpha: 0.9, delay: SUNSET_DURATION, duration: SUNSET_DURATION });
+      this.scene.tweens.add({ targets: this.sunset, alpha: 0.7, delay: SUNSET_DURATION, duration: SUNSET_DURATION });
+      this.scene.tweens.add({ targets: this.twilight, alpha: 1, delay: SUNSET_DURATION * 2, duration: SUNSET_DURATION });
     }
   }
 

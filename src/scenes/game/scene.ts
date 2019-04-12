@@ -90,4 +90,16 @@ export class GameScene extends BaseScene {
   restart() {
     this.scene.start(TitleScene.SceneKey);
   }
+
+  playerDied() {
+    if (this.hud.updateLifes(-1)) {
+      // Still alive, go back to beginning!
+      // TODO: Checkpoints
+      this.player.setPosition(this.start.x, this.start.y);
+      this.player.init();
+    } else {
+      // Run out of lifes
+      this.restart();
+    }
+  }
 }

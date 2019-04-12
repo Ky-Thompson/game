@@ -38,9 +38,9 @@ const ENTER_PIPE_TRANSLATION = 80;
 const ENTER_PIPE_START_Y = -200;
 
 export class Player extends Phaser.GameObjects.Sprite {
-  private alive: boolean = true;
+  private alive: boolean;
   private playerType: Players;
-  private playerState: PlayerStates = PlayerStates.Default;
+  private playerState: PlayerStates;
 
   private wasHurtTimer: number = 0;
   private flashToggle: boolean = false;
@@ -66,7 +66,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     this.body.maxVelocity.x = MAX_VELOCITY_X;
     this.body.maxVelocity.y = MAX_VELOCITY_Y;
-    this.small();
+    this.init();
 
     const onAnimationComplete = () => {
       const animationGrow = getPlayerAnimationKey(this.playerType, PlayerActions.Grow);
@@ -78,6 +78,16 @@ export class Player extends Phaser.GameObjects.Sprite {
     };
 
     this.on('animationcomplete', onAnimationComplete, this);
+  }
+
+  init() {
+    this.alive = true;
+    this.body.velocity.x = 0;
+    this.body.velocity.y = 0;
+    this.flipX = false;
+    this.playerState = PlayerStates.Default;
+    this.small();
+    this.animate(PlayerActions.Stand, true);
   }
 
   isAlive(): boolean {
@@ -141,7 +151,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     const { height } = this.scene.gameConfig();
 
     if (this.y > height * 2) {
-      this.scene.restart(); // Really superdead, has been falling for a while.
+      this.scene.playerDied();
     } else if (this.y > height && this.alive) {
       this.die();
     }

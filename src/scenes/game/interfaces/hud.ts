@@ -1,3 +1,4 @@
+import { HUDAnimations, SPRITES_KEY } from '@game/animations';
 import { FONT, GAME_TIMEOUT, HURRY_TIME, MS_TO_S, TILE_SIZE, TIME_FACTOR } from '@game/config';
 import { Colors, Scores, Sounds } from '@game/models';
 
@@ -8,45 +9,92 @@ const HUD_PADDING = TILE_SIZE * 2;
 const SCORE_TEXT_PADDING = 5;
 const TIME_TEXT_PADDING = 3;
 const TIME_TEXT = 'TIME';
+const LIFES_X = TILE_SIZE * 5;
+const LIFES_Y = (TILE_SIZE * 3) / 4;
+const MAX_LIFES = 5;
+const START_LIFES = 3;
 
 export class HUD {
-  private readonly playerText: Phaser.GameObjects.BitmapText;
-  private readonly scoreText: Phaser.GameObjects.BitmapText;
+  private playerText: Phaser.GameObjects.BitmapText;
+  private scoreText: Phaser.GameObjects.BitmapText;
   private score: number = 0;
 
-  private readonly timeText: Phaser.GameObjects.BitmapText;
-  private readonly timerText: Phaser.GameObjects.BitmapText;
+  private timeText: Phaser.GameObjects.BitmapText;
+  private timerText: Phaser.GameObjects.BitmapText;
   private time: number = GAME_TIMEOUT * MS_TO_S;
   private displayedTime: number = GAME_TIMEOUT;
   private hurry: boolean = false;
 
+  private readonly lifeSprites: Phaser.GameObjects.Sprite[] = [];
+  private lifes: number = START_LIFES;
+
   constructor(private scene: GameScene) {
+    this.createPlayerScore();
+    this.createTimer();
+    this.createLifes();
+
+    if (this.scene.attractMode.isActive()) {
+      this.playerText.setAlpha(0);
+      this.scoreText.setAlpha(0);
+      this.timeText.setAlpha(0);
+      this.timerText.setAlpha(0);
+      this.lifeSprites.forEach((life) => life.setAlpha(0).setActive(false));
+    }
+  }
+
+  private createPlayerScore() {
     this.playerText = this.scene.add
       .bitmapText(HUD_PADDING, TILE_SIZE / 2, FONT, this.scene.player.getPlayerType().toUpperCase(), FONT_SIZE)
       .setScrollFactor(0, 0);
+
     this.scoreText = this.scene.add
       .bitmapText(HUD_PADDING, TILE_SIZE, FONT, ''.padEnd(SCORE_TEXT_PADDING, '0'), FONT_SIZE)
       .setScrollFactor(0, 0);
+  }
 
+  private createTimer() {
     const { width } = this.scene.gameConfig();
     const timePosition = width - HUD_PADDING;
 
     this.timeText = this.scene.add
       .bitmapText(timePosition - TIME_TEXT.length * FONT_SIZE, TILE_SIZE / 2, FONT, TIME_TEXT, FONT_SIZE)
       .setScrollFactor(0, 0);
+
     this.timerText = this.scene.add
       .bitmapText(timePosition - TIME_TEXT_PADDING * FONT_SIZE, TILE_SIZE, FONT, ''.padEnd(TIME_TEXT_PADDING, '0'), FONT_SIZE)
       .setScrollFactor(0, 0);
 
-    if (this.scene.attractMode.isActive()) {
-      this.playerText.alpha = 0;
-      this.scoreText.alpha = 0;
-      this.timeText.alpha = 0;
-      this.timerText.alpha = 0;
+    this.time = GAME_TIMEOUT * MS_TO_S;
+    this.displayedTime = GAME_TIMEOUT;
+  }
+
+  private createLifes() {
+    for (let i = 0; i < MAX_LIFES; i++) {
+      const sprite = this.scene.add
+        .sprite(LIFES_X + (TILE_SIZE * i) / 2, LIFES_Y, SPRITES_KEY)
+        .play(HUDAnimations.Life)
+        .setActive(false)
+        .setScrollFactor(0, 0);
+
+      this.lifeSprites.push(sprite);
     }
+
+    this.updateLifes(0);
+  }
+
+  updateLifes(inc: number): boolean {
+    this.lifes += inc;
+    this.lifes = Math.max(Math.min(this.lifes, MAX_LIFES), 0);
+    this.lifeSprites.forEach((life, index) => life.setAlpha(index < this.lifes ? 1 : 0));
+
+    return this.lifes > 0;
   }
 
   update(delta: number) {
+    if (this.displayedTime <= 0) {
+      return;
+    }
+
     this.time -= delta * TIME_FACTOR;
 
     if (this.time / MS_TO_S - this.displayedTime < 1) {
@@ -80,8 +128,8 @@ export class HUD {
         this.hurry = false;
         this.timerText.clearTint();
         this.scene.soundEffects.setMusicRate(1);
-        this.time = GAME_TIMEOUT * MS_TO_S;
-        this.displayedTime = GAME_TIMEOUT;
+        this.time = 0;
+        this.displayedTime = 0;
       }
     }
   }

@@ -60,7 +60,7 @@ export class TitleScene extends BaseScene {
     if (this.getRegistry(GameOptions.RestartScene)) {
       this.scene.stop(GameScene.SceneKey);
       this.scene.launch(GameScene.SceneKey);
-      this.scene.bringToTop(GameScene.SceneKey);
+      this.scene.bringToTop();
       this.setRegistry(GameOptions.RestartScene, false);
     }
   }

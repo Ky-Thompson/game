@@ -1,6 +1,7 @@
 import {
   makeBibleAnimations,
   makeGoombaAnimations,
+  makeHUDAnimations,
   makePadAnimations,
   makePlayerAnimations,
   makePowerUpAnimations,
@@ -61,6 +62,7 @@ export class BootScene extends BaseScene {
 
   private makeAnimations() {
     makePadAnimations(this);
+    makeHUDAnimations(this);
     makeTitleAnimations(this);
     makeTileAnimations(this);
 

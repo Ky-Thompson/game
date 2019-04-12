@@ -185,6 +185,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
         break;
       case PowerUps.Robot:
         this.scene.soundEffects.playEffect(Sounds.Life);
+        this.scene.hud.updateLifes(1);
         break;
     }
 
