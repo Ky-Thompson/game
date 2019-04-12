@@ -5,6 +5,7 @@ export const TILE_SIZE = 32;
 export const FONT = 'font';
 
 // Game
+export const GRAVITY = 1600;
 export const GAME_TIMEOUT = 150;
 export const MS_TO_S = 1000;
 export const HURRY_TIME = 50;

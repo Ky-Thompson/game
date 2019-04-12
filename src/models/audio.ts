@@ -8,7 +8,7 @@ export enum Sounds {
   Kick = 'smb_kick',
   FlagPole = 'smb_flagpole',
   StageClear = 'smb_stage_clear',
-  Fireball = 'smb_fireball',
+  ThrowBible = 'smb_fireball',
   JumpSmall = 'smb_jump-small',
   JumpBig = 'smb_jump-big',
   Pipe = 'smb_pipe',

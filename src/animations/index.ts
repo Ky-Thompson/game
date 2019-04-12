@@ -1,4 +1,4 @@
-export * from './fire';
+export * from './bible';
 export * from './goomba';
 export * from './pad';
 export * from './player';

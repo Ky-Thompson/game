@@ -135,7 +135,7 @@ export class World {
       }
     }
 
-    // If the tile has a callback, lets fire it
+    // If the tile has a callback, lets call it
     if (tile.properties.callback) {
       switch (tile.properties.callback) {
         case TileCallbacks.QuestionMark:

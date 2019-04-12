@@ -22,7 +22,7 @@ export const makePlayerAnimations = (scene: Phaser.Scene, player: Players) => {
     repeatDelay: 0,
   };
 
-  // Loop in Default, Big and Fire
+  // Loop in Default, Big and Super
   for (const playerState in PlayerStates) {
     const state: PlayerStates = <PlayerStates>PlayerStates[playerState];
 

@@ -25,7 +25,7 @@ const MAX_VELOCITY_Y = 800;
 const JUMP_VELOCITY = -400;
 const JUMP_TIME = 300;
 const BEND_VELOCITY = 200;
-const FIRE_COOLDOWN = 300;
+const THROW_BIBLE_COOLDOWN = 500;
 const SUPER_TINTS = [Colors.White, Colors.Red, Colors.White, Colors.Green, Colors.White, Colors.Blue];
 const SUPER_TIME = 10000;
 const WAS_HURT_ALPHA = 0.2;
@@ -38,7 +38,6 @@ const ENTER_PIPE_TRANSLATION = 80;
 const ENTER_PIPE_START_Y = -200;
 
 export class Player extends Phaser.GameObjects.Sprite {
-  private lastPlayerKey: boolean = false; // TODO: Remove once player selection is in place
   private alive: boolean = true;
   private playerType: Players;
   private playerState: PlayerStates = PlayerStates.Default;
@@ -128,7 +127,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.collideGround();
     this.updatePlayerType();
     this.updateAnimation(keys);
-    this.updateSuper(delta, keys.fire);
+    this.updateSuper(delta, keys.throwBible);
     this.updateStar(delta);
     this.updateWasHurt(delta);
     this.updateMovement(keys.left, keys.right);
@@ -158,12 +157,6 @@ export class Player extends Phaser.GameObjects.Sprite {
   }
 
   private updateAnimation(input: Partial<ActionState>) {
-    // TODO: Remove once player selection is in place
-    if (input.player && !this.lastPlayerKey) {
-      this.playerType = this.playerType === Players.Caleb ? (this.playerType = Players.Sophia) : (this.playerType = Players.Caleb);
-    }
-    this.lastPlayerKey = input.player;
-
     let animation: PlayerActions = PlayerActions.Stand;
 
     // When jumping at the top of the jump, there is a flickr in the animation. This check that the player is really stopped in Y axis
@@ -195,16 +188,16 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.animate(animation);
   }
 
-  private updateSuper(delta: number, fire: boolean) {
+  private updateSuper(delta: number, throwBible: boolean) {
     if (this.superCoolDownTimer > 0) {
       this.superCoolDownTimer -= delta;
     }
 
-    if (fire && this.playerState === PlayerStates.Super && this.superCoolDownTimer <= 0) {
-      let fireball = this.scene.fireballs.get();
-      if (fireball) {
-        fireball.fire(this.x, this.y, this.flipX);
-        this.superCoolDownTimer = FIRE_COOLDOWN;
+    if (throwBible && this.playerState === PlayerStates.Super && this.superCoolDownTimer <= 0) {
+      let bible = this.scene.bibles.get();
+      if (bible) {
+        bible.throw(this.x, this.y, this.flipX);
+        this.superCoolDownTimer = THROW_BIBLE_COOLDOWN;
       }
     }
   }

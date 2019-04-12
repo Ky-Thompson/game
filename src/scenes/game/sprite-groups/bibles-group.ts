@@ -1,25 +1,25 @@
-import { Fireball } from '@game/sprites';
+import { Bible } from '@game/sprites';
 
 import { GameScene } from '../scene';
 
-export class FireballsGroup {
+export class BiblesGroup {
   private readonly group: Phaser.GameObjects.Group;
 
   constructor(private scene: GameScene) {
     this.group = this.scene.add.group({
-      classType: <any>Fireball,
+      classType: <any>Bible,
       maxSize: 10,
       runChildUpdate: false, // Due to https://github.com/photonstorm/phaser/issues/3724
     });
   }
 
-  get(): Fireball {
+  get(): Bible {
     return this.group.get();
   }
 
   update() {
-    Array.from(this.group.children.entries).forEach((fireball: Fireball) => {
-      fireball.update();
+    Array.from(this.group.children.entries).forEach((bible: Bible) => {
+      bible.update();
     });
   }
 }

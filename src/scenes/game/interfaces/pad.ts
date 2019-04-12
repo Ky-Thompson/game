@@ -14,7 +14,7 @@ export class GamePad {
   private readonly rightButton: Phaser.GameObjects.Sprite;
   private readonly leftButton: Phaser.GameObjects.Sprite;
   private readonly upButton: Phaser.GameObjects.Sprite;
-  private readonly fireButton: Phaser.GameObjects.Sprite;
+  private readonly throwBibleButton: Phaser.GameObjects.Sprite;
 
   constructor(private scene: GameScene) {
     if (!this.show()) {
@@ -29,15 +29,15 @@ export class GamePad {
     const LEFT_BUTTON_Y = RIGHT_BUTTON_Y;
     const UP_BUTTON_X = BUTTON_SIZE / 2 + PADDING;
     const UP_BUTTON_Y = RIGHT_BUTTON_Y;
-    const FIRE_BUTTON_X = UP_BUTTON_X + BUTTON_SIZE + PADDING;
-    const FIRE_BUTTON_Y = RIGHT_BUTTON_Y;
+    const THROW_BIBLE_BUTTON_X = UP_BUTTON_X + BUTTON_SIZE + PADDING;
+    const THROW_BIBLE_BUTTON_Y = RIGHT_BUTTON_Y;
 
     this.rightButton = this.scene.add.sprite(RIGHT_BUTTON_X, RIGHT_BUTTON_Y, SPRITES_KEY).play(PadAnimations.Right);
     this.leftButton = this.scene.add.sprite(LEFT_BUTTON_X, LEFT_BUTTON_Y, SPRITES_KEY).play(PadAnimations.Left);
     this.upButton = this.scene.add.sprite(UP_BUTTON_X, UP_BUTTON_Y, SPRITES_KEY).play(PadAnimations.Up);
-    this.fireButton = this.scene.add.sprite(FIRE_BUTTON_X, FIRE_BUTTON_Y, SPRITES_KEY).play(PadAnimations.A);
+    this.throwBibleButton = this.scene.add.sprite(THROW_BIBLE_BUTTON_X, THROW_BIBLE_BUTTON_Y, SPRITES_KEY).play(PadAnimations.A);
 
-    [this.rightButton, this.leftButton, this.upButton, this.fireButton].forEach((button) =>
+    [this.rightButton, this.leftButton, this.upButton, this.throwBibleButton].forEach((button) =>
       button
         .setScrollFactor(0, 0)
         .setDepth(Depth.HUD)
@@ -48,7 +48,7 @@ export class GamePad {
         .on('pointerup', () => button.clearTint())
     );
 
-    this.fireButton.setAlpha(0); // Fire button is hidden until available
+    this.throwBibleButton.setAlpha(0); // Throw Bible button is hidden until available
 
     this.rightButton.on('pointerdown', () => (this.gamePad.right = true));
     this.rightButton.on('pointerup', () => (this.gamePad.right = false));
@@ -59,8 +59,8 @@ export class GamePad {
     this.upButton.on('pointerdown', () => (this.gamePad.jump = true));
     this.upButton.on('pointerup', () => (this.gamePad.jump = false));
 
-    this.fireButton.on('pointerdown', () => (this.gamePad.fire = true));
-    this.fireButton.on('pointerup', () => (this.gamePad.fire = false));
+    this.throwBibleButton.on('pointerdown', () => (this.gamePad.throwBible = true));
+    this.throwBibleButton.on('pointerup', () => (this.gamePad.throwBible = false));
   }
 
   private show() {
@@ -76,6 +76,6 @@ export class GamePad {
       return; // Don't update pad if not needed
     }
 
-    this.fireButton.setAlpha(this.scene.player.isPlayerState(PlayerStates.Super) ? GAME_PAD_ALPHA : 0);
+    this.throwBibleButton.setAlpha(this.scene.player.isPlayerState(PlayerStates.Super) ? GAME_PAD_ALPHA : 0);
   }
 }

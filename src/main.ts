@@ -1,7 +1,7 @@
 /// <reference path="./phaser.d.ts"/>
 import 'phaser';
 
-import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE } from './config';
+import { GAME_HEIGHT, GAME_WIDTH, GRAVITY, TILE_SIZE } from './config';
 import { resizeGame, setFullscreen } from './helpers';
 import { BootScene, GameScene, TitleScene } from './scenes';
 
@@ -13,7 +13,7 @@ const config: GameConfig = {
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: { y: 1600 },
+      gravity: { y: GRAVITY },
       debug: false,
       tileBias: TILE_SIZE,
     },

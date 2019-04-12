@@ -5,7 +5,7 @@ import { BlockEmitter, BounceBrick, FinishLine, Player } from '@game/sprites';
 import { BaseScene } from '../base';
 import { TitleScene } from '../title';
 import { AttractMode, GamePad, HUD, Keyboard, SoundEffects } from './interfaces';
-import { EnemyGroup, FireballsGroup, ModifierGroup, PowerUpGroup, World } from './sprite-groups';
+import { BiblesGroup, EnemyGroup, ModifierGroup, PowerUpGroup, World } from './sprite-groups';
 
 export class GameScene extends BaseScene {
   static readonly SceneKey = 'GameScene';
@@ -22,7 +22,7 @@ export class GameScene extends BaseScene {
   enemies: EnemyGroup;
   powerUps: PowerUpGroup;
   modifiers: ModifierGroup;
-  fireballs: FireballsGroup;
+  bibles: BiblesGroup;
   blockEmitter: BlockEmitter;
 
   // Sprites
@@ -47,7 +47,7 @@ export class GameScene extends BaseScene {
     this.enemies = new EnemyGroup(this, this.world);
     this.powerUps = new PowerUpGroup(this, this.world);
     this.modifiers = new ModifierGroup(this, this.world);
-    this.fireballs = new FireballsGroup(this);
+    this.bibles = new BiblesGroup(this);
 
     this.blockEmitter = new BlockEmitter(this);
     this.bounceBrick = new BounceBrick(this);
@@ -69,7 +69,7 @@ export class GameScene extends BaseScene {
 
   update(time: number, delta: number) {
     this.attractMode.update(delta);
-    this.fireballs.update();
+    this.bibles.update();
 
     if (this.physics.world.isPaused) {
       return;

@@ -1,5 +1,5 @@
 import { TiledGameObject } from '@game/models';
-import { BounceBrick, Enemy, EnemyTypes, Fireball, Goomba, Turtle } from '@game/sprites';
+import { Bible, BounceBrick, Enemy, EnemyTypes, Goomba, Turtle } from '@game/sprites';
 
 import { GameScene } from '../scene';
 import { World, WorldLayers } from './world';
@@ -55,10 +55,10 @@ export class EnemyGroup {
     });
   }
 
-  overlapFire(fire: Fireball) {
+  overlapBible(bible: Bible) {
     Array.from(this.group.children.entries).forEach((enemy: Enemy) => {
-      this.scene.physics.world.overlap(fire, enemy, () => {
-        fire.explode();
+      this.scene.physics.world.overlap(bible, enemy, () => {
+        bible.terminate();
         enemy.kill(true);
         enemy.updatePoints();
       });
