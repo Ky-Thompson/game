@@ -5,7 +5,7 @@ import { Candy, PowerUp } from '@game/sprites';
 import { GameScene } from '../scene';
 import { World, WorldLayers } from './world';
 
-export class PowerUpGroup {
+export class PowerUpsGroup {
   private readonly group: Phaser.GameObjects.Group;
   private readonly mapLayer: Phaser.Tilemaps.ObjectLayer;
   private readonly tileset: Phaser.Tilemaps.Tileset;

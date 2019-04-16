@@ -170,6 +170,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     let animation: PlayerActions = PlayerActions.Stand;
 
     // When jumping at the top of the jump, there is a flickr in the animation. This check that the player is really stopped in Y axis
+    // TODO: Fix jumping logic, it appears as jumping when touching ground
     this.lastVelocityY.push(this.body.velocity.y);
     this.lastVelocityY = this.lastVelocityY.slice(-5);
     const stoppedY = this.lastVelocityY.map((velY) => Math.abs(velY) < MIN_VELOCITY_Y).reduce((prev, curr) => curr && prev, true);
@@ -374,11 +375,15 @@ export class Player extends Phaser.GameObjects.Sprite {
       if (this.playerState !== PlayerStates.Default) {
         this.resize(false);
         this.scene.soundEffects.playEffect(Sounds.Pipe);
-        this.wasHurtTimer = WAS_HURT_TIME;
+        this.startGraceTime();
       } else {
         this.die();
       }
     }
+  }
+
+  startGraceTime() {
+    this.wasHurtTimer = WAS_HURT_TIME;
   }
 
   die() {
@@ -392,6 +397,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
   enterPipe(destinationTileId: number, pipeDirection: PipeDirection) {
     // TODO:  fix enter to right
+    // TODO: Fix enter corner pipe
     this.animate(PlayerActions.Bend);
     this.scene.soundEffects.playEffect(Sounds.Die);
 

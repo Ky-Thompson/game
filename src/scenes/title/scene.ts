@@ -28,6 +28,8 @@ export class TitleScene extends BaseScene {
   private startSprite: Phaser.GameObjects.BitmapText;
   private blinkTimer: number = TITLE_BLINK_TIME * 2;
   private playerSprite: Phaser.GameObjects.Sprite;
+  private calebSprite: Phaser.GameObjects.Sprite;
+  private sophiaSprite: Phaser.GameObjects.Sprite;
   private selectedPlayer: Players = Players.Caleb;
 
   constructor() {
@@ -109,25 +111,25 @@ export class TitleScene extends BaseScene {
     }
 
     // Create Caleb sprite
-    const caleb: Phaser.GameObjects.Sprite = this.add.sprite(width / 2 - PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
+    this.calebSprite = this.add.sprite(width / 2 - PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
     const calebAnimation = getPlayerAnimationKey(Players.Caleb, PlayerActions.Stand, PlayerStates.Big);
-    caleb.flipX = true;
-    caleb.setScale(PLAYER_SPRITE_SCALE);
-    caleb.play(calebAnimation);
-    caleb.setInteractive();
-    caleb.on('pointerdown', () => {
+    this.calebSprite.flipX = true;
+    this.calebSprite.setScale(PLAYER_SPRITE_SCALE);
+    this.calebSprite.play(calebAnimation);
+    this.calebSprite.setInteractive();
+    this.calebSprite.on('pointerdown', () => {
       this.selectPlayer(Players.Caleb);
       this.startGame();
     });
 
     // Create Sophia sprite
-    const sophia: Phaser.GameObjects.Sprite = this.add.sprite(width / 2 + PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
+    this.sophiaSprite = this.add.sprite(width / 2 + PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
     const sophiaAnimation = getPlayerAnimationKey(Players.Sophia, PlayerActions.Stand, PlayerStates.Big);
-    sophia.flipX = false;
-    sophia.setScale(PLAYER_SPRITE_SCALE);
-    sophia.play(sophiaAnimation);
-    sophia.setInteractive();
-    sophia.on('pointerdown', () => {
+    this.sophiaSprite.flipX = false;
+    this.sophiaSprite.setScale(PLAYER_SPRITE_SCALE);
+    this.sophiaSprite.play(sophiaAnimation);
+    this.sophiaSprite.setInteractive();
+    this.sophiaSprite.on('pointerdown', () => {
       this.selectPlayer(Players.Sophia);
       this.startGame();
     });
@@ -167,6 +169,17 @@ export class TitleScene extends BaseScene {
     const { width } = this.gameConfig();
     const position: number = player === Players.Caleb ? -1 : 1;
     this.playerSprite.setPosition(width / 2 + PLAYER_SELECT_X * position, TITLE_Y);
+
+    switch (player) {
+      case Players.Caleb:
+        this.calebSprite.play(getPlayerAnimationKey(Players.Caleb, PlayerActions.Walk, PlayerStates.Big));
+        this.sophiaSprite.play(getPlayerAnimationKey(Players.Sophia, PlayerActions.Stand, PlayerStates.Big));
+        break;
+      case Players.Sophia:
+        this.calebSprite.play(getPlayerAnimationKey(Players.Caleb, PlayerActions.Stand, PlayerStates.Big));
+        this.sophiaSprite.play(getPlayerAnimationKey(Players.Sophia, PlayerActions.Walk, PlayerStates.Big));
+        break;
+    }
   }
 
   private togglePlayer() {

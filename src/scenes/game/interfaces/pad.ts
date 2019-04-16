@@ -1,6 +1,6 @@
 import { PadAnimations, SPRITES_KEY } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
-import { ActionState, Colors, Depth, PlayerStates } from '@game/models';
+import { ActionState, Colors, Depths, PlayerStates } from '@game/models';
 
 import { GameScene } from '../scene';
 
@@ -40,7 +40,7 @@ export class GamePad {
     [this.rightButton, this.leftButton, this.upButton, this.throwBibleButton].forEach((button) =>
       button
         .setScrollFactor(0, 0)
-        .setDepth(Depth.HUD)
+        .setDepth(Depths.HUD)
         .setAlpha(GAME_PAD_ALPHA)
         .setInteractive({ useHandCursor: true })
         .setDisplaySize(BUTTON_SIZE, BUTTON_SIZE)

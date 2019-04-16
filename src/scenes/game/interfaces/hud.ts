@@ -9,7 +9,6 @@ const HUD_PADDING = TILE_SIZE * 2;
 const SCORE_TEXT_PADDING = 5;
 const TIME_TEXT_PADDING = 3;
 const TIME_TEXT = 'TIME';
-const LIFES_X = TILE_SIZE * 5;
 const LIFES_Y = (TILE_SIZE * 3) / 4;
 const MAX_LIFES = 5;
 const START_LIFES = 3;
@@ -69,9 +68,11 @@ export class HUD {
   }
 
   private createLifes() {
+    const lifesX = HUD_PADDING + this.scene.player.getPlayerType().toUpperCase().length * FONT_SIZE + TILE_SIZE / 2;
+
     for (let i = 0; i < MAX_LIFES; i++) {
       const sprite = this.scene.add
-        .sprite(LIFES_X + (TILE_SIZE * i) / 2, LIFES_Y, SPRITES_KEY)
+        .sprite(lifesX + (TILE_SIZE * i) / 2, LIFES_Y, SPRITES_KEY)
         .play(HUDAnimations.Life)
         .setActive(false)
         .setScrollFactor(0, 0);
@@ -123,7 +124,7 @@ export class HUD {
       }
 
       // Timeout
-      if (this.displayedTime < 1) {
+      if (this.hasTimedOut()) {
         this.scene.player.die();
         this.hurry = false;
         this.timerText.clearTint();
@@ -137,5 +138,9 @@ export class HUD {
   updateScore(score: Scores) {
     this.score += score;
     this.scoreText.setText(String(this.score).padStart(SCORE_TEXT_PADDING, '0'));
+  }
+
+  hasTimedOut(): boolean {
+    return this.displayedTime < 1;
   }
 }

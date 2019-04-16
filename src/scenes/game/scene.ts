@@ -5,7 +5,7 @@ import { BlockEmitter, BounceBrick, FinishLine, Player } from '@game/sprites';
 import { BaseScene } from '../base';
 import { TitleScene } from '../title';
 import { AttractMode, GamePad, HUD, Keyboard, SoundEffects } from './interfaces';
-import { BiblesGroup, EnemyGroup, ModifierGroup, PowerUpGroup, World } from './sprite-groups';
+import { BiblesGroup, EnemyGroup, ModifierGroup, PowerUpsGroup, World } from './sprite-groups';
 
 export class GameScene extends BaseScene {
   static readonly SceneKey = 'GameScene';
@@ -20,7 +20,7 @@ export class GameScene extends BaseScene {
 
   // Sprite groups
   enemies: EnemyGroup;
-  powerUps: PowerUpGroup;
+  powerUps: PowerUpsGroup;
   modifiers: ModifierGroup;
   bibles: BiblesGroup;
   blockEmitter: BlockEmitter;
@@ -45,13 +45,13 @@ export class GameScene extends BaseScene {
     this.soundEffects = new SoundEffects(this);
 
     this.enemies = new EnemyGroup(this, this.world);
-    this.powerUps = new PowerUpGroup(this, this.world);
+    this.powerUps = new PowerUpsGroup(this, this.world);
     this.modifiers = new ModifierGroup(this, this.world);
     this.bibles = new BiblesGroup(this);
 
     this.blockEmitter = new BlockEmitter(this);
     this.bounceBrick = new BounceBrick(this);
-    this.finishLine = new FinishLine(this, this.modifiers.getFinishLine());
+    this.finishLine = new FinishLine(this, this.modifiers.getFinishLine(), this.modifiers.getEnd());
 
     this.start = this.modifiers.getStart();
     this.player = new Player(this, this.start.x, this.start.y);
@@ -64,6 +64,9 @@ export class GameScene extends BaseScene {
     this.cameras.main.startFollow(this.player);
     this.cameras.main.roundPixels = true;
 
+    // Init background images
+    this.world.init();
+
     this.physics.world.resume(); // If the game ended while physics was disabled
   }
 
@@ -75,15 +78,23 @@ export class GameScene extends BaseScene {
       return;
     }
 
-    this.finishLine.update(delta);
+    this.finishLine.update();
     this.hud.update(delta);
     this.enemies.update(delta);
     this.powerUps.update();
 
-    const actions: Partial<ActionState> = this.attractMode.isActive()
-      ? this.attractMode.getCurrentFrame().actions
-      : this.keyboard.getActions();
+    let actions: Partial<ActionState>;
+
+    if (this.finishLine.succeeded()) {
+      actions = { right: true };
+    } else if (this.attractMode.isActive()) {
+      actions = this.attractMode.getCurrentFrame().actions;
+    } else {
+      actions = this.keyboard.getActions();
+    }
+
     this.player.update(delta, actions);
+    this.world.update();
     this.gamePad.update();
   }
 
@@ -92,11 +103,12 @@ export class GameScene extends BaseScene {
   }
 
   playerDied() {
-    if (this.hud.updateLifes(-1)) {
-      // Still alive, go back to beginning!
-      // TODO: Checkpoints
-      this.player.setPosition(this.start.x, this.start.y);
+    if (this.hud.updateLifes(-1) && !this.hud.hasTimedOut()) {
+      // Still alive, go back to last checkpoint or start!
+      const checkpoint = this.world.getCurrentCheckpoint();
+      this.player.setPosition(checkpoint.x, checkpoint.y);
       this.player.init();
+      this.player.startGraceTime();
     } else {
       // Run out of lifes
       this.restart();

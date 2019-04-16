@@ -58,9 +58,11 @@ export class EnemyGroup {
   overlapBible(bible: Bible) {
     Array.from(this.group.children.entries).forEach((enemy: Enemy) => {
       this.scene.physics.world.overlap(bible, enemy, () => {
-        bible.terminate();
-        enemy.kill(true);
-        enemy.updatePoints();
+        if (enemy.isAlive()) {
+          bible.terminate();
+          enemy.kill(true);
+          enemy.updatePoints();
+        }
       });
     });
   }

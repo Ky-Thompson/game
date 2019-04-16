@@ -2,7 +2,7 @@ export * from './actions';
 export * from './audio';
 export * from './body';
 export * from './colors';
-export * from './depth';
+export * from './depths';
 export * from './modifers';
 export * from './options';
 export * from './pipes';

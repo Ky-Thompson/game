@@ -1,5 +1,5 @@
 import { SUNSET_DURATION, TILE_SIZE } from '@game/config';
-import { Colors, Depth, PlayerStates, PowerUps, Scores, Sounds, TileCallbacks, TiledGameObject, Tilemap, TilemapIds } from '@game/models';
+import { Colors, Depths, PlayerStates, PowerUps, Scores, Sounds, TileCallbacks, TiledGameObject, Tilemap, TilemapIds } from '@game/models';
 import { Player, PowerUp, Turtle } from '@game/sprites';
 
 import { GameScene } from '../scene';
@@ -11,17 +11,21 @@ export enum WorldLayers {
   Modifiers = 'modifiers',
 }
 
-export interface WorldSize {
+export interface RoomSize {
   width: number;
   height: number;
-  scaleX: number;
-  scaleY: number;
 }
 
 export interface Room {
   x: number;
   width: number;
+  height: number;
   backgroundColor: string;
+}
+
+export interface Checkpoint {
+  x: number;
+  y: number;
 }
 
 export class World {
@@ -31,11 +35,17 @@ export class World {
   private sunset: Phaser.GameObjects.Graphics;
   private twilight: Phaser.GameObjects.Graphics;
   private clouds: Phaser.GameObjects.Sprite;
-  private readonly rooms: Room[] = [];
+  private city: Phaser.GameObjects.Sprite;
+  private rooms: Room[] = [];
+  private checkpoints: Checkpoint[] = [];
 
   constructor(private scene: GameScene) {
     this.createWorld();
+  }
+
+  init() {
     this.createSky();
+    this.createCity();
   }
 
   private createWorld() {
@@ -54,25 +64,23 @@ export class World {
     // Create the sky background color
     this.sunset = this.scene.add
       .graphics({ x: 0, y: 0 })
-      .setDepth(Depth.Twilight)
+      .setDepth(Depths.Twilight)
       .setScrollFactor(0, 0)
       .setAlpha(0)
-      .fillGradientStyle(0x33a5ff, 0x33a5ff, Colors.SkyYellow, Colors.SkyYellow)
+      .fillGradientStyle(Colors.SkyBlue, Colors.SkyBlue, Colors.SkyYellow, Colors.SkyYellow)
       .fillRect(0, 0, width, height);
 
     this.twilight = this.scene.add
       .graphics({ x: 0, y: 0 })
-      .setDepth(Depth.Twilight)
+      .setDepth(Depths.Twilight)
       .setScrollFactor(0, 0)
       .setAlpha(0)
       .fillGradientStyle(Colors.Blue, Colors.Blue, Colors.Orange, Colors.Orange)
       .fillRect(0, 0, width, height);
 
     // Create the clouds
-    this.clouds = this.scene.add.sprite(0, 0, Tilemap.SkyKey).setDepth(Depth.Clouds);
-    this.clouds.setPosition(this.clouds.width / 2, this.clouds.height / 2);
-    const scrollFactorX: number = this.clouds.width / this.groundLayer.width;
-    this.clouds.setScrollFactor(scrollFactorX, 0);
+    this.clouds = this.scene.add.sprite(0, 0, Tilemap.SkyKey).setDepth(Depths.Clouds);
+    this.setBackgroundSprite(this.clouds);
 
     if (this.scene.attractMode.isActive()) {
       this.clouds.setAlpha(0);
@@ -80,6 +88,45 @@ export class World {
       this.scene.tweens.add({ targets: this.sunset, alpha: 0.7, delay: SUNSET_DURATION, duration: SUNSET_DURATION });
       this.scene.tweens.add({ targets: this.twilight, alpha: 1, delay: SUNSET_DURATION * 2, duration: SUNSET_DURATION });
     }
+  }
+
+  private createCity() {
+    this.city = this.scene.add.sprite(0, 0, Tilemap.CityKey).setDepth(Depths.City);
+    this.setBackgroundSprite(this.city);
+  }
+
+  private setBackgroundSprite(sprite: Phaser.GameObjects.Sprite) {
+    const worldWidth = this.size().width;
+    const { width } = this.scene.gameConfig();
+
+    const scrollFactorX: number = (sprite.width - width) / (worldWidth - width);
+    sprite
+      .setActive(false)
+      .setScrollFactor(scrollFactorX, 0)
+      .setPosition(sprite.width / 2, sprite.height / 2);
+  }
+
+  update() {
+    if (this.checkpoints.length < 2) {
+      return;
+    }
+
+    const nextCheckpoint: Checkpoint = this.checkpoints[1];
+
+    if (this.scene.player.body.x > nextCheckpoint.x) {
+      this.checkpoints.shift(); // Remove checkpoint since a new one has been completed
+    }
+  }
+
+  // Methods for tileset
+
+  private size(): RoomSize {
+    const firstRoom: Room = this.rooms[0];
+
+    return {
+      width: firstRoom.width,
+      height: firstRoom.height,
+    };
   }
 
   getLayer(name: WorldLayers): Phaser.Tilemaps.ObjectLayer {
@@ -98,30 +145,35 @@ export class World {
     this.tilemap.removeTileAt(x, y, true, true, this.groundLayer);
   }
 
-  size(): WorldSize {
-    return {
-      width: this.groundLayer.width,
-      height: this.groundLayer.height,
-      scaleX: this.groundLayer.scaleX,
-      scaleY: this.groundLayer.scaleY,
-    };
-  }
+  // Methods for modifiers
 
   addRoom(room: Room) {
     this.rooms.push(room);
+    this.rooms = this.rooms.sort((roomtA, roomB) => (roomtA.x > roomB.x ? 1 : -1));
   }
 
   setRoomBounds() {
     this.rooms.forEach((room) => {
       if (this.scene.player.x >= room.x && this.scene.player.x <= room.x + room.width) {
         const camera: Phaser.Cameras.Scene2D.Camera = this.scene.cameras.main;
-        const { height, scaleX, scaleY } = this.scene.world.size();
+        const { height, scaleX, scaleY } = this.groundLayer;
         camera.setBounds(room.x, 0, room.width * scaleX, height * scaleY);
         this.scene.finishLine.setActive(room.x === 0);
         this.scene.cameras.main.setBackgroundColor(room.backgroundColor);
       }
     });
   }
+
+  addCheckpoint(checkpoint: Checkpoint) {
+    this.checkpoints.push(checkpoint);
+    this.checkpoints = this.checkpoints.sort((checkpointA, checkpointB) => (checkpointA.x > checkpointB.x ? 1 : -1));
+  }
+
+  getCurrentCheckpoint(): Checkpoint {
+    return this.checkpoints[0];
+  }
+
+  // Collision handling
 
   collide(sprite: Phaser.GameObjects.Sprite, collideCallback?: ArcadePhysicsCallback) {
     this.scene.physics.world.collide(sprite, this.groundLayer, collideCallback);

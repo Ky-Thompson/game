@@ -37,6 +37,7 @@ export enum Tilemap {
   TilesetKey = 'tiles',
   WorldLayerKey = 'world',
   SkyKey = 'background-clouds',
+  CityKey = 'city',
 }
 
 export enum TilemapIds {

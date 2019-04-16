@@ -10,6 +10,7 @@ export class ModifierGroup {
 
   private finishLine: TiledGameObject;
   private start: TiledGameObject;
+  private end: TiledGameObject;
 
   constructor(private scene: GameScene, private world: World) {
     this.mapLayer = this.world.getLayer(WorldLayers.Modifiers);
@@ -28,11 +29,18 @@ export class ModifierGroup {
         case Modifiers.Room:
           this.processRoom(modifier);
           break;
+        case Modifiers.Checkpoint:
+          this.processCheckpoint(modifier);
+          break;
         case Modifiers.FinishLine:
           this.finishLine = modifier;
           break;
         case Modifiers.Start:
           this.start = modifier;
+          this.processCheckpoint(modifier);
+          break;
+        case Modifiers.End:
+          this.end = modifier;
           break;
       }
     });
@@ -92,7 +100,15 @@ export class ModifierGroup {
     this.scene.world.addRoom({
       x: modifier.x,
       width: modifier.width,
+      height: modifier.height,
       backgroundColor: modifier.properties.backgroundColor,
+    });
+  }
+
+  private processCheckpoint(modifier: TiledGameObject) {
+    this.scene.world.addCheckpoint({
+      x: modifier.x + modifier.width / 2,
+      y: modifier.y + modifier.height / 2,
     });
   }
 
@@ -106,5 +122,9 @@ export class ModifierGroup {
 
   getStart(): TiledGameObject {
     return this.start;
+  }
+
+  getEnd(): TiledGameObject {
+    return this.end;
   }
 }

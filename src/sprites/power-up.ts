@@ -1,6 +1,6 @@
 import { getCandyAnimationKey, PowerUpAnimations, SPRITES_KEY } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
-import { Body, Depth, PlayerStates, PowerUps, Scores, Sounds } from '@game/models';
+import { Body, Depths, PlayerStates, PowerUps, Scores, Sounds } from '@game/models';
 import { GameScene } from '@game/scenes';
 
 const DIMENSIONS: Body = { width: 24, height: 24, x: 3, y: 8 };
@@ -8,6 +8,7 @@ const VELOCITY_X = 140;
 const ACTIVATE_VELOCITY_Y = -300;
 const ANIMATION_DURATION = 500;
 const CANDY_MOVEMENT_Y = 100;
+const CANDY_EASING = 'Quad.easeOut';
 const BUTTERFLY_VELOCITY_Y = -600;
 
 const CANDY_DIMENSIONS: Body = { width: 28, height: 32, x: 0, y: 0 };
@@ -78,7 +79,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
         break;
 
       case PowerUps.Flower:
-        this.setDepth(Depth.Flower);
+        this.setDepth(Depths.Flower);
         this.body.allowGravity = false;
         this.body.setVelocity(0, 0);
         this.direction = 0;
@@ -96,6 +97,7 @@ export class PowerUp extends Phaser.GameObjects.Sprite {
         this.scene.tweens.add({
           targets: this,
           y: this.y - CANDY_MOVEMENT_Y,
+          ease: CANDY_EASING,
           duration: ANIMATION_DURATION,
           onComplete: () => this.destroy(),
         });

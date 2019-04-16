@@ -3,5 +3,7 @@ export enum Modifiers {
   Destination = 'dest',
   Room = 'room',
   Start = 'start',
+  End = 'end',
   FinishLine = 'finishLine',
+  Checkpoint = 'checkpoint',
 }
