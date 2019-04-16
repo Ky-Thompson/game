@@ -1,6 +1,5 @@
 /// <reference path="./phaser.d.ts"/>
 import 'phaser';
-
 import { GAME_HEIGHT, GAME_WIDTH, GRAVITY, TILE_SIZE } from './config';
 import { resizeGame, setFullscreen } from './helpers';
 import { BootScene, GameScene, TitleScene } from './scenes';

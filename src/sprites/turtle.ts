@@ -1,10 +1,9 @@
 import { TurtleAnimations } from '@game/animations';
 import { Body, Sounds, TiledGameObject } from '@game/models';
 import { GameScene } from '@game/scenes';
-
 import { Enemy } from './enemy';
 
-const DIMENSIONS: Body = { width: 24, height: 24, x: 2, y: 24 };
+const DIMENSIONS: Body = { width: 40, height: 20, x: 4, y: 12 };
 const SLIDE_VELOCITY: number = 300;
 
 export class Turtle extends Enemy {
