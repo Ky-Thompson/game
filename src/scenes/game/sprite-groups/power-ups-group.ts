@@ -1,6 +1,6 @@
 import { TILE_SIZE } from '@game/config';
-import { PowerUps, TiledGameObject } from '@game/models';
-import { Candy, PowerUp } from '@game/sprites';
+import { PowerUps, PowerUpTypes, TiledGameObject } from '@game/models';
+import { createPowerUp } from '@game/sprites';
 
 import { GameScene } from '../scene';
 import { World, WorldLayers } from './world';
@@ -19,28 +19,28 @@ export class PowerUpsGroup {
       const tileProperties = this.scene.getTilesetProperties(powerUp, this.tileset);
 
       switch (tileProperties.name) {
-        case PowerUps.Candy:
-          this.add(new Candy(this.scene, powerUp.x + TILE_SIZE / 2, powerUp.y - TILE_SIZE / 2));
+        case PowerUpTypes.Candy:
+          this.add(createPowerUp(this.scene, powerUp.x + TILE_SIZE / 2, powerUp.y - TILE_SIZE / 2, PowerUpTypes.Candy));
           break;
         default:
           // Other power-ups are just linked to the underlying question mark
           const tile: Phaser.Tilemaps.Tile = this.world.getTileAt(powerUp.x / TILE_SIZE, powerUp.y / TILE_SIZE - 1);
-          tile.properties['powerUp'] = <PowerUps>tileProperties.name;
+          tile.properties['powerUp'] = <PowerUpTypes>tileProperties.name;
       }
     });
   }
 
-  add(powerUp: PowerUp | Candy) {
+  add(powerUp: PowerUps) {
     this.group.add(powerUp);
   }
 
   update() {
-    Array.from(this.group.children.entries).forEach((powerUp: PowerUp) => {
+    Array.from(this.group.children.entries).forEach((powerUp: PowerUps) => {
       powerUp.update();
     });
   }
 
-  remove(powerUp: PowerUp | Candy) {
+  remove(powerUp: PowerUps) {
     this.group.remove(powerUp);
   }
 }

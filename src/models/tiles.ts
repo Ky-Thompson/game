@@ -1,6 +1,6 @@
 import { Modifiers } from './modifers';
 import { PipeDirection } from './pipes';
-import { PowerUps } from './power-up';
+import { PowerUpTypes } from './power-up';
 
 export interface TiledGameObject extends Phaser.GameObjects.Sprite {
   gid?: number;
@@ -23,7 +23,7 @@ export type TileProperties = {
   name?: string; // TODO: Type
   type?: Modifiers;
   backgroundColor?: string;
-  powerUp?: PowerUps;
+  powerUp?: PowerUpTypes;
   pipe?: boolean;
   pipeId?: number;
   goto?: number;

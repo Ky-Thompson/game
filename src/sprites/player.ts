@@ -3,6 +3,7 @@ import {
   ActionState,
   Body,
   Colors,
+  Depths,
   GameOptions,
   PipeDirection,
   PlayerActions,
@@ -32,7 +33,6 @@ const WAS_HURT_ALPHA = 0.2;
 const WAS_HURT_TIME = 2000;
 const DEATH_VELOCITY = -600;
 const ENTER_PIPE_DURATION = 800;
-const ENTER_PIPE_DEPTH = -100;
 const EXIT_PIPE_DEPTH = 1;
 const ENTER_PIPE_TRANSLATION = 80;
 const ENTER_PIPE_START_Y = -200;
@@ -42,17 +42,17 @@ export class Player extends Phaser.GameObjects.Sprite {
   private playerType: Players;
   private playerState: PlayerStates;
 
-  private wasHurtTimer: number = 0;
-  private flashToggle: boolean = false;
-  private jumpTimer: number = 0;
-  private jumping: boolean = false;
-  private bending: boolean = false;
-  private enteringPipe: boolean = false;
-  private superActive: boolean = false;
-  private superTimer: number = 0;
-  private superStep: number = 0;
-  private superCoolDownTimer: number = 0;
-  private lastVelocityY: number[] = [];
+  private wasHurtTimer: number;
+  private flashToggle: boolean;
+  private jumpTimer: number;
+  private jumping: boolean;
+  private bending: boolean;
+  private enteringPipe: boolean;
+  private superActive: boolean;
+  private superTimer: number;
+  private superStep: number;
+  private superCoolDownTimer: number;
+  private lastVelocityY: number[];
 
   body: Phaser.Physics.Arcade.Body;
 
@@ -82,9 +82,20 @@ export class Player extends Phaser.GameObjects.Sprite {
 
   init() {
     this.alive = true;
-    this.body.velocity.x = 0;
-    this.body.velocity.y = 0;
-    this.flipX = false;
+    this.wasHurtTimer = 0;
+    this.flashToggle = false;
+    this.jumpTimer = 0;
+    this.jumping = false;
+    this.bending = false;
+    this.enteringPipe = false;
+    this.superActive = false;
+    this.superStep = 0;
+    this.superCoolDownTimer = 0;
+    this.lastVelocityY = [];
+
+    this.body.setVelocity(0, 0);
+    this.setFlipX(false);
+
     this.playerState = PlayerStates.Default;
     this.small();
     this.animate(PlayerActions.Stand, true);
@@ -404,7 +415,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.enteringPipe = true;
     this.body.setVelocity(0);
     this.body.setAcceleration(0, 0);
-    this.setDepth(ENTER_PIPE_DEPTH);
+    this.setDepth(Depths.EnterPipe);
 
     let pipeX: number = 0;
     let pipeY: number = 0;

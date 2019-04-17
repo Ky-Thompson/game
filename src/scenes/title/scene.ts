@@ -47,9 +47,7 @@ export class TitleScene extends BaseScene {
     this.blinkTitle(delta);
   }
 
-  /**
-   * Methods for attract mode
-   */
+  // Methods for attract mode
 
   private createAttractMode() {
     this.setRegistry(GameOptions.AttractMode, true);
@@ -73,9 +71,7 @@ export class TitleScene extends BaseScene {
     this.scene.start(GameScene.SceneKey);
   }
 
-  /**
-   * Methods for the title
-   */
+  // Methods for the title
 
   private createTitle() {
     const { width } = this.gameConfig();
@@ -112,11 +108,12 @@ export class TitleScene extends BaseScene {
 
     // Create Caleb sprite
     this.calebSprite = this.add.sprite(width / 2 - PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
-    const calebAnimation = getPlayerAnimationKey(Players.Caleb, PlayerActions.Stand, PlayerStates.Big);
+    const calebAnimation = getPlayerAnimationKey(Players.Caleb, PlayerActions.Walk, PlayerStates.Big);
     this.calebSprite.flipX = true;
     this.calebSprite.setScale(PLAYER_SPRITE_SCALE);
     this.calebSprite.play(calebAnimation);
     this.calebSprite.setInteractive();
+    this.calebSprite.input.cursor = 'pointer';
     this.calebSprite.on('pointerdown', () => {
       this.selectPlayer(Players.Caleb);
       this.startGame();
@@ -124,11 +121,12 @@ export class TitleScene extends BaseScene {
 
     // Create Sophia sprite
     this.sophiaSprite = this.add.sprite(width / 2 + PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
-    const sophiaAnimation = getPlayerAnimationKey(Players.Sophia, PlayerActions.Stand, PlayerStates.Big);
+    const sophiaAnimation = getPlayerAnimationKey(Players.Sophia, PlayerActions.Walk, PlayerStates.Big);
     this.sophiaSprite.flipX = false;
     this.sophiaSprite.setScale(PLAYER_SPRITE_SCALE);
     this.sophiaSprite.play(sophiaAnimation);
     this.sophiaSprite.setInteractive();
+    this.sophiaSprite.input.cursor = 'pointer';
     this.sophiaSprite.on('pointerdown', () => {
       this.selectPlayer(Players.Sophia);
       this.startGame();
@@ -136,17 +134,19 @@ export class TitleScene extends BaseScene {
 
     // Toggle and select player
     this.selectPlayer(Players.Caleb);
-    this.input.keyboard.on('keydown', (event: Phaser.Input.Keyboard.Key) => {
-      switch (event.keyCode) {
-        case Phaser.Input.Keyboard.KeyCodes.RIGHT:
-        case Phaser.Input.Keyboard.KeyCodes.LEFT:
-          this.togglePlayer();
-          break;
-        case Phaser.Input.Keyboard.KeyCodes.ENTER:
-          this.startGame();
-          break;
-      }
-    });
+    if (!this.isMobile()) {
+      this.input.keyboard.on('keydown', (event: Phaser.Input.Keyboard.Key) => {
+        switch (event.keyCode) {
+          case Phaser.Input.Keyboard.KeyCodes.RIGHT:
+          case Phaser.Input.Keyboard.KeyCodes.LEFT:
+            this.togglePlayer();
+            break;
+          case Phaser.Input.Keyboard.KeyCodes.ENTER:
+            this.startGame();
+            break;
+        }
+      });
+    }
   }
 
   private blinkTitle(delta: number) {
@@ -170,15 +170,17 @@ export class TitleScene extends BaseScene {
     const position: number = player === Players.Caleb ? -1 : 1;
     this.playerSprite.setPosition(width / 2 + PLAYER_SELECT_X * position, TITLE_Y);
 
-    switch (player) {
-      case Players.Caleb:
-        this.calebSprite.play(getPlayerAnimationKey(Players.Caleb, PlayerActions.Walk, PlayerStates.Big));
-        this.sophiaSprite.play(getPlayerAnimationKey(Players.Sophia, PlayerActions.Stand, PlayerStates.Big));
-        break;
-      case Players.Sophia:
-        this.calebSprite.play(getPlayerAnimationKey(Players.Caleb, PlayerActions.Stand, PlayerStates.Big));
-        this.sophiaSprite.play(getPlayerAnimationKey(Players.Sophia, PlayerActions.Walk, PlayerStates.Big));
-        break;
+    if (!this.isMobile()) {
+      switch (player) {
+        case Players.Caleb:
+          this.calebSprite.play(getPlayerAnimationKey(Players.Caleb, PlayerActions.Walk, PlayerStates.Big));
+          this.sophiaSprite.play(getPlayerAnimationKey(Players.Sophia, PlayerActions.Stand, PlayerStates.Big));
+          break;
+        case Players.Sophia:
+          this.calebSprite.play(getPlayerAnimationKey(Players.Caleb, PlayerActions.Stand, PlayerStates.Big));
+          this.sophiaSprite.play(getPlayerAnimationKey(Players.Sophia, PlayerActions.Walk, PlayerStates.Big));
+          break;
+      }
     }
   }
 

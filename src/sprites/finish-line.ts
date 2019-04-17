@@ -3,16 +3,9 @@ import { TILE_SIZE } from '@game/config';
 import { PlayerActions, Sounds, TiledGameObject } from '@game/models';
 import { GameScene } from '@game/scenes';
 
-enum FinishLineSteps {
-  Climb = 'climb',
-  Walk = 'walk',
-  Disappear = 'disappear',
-}
-
 const PLAYER_ANIMATION_DURATION = 1000;
 const FLAG_ANIMATION_DURATION = 1500;
 const DISAPPEAR_ANIMATION_DURATION = 500;
-const WALK_DISTANCE = 6 * TILE_SIZE;
 
 export class FinishLine {
   private flag: Phaser.GameObjects.Sprite;
@@ -45,7 +38,7 @@ export class FinishLine {
   }
 
   succeeded(): boolean {
-    return this.scene.player.x > this.finishLineTile.x && this.active;
+    return this.scene.player.x >= this.finishLineTile.x && this.active;
   }
 
   private ended(): boolean {
@@ -60,6 +53,8 @@ export class FinishLine {
 
     this.scene.player.animate(PlayerActions.Climb);
     this.scene.player.x = this.finishLineTile.x;
+    this.scene.player.body.setVelocity(0, 0);
+    this.scene.player.body.setAcceleration(0, 0);
 
     this.scene.tweens.add({
       targets: this.flag,

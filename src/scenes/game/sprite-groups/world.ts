@@ -1,6 +1,17 @@
 import { SUNSET_DURATION, TILE_SIZE } from '@game/config';
-import { Colors, Depths, PlayerStates, PowerUps, Scores, Sounds, TileCallbacks, TiledGameObject, Tilemap, TilemapIds } from '@game/models';
-import { Player, PowerUp, Turtle } from '@game/sprites';
+import {
+  Colors,
+  Depths,
+  PlayerStates,
+  PowerUpTypes,
+  Scores,
+  Sounds,
+  TileCallbacks,
+  TiledGameObject,
+  Tilemap,
+  TilemapIds,
+} from '@game/models';
+import { createPowerUp, Player, Turtle } from '@game/sprites';
 
 import { GameScene } from '../scene';
 
@@ -34,8 +45,8 @@ export class World {
   private groundLayer: Phaser.Tilemaps.DynamicTilemapLayer;
   private sunset: Phaser.GameObjects.Graphics;
   private twilight: Phaser.GameObjects.Graphics;
-  private clouds: Phaser.GameObjects.Sprite;
-  private city: Phaser.GameObjects.Sprite;
+  private clouds: Phaser.GameObjects.Image;
+  private city: Phaser.GameObjects.Image;
   private rooms: Room[] = [];
   private checkpoints: Checkpoint[] = [];
 
@@ -67,6 +78,7 @@ export class World {
       .setDepth(Depths.Twilight)
       .setScrollFactor(0, 0)
       .setAlpha(0)
+      .setActive(false)
       .fillGradientStyle(Colors.SkyBlue, Colors.SkyBlue, Colors.SkyYellow, Colors.SkyYellow)
       .fillRect(0, 0, width, height);
 
@@ -75,11 +87,12 @@ export class World {
       .setDepth(Depths.Twilight)
       .setScrollFactor(0, 0)
       .setAlpha(0)
+      .setActive(false)
       .fillGradientStyle(Colors.Blue, Colors.Blue, Colors.Orange, Colors.Orange)
       .fillRect(0, 0, width, height);
 
     // Create the clouds
-    this.clouds = this.scene.add.sprite(0, 0, Tilemap.SkyKey).setDepth(Depths.Clouds);
+    this.clouds = this.scene.add.image(0, 0, Tilemap.SkyKey).setDepth(Depths.Clouds);
     this.setBackgroundSprite(this.clouds);
 
     if (this.scene.attractMode.isActive()) {
@@ -91,11 +104,14 @@ export class World {
   }
 
   private createCity() {
-    this.city = this.scene.add.sprite(0, 0, Tilemap.CityKey).setDepth(Depths.City);
+    this.city = this.scene.add
+      .image(0, 0, Tilemap.CityKey)
+      .setDepth(Depths.City)
+      .setAlpha(0.7);
     this.setBackgroundSprite(this.city);
   }
 
-  private setBackgroundSprite(sprite: Phaser.GameObjects.Sprite) {
+  private setBackgroundSprite(sprite: Phaser.GameObjects.Image) {
     const worldWidth = this.size().width;
     const { width } = this.scene.gameConfig();
 
@@ -208,14 +224,10 @@ export class World {
           tile.setCollision(true); // Invincible blocks are only collidable from above, but everywhere once revealed
 
           // Check powerUp for what to do, make a candy if not defined
-          const powerUpType: PowerUps = tile.properties.powerUp ? tile.properties.powerUp : PowerUps.Candy;
+          const powerUpType: PowerUpTypes = tile.properties.powerUp ? tile.properties.powerUp : PowerUpTypes.TileCandy;
 
           // Make powerUp (including a candy)
-          const newPowerUp = new PowerUp(this.scene, tile.x * TILE_SIZE + TILE_SIZE / 2, tile.y * TILE_SIZE - TILE_SIZE / 2, powerUpType);
-
-          if (powerUpType === PowerUps.Candy) {
-            this.scene.hud.updateScore(Scores.Candy);
-          }
+          createPowerUp(this.scene, tile.x * TILE_SIZE + TILE_SIZE / 2, tile.y * TILE_SIZE - TILE_SIZE / 2, powerUpType);
 
           break;
         case TileCallbacks.Breakable:

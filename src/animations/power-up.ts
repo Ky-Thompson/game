@@ -2,7 +2,7 @@ import { SPRITES_KEY } from './sprites';
 
 export enum PowerUpAnimations {
   Candy = 'candy',
-  Mushroom = 'powerup/mushroom',
+  Bear = 'powerup/bear',
   Flower = 'powerup/flower',
   Robot = 'powerup/robot',
   Butterfly = 'powerup/butterfly',
@@ -41,10 +41,10 @@ export const makePowerUpAnimations = (scene: Phaser.Scene) => {
     });
   });
 
-  // Mushroom and life
+  // Bear and life
   scene.anims.create({
-    key: PowerUpAnimations.Mushroom,
-    frames: [{ frame: PowerUpAnimations.Mushroom, key: SPRITES_KEY }],
+    key: PowerUpAnimations.Bear,
+    frames: [{ frame: PowerUpAnimations.Bear, key: SPRITES_KEY }],
   });
 
   // Robot

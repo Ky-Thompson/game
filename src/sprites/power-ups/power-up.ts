@@ -1,0 +1,68 @@
+import { SPRITES_KEY } from '@game/animations';
+import { TILE_SIZE } from '@game/config';
+import { Body, Scores } from '@game/models';
+import { GameScene } from '@game/scenes';
+
+export abstract class PowerUp extends Phaser.GameObjects.Sprite {
+  body: Phaser.Physics.Arcade.Body;
+
+  constructor(public scene: GameScene, x: number, y: number, public direction: number, public dimensions: Body) {
+    super(scene, x, y, SPRITES_KEY);
+
+    scene.physics.world.enable(this);
+    scene.add.existing(this);
+
+    this.init(x);
+    this.updateBody();
+    this.activate();
+  }
+
+  private init(x: number) {
+    if (!this.direction) {
+      return;
+    }
+
+    if (this.scene.player.x > x + TILE_SIZE / 2) {
+      this.direction = -this.direction; // Player on the right -> power up bounces left
+    }
+
+    this.body.setVelocityX(this.direction);
+  }
+
+  protected updateBody() {
+    this.body.setSize(this.dimensions.width, this.dimensions.height);
+    this.body.offset.set(this.dimensions.x, this.dimensions.y);
+  }
+
+  protected abstract activate();
+
+  update() {
+    // Check if power up needs to be destroyed
+    const { height } = this.scene.gameConfig();
+    if (this.alpha === 0 || this.y > height * 2) {
+      this.scene.powerUps.remove(this);
+      this.destroy();
+      return;
+    }
+
+    if (!this.body) {
+      return;
+    }
+
+    this.scene.world.collide(this);
+    this.scene.physics.world.overlap(this, this.scene.player, () => this.collect());
+
+    // Invert direction
+    if (this.body.velocity.x === 0) {
+      this.direction = -this.direction;
+      this.body.velocity.x = this.direction;
+      this.flipX = this.direction < 0;
+    }
+  }
+
+  protected collect() {
+    // Get points
+    this.scene.hud.updateScore(Scores.PowerUp);
+    this.alpha = 0;
+  }
+}

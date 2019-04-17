@@ -1,8 +1,9 @@
 export enum Depths {
-  Sunset = -100,
-  Twilight = -200,
-  Clouds = -100,
-  City = -50,
-  Flower = -10,
+  Sunset = -130,
+  Twilight = -120,
+  Clouds = -110,
+  City = -100,
+  Flower = -20,
+  EnterPipe = -10,
   HUD = 100,
 }
