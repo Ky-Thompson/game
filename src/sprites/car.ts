@@ -1,12 +1,13 @@
-import { TurtleAnimations } from '@game/animations';
+import { CarAnimations } from '@game/animations';
 import { Body, Sounds, TiledGameObject } from '@game/models';
 import { GameScene } from '@game/scenes';
+
 import { Enemy } from './enemy';
 
 const DIMENSIONS: Body = { width: 40, height: 20, x: 4, y: 12 };
 const SLIDE_VELOCITY: number = 300;
 
-export class Turtle extends Enemy {
+export class Car extends Enemy {
   private sliding: boolean = false;
 
   constructor(scene: GameScene, x: number, y: number) {
@@ -17,7 +18,7 @@ export class Turtle extends Enemy {
     this.animate();
   }
 
-  private animate(animation: TurtleAnimations = TurtleAnimations.Default) {
+  private animate(animation: CarAnimations = CarAnimations.Default) {
     this.anims.play(animation);
   }
 
@@ -26,12 +27,12 @@ export class Turtle extends Enemy {
       return;
     }
 
-    if (this.sliding) {
-      // Turtle destroys tiles when sliding
+    if (this.sliding && !this.dropped) {
+      // Car destroys tiles when sliding
       this.scene.world.collide(this, (object: Phaser.GameObjects.Sprite, tile: TiledGameObject) =>
         this.scene.world.tileCollision(object, tile)
       );
-      this.scene.enemies.overlapTurtle(this);
+      this.scene.enemies.overlapCar(this);
     } else {
       this.collideGround();
     }
@@ -57,7 +58,7 @@ export class Turtle extends Enemy {
     if (this.isVerticalHit()) {
       this.updatePoints();
 
-      // Set the turtle shell and start to slide
+      // Set the car crushed and start to slide
       if (!this.sliding || (this.sliding && this.body.velocity.x === 0)) {
         this.scene.soundEffects.playEffect(Sounds.Kick);
 
@@ -71,7 +72,7 @@ export class Turtle extends Enemy {
       }
 
       this.sliding = true;
-      this.animate(TurtleAnimations.Shell);
+      this.animate(CarAnimations.Crushed);
       this.scene.player.enemyBounce(this);
     } else {
       // Player hit

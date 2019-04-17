@@ -27,8 +27,6 @@ export class Robot extends PowerUp {
 
   protected collect() {
     super.collect();
-
-    this.scene.soundEffects.playEffect(Sounds.Life);
-    this.scene.hud.updateLifes(1);
+    this.upgradePlayer();
   }
 }

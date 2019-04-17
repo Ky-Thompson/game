@@ -6,4 +6,5 @@ export enum Modifiers {
   End = 'end',
   FinishLine = 'finishLine',
   Checkpoint = 'checkpoint',
+  Image = 'image',
 }

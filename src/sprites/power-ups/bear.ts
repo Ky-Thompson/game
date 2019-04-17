@@ -26,8 +26,6 @@ export class Bear extends PowerUp {
 
   protected collect() {
     super.collect();
-
-    this.scene.player.resize(true);
-    this.scene.soundEffects.playEffect(Sounds.PowerUp);
+    this.upgradePlayer();
   }
 }

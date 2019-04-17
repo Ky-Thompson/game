@@ -1,5 +1,5 @@
 import { TILE_SIZE } from '@game/config';
-import { Modifiers, PipeDestination, PipeDestinations, PipeDirection, TiledGameObject } from '@game/models';
+import { Depths, Modifiers, PipeDestination, PipeDestinations, PipeDirection, TiledGameObject } from '@game/models';
 
 import { GameScene } from '../scene';
 import { World, WorldLayers } from './world';
@@ -41,6 +41,9 @@ export class ModifierGroup {
           break;
         case Modifiers.End:
           this.end = modifier;
+          break;
+        case Modifiers.Image:
+          this.processImage(modifier);
           break;
       }
     });
@@ -110,6 +113,13 @@ export class ModifierGroup {
       x: modifier.x + modifier.width / 2,
       y: modifier.y + modifier.height / 2,
     });
+  }
+
+  private processImage(modifier: TiledGameObject) {
+    this.scene.add
+      .image(modifier.x + modifier.width / 2, modifier.y + modifier.height / 2, modifier.properties.image)
+      .setDepth(Depths.Images)
+      .setActive(false);
   }
 
   getDestination(id: number): PipeDestination {

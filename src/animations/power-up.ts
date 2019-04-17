@@ -41,7 +41,7 @@ export const makePowerUpAnimations = (scene: Phaser.Scene) => {
     });
   });
 
-  // Bear and life
+  // Bear
   scene.anims.create({
     key: PowerUpAnimations.Bear,
     frames: [{ frame: PowerUpAnimations.Bear, key: SPRITES_KEY }],
@@ -59,7 +59,8 @@ export const makePowerUpAnimations = (scene: Phaser.Scene) => {
   // Butterfly
   scene.anims.create({
     key: PowerUpAnimations.Butterfly,
-    frames: scene.anims.generateFrameNames(SPRITES_KEY, { prefix: PowerUpAnimations.Butterfly, start: 1, end: 4 }),
+    frames: scene.anims.generateFrameNames(SPRITES_KEY, { prefix: PowerUpAnimations.Butterfly, start: 1, end: 3 }),
+    yoyo: true,
     frameRate: 30,
     repeat: -1,
     repeatDelay: 0,
@@ -68,9 +69,6 @@ export const makePowerUpAnimations = (scene: Phaser.Scene) => {
   // Flower
   scene.anims.create({
     key: PowerUpAnimations.Flower,
-    frames: scene.anims.generateFrameNames(SPRITES_KEY, { prefix: PowerUpAnimations.Flower, start: 1, end: 4 }),
-    frameRate: 30,
-    repeat: -1,
-    repeatDelay: 0,
+    frames: [{ frame: PowerUpAnimations.Flower, key: SPRITES_KEY }],
   });
 };

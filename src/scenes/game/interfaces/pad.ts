@@ -76,6 +76,6 @@ export class GamePad {
       return; // Don't update pad if not needed
     }
 
-    this.throwBibleButton.setAlpha(this.scene.player.isPlayerState(PlayerStates.Super) ? GAME_PAD_ALPHA : 0);
+    this.throwBibleButton.setAlpha(this.scene.player.playerState === PlayerStates.Super ? GAME_PAD_ALPHA : 0);
   }
 }

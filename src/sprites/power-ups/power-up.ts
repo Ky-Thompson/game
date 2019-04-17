@@ -1,6 +1,6 @@
 import { SPRITES_KEY } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
-import { Body, Scores } from '@game/models';
+import { Body, PlayerStates, Scores, Sounds } from '@game/models';
 import { GameScene } from '@game/scenes';
 
 export abstract class PowerUp extends Phaser.GameObjects.Sprite {
@@ -64,5 +64,22 @@ export abstract class PowerUp extends Phaser.GameObjects.Sprite {
     // Get points
     this.scene.hud.updateScore(Scores.PowerUp);
     this.alpha = 0;
+  }
+
+  protected upgradePlayer() {
+    switch (this.scene.player.playerState) {
+      case PlayerStates.Default:
+        this.scene.soundEffects.playEffect(Sounds.PowerUp);
+        this.scene.player.resize(true); // Grow
+        break;
+      case PlayerStates.Big:
+        this.scene.soundEffects.playEffect(Sounds.PowerUp);
+        this.scene.player.playerState = PlayerStates.Super; // Go super
+        break;
+      case PlayerStates.Super:
+        this.scene.soundEffects.playEffect(Sounds.Life);
+        this.scene.hud.updateLifes(1); // get life
+        break;
+    }
   }
 }

@@ -3913,6 +3913,29 @@
           "width": 32,
           "x": 6528,
           "y": 384
+        },
+        {
+          "height": 64,
+          "id": 247,
+          "name": "",
+          "properties": [
+            {
+              "name": "image",
+              "type": "string",
+              "value": "bull"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "value": "image"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 64,
+          "x": 2912,
+          "y": 96
         }
       ],
       "opacity": 1,
@@ -4481,18 +4504,6 @@
         {
           "gid": 7,
           "height": 32,
-          "id": 209,
-          "name": "",
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "width": 32,
-          "x": 1152,
-          "y": 416
-        },
-        {
-          "gid": 7,
-          "height": 32,
           "id": 210,
           "name": "",
           "rotation": 0,
@@ -4561,6 +4572,18 @@
           "width": 32,
           "x": 7360,
           "y": 32
+        },
+        {
+          "gid": 8,
+          "height": 32,
+          "id": 246,
+          "name": "",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 32,
+          "x": 1120,
+          "y": 416
         }
       ],
       "opacity": 1,
@@ -4571,7 +4594,7 @@
     }
   ],
   "nextlayerid": 6,
-  "nextobjectid": 245,
+  "nextobjectid": 248,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.2.1",
@@ -4645,7 +4668,7 @@
             {
               "name": "name",
               "type": "string",
-              "value": "turtle"
+              "value": "car"
             }
           ]
         },

@@ -40,7 +40,7 @@ const ENTER_PIPE_START_Y = -200;
 export class Player extends Phaser.GameObjects.Sprite {
   private alive: boolean;
   private playerType: Players;
-  private playerState: PlayerStates;
+  playerState: PlayerStates;
 
   private wasHurtTimer: number;
   private flashToggle: boolean;
@@ -116,14 +116,6 @@ export class Player extends Phaser.GameObjects.Sprite {
       this.playerType = playerType;
       this.animate();
     }
-  }
-
-  isPlayerState(playerState: PlayerStates): boolean {
-    return playerState === this.playerState;
-  }
-
-  setPlayerState(playerState: PlayerStates) {
-    return (this.playerState = playerState);
   }
 
   animate(animation: PlayerActions = PlayerActions.Stand, force: boolean = false) {

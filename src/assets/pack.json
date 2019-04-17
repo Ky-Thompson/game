@@ -12,6 +12,11 @@
         "url": "assets/images/city.png"
       },
       {
+        "type": "image",
+        "key": "bull",
+        "url": "assets/images/bull.png"
+      },
+      {
         "type": "spritesheet",
         "key": "tiles",
         "url": "assets/images/game-sprites.png",

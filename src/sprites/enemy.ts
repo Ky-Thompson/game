@@ -10,7 +10,7 @@ const BASE_DIRECTION_VELOCITY: number = -100;
 
 export enum EnemyTypes {
   Liar = 'liar',
-  Turtle = 'turtle',
+  Car = 'car',
 }
 
 /**
@@ -22,7 +22,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
   private activated: boolean = false;
   private alive: boolean = true;
   private hasBeenSeen: boolean = false;
-  private dropped: boolean = false;
+  dropped: boolean = false;
 
   body: Phaser.Physics.Arcade.Body;
 

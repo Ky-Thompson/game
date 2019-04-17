@@ -1,5 +1,5 @@
 import { TiledGameObject } from '@game/models';
-import { Bible, BounceBrick, Enemy, EnemyTypes, Liar, Turtle } from '@game/sprites';
+import { Bible, BounceBrick, Car, Enemy, EnemyTypes, Liar } from '@game/sprites';
 
 import { GameScene } from '../scene';
 import { World, WorldLayers } from './world';
@@ -21,8 +21,8 @@ export class EnemyGroup {
         case EnemyTypes.Liar:
           this.group.add(new Liar(this.scene, enemy.x, enemy.y));
           break;
-        case EnemyTypes.Turtle:
-          this.group.add(new Turtle(this.scene, enemy.x, enemy.y));
+        case EnemyTypes.Car:
+          this.group.add(new Car(this.scene, enemy.x, enemy.y));
           break;
       }
     });
@@ -47,10 +47,10 @@ export class EnemyGroup {
     });
   }
 
-  overlapTurtle(turtle: Turtle) {
+  overlapCar(car: Car) {
     Array.from(this.group.children.entries).forEach((enemy: Enemy) => {
-      if (turtle !== enemy) {
-        this.scene.physics.world.overlap(turtle, enemy, () => turtle.slideKill(enemy));
+      if (car !== enemy) {
+        this.scene.physics.world.overlap(car, enemy, () => car.slideKill(enemy));
       }
     });
   }

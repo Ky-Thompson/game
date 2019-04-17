@@ -29,6 +29,7 @@ export type TileProperties = {
   goto?: number;
   direction?: PipeDirection;
   callback?: TileCallbacks;
+  image?: string;
 };
 
 export enum Tilemap {

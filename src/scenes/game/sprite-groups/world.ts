@@ -11,7 +11,7 @@ import {
   Tilemap,
   TilemapIds,
 } from '@game/models';
-import { createPowerUp, Player, Turtle } from '@game/sprites';
+import { Car, createPowerUp, Player } from '@game/sprites';
 
 import { GameScene } from '../scene';
 
@@ -196,8 +196,8 @@ export class World {
   }
 
   tileCollision(sprite: Phaser.GameObjects.Sprite, tile: TiledGameObject) {
-    if (sprite instanceof Turtle) {
-      // Turtles ignore the ground
+    if (sprite instanceof Car) {
+      // Cars ignore the ground
       if (tile.y > Math.round(sprite.y / TILE_SIZE)) {
         return;
       }
@@ -231,7 +231,7 @@ export class World {
 
           break;
         case TileCallbacks.Breakable:
-          if (sprite instanceof Player && sprite.isPlayerState(PlayerStates.Default)) {
+          if (sprite instanceof Player && sprite.playerState === PlayerStates.Default) {
             // Can't break it anyway. Bounce it a bit.
             this.scene.bounceBrick.restart(tile);
             this.scene.soundEffects.playEffect(Sounds.Bump);

@@ -29,7 +29,7 @@ export class Butterfly extends PowerUp {
     super.update();
 
     // Bounce
-    if (this.body.blocked.down) {
+    if (this.body && this.body.blocked.down) {
       this.body.velocity.y = BUTTERFLY_VELOCITY_Y;
     }
   }

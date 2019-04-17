@@ -1,5 +1,6 @@
 import {
   makeBibleAnimations,
+  makeCarAnimations,
   makeHUDAnimations,
   makeLiarAnimations,
   makePadAnimations,
@@ -7,7 +8,6 @@ import {
   makePowerUpAnimations,
   makeTileAnimations,
   makeTitleAnimations,
-  makeTurtleAnimations,
 } from '@game/animations';
 import { resizeGame } from '@game/helpers';
 import { Colors, Players } from '@game/models';
@@ -71,7 +71,7 @@ export class BootScene extends BaseScene {
     makeBibleAnimations(this);
 
     makeLiarAnimations(this);
-    makeTurtleAnimations(this);
+    makeCarAnimations(this);
     makePowerUpAnimations(this);
   }
 }
