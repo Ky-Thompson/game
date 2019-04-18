@@ -1,3 +1,4 @@
+import { EnemyTypes } from './enemies';
 import { Modifiers } from './modifers';
 import { PipeDirection } from './pipes';
 import { PowerUpTypes } from './power-up';
@@ -20,7 +21,7 @@ export enum TileCallbacks {
 }
 
 export type TileProperties = {
-  name?: string; // TODO: Type
+  name?: EnemyTypes | PowerUpTypes;
   type?: Modifiers;
   backgroundColor?: string;
   powerUp?: PowerUpTypes;
@@ -30,6 +31,10 @@ export type TileProperties = {
   direction?: PipeDirection;
   callback?: TileCallbacks;
   image?: string;
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
 };
 
 export enum Tilemap {
@@ -44,6 +49,12 @@ export enum Tilemap {
 export enum TilemapIds {
   BrickTile = 11,
   BlockTile = 14,
+}
+
+export enum WorldLayers {
+  Enemies = 'enemies',
+  PowerUps = 'power-ups',
+  Modifiers = 'modifiers',
 }
 
 export const SKY_HEIGHT = 1000;

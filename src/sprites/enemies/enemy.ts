@@ -8,15 +8,6 @@ const VERTICAL_COLLISION_THRESHOLD: number = 20;
 const KILLED_VELOCITY_Y: number = -400;
 const BASE_DIRECTION_VELOCITY: number = -100;
 
-export enum EnemyTypes {
-  Liar = 'liar',
-  Car = 'car',
-}
-
-/**
- * Generic enemy class that extends Phaser sprites.
- * Classes for enemy types extend this class.
- */
 export abstract class Enemy extends Phaser.GameObjects.Sprite {
   protected direction: number = BASE_DIRECTION_VELOCITY;
   private activated: boolean = false;
@@ -38,7 +29,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
       .setBounce(0, 0)
       .setCollideWorldBounds(false);
 
-    this.body.allowGravity = false;
+    this.body.setAllowGravity(false);
   }
 
   protected setBody(body: Body) {
@@ -47,7 +38,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
   }
 
   protected isActivated(): boolean {
-    const { height } = this.scene.gameConfig();
+    const { height } = this.scene.getGameDimensions();
 
     // Check if it is alive
     if (!this.alive) {
@@ -60,8 +51,8 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
     if (!this.hasBeenSeen) {
       if (this.x < this.scene.cameras.main.scrollX + this.scene.sys.game.canvas.width + INITIAL_POSITION_X) {
         this.hasBeenSeen = true;
-        this.body.velocity.x = this.direction;
-        this.body.allowGravity = true;
+        this.body.setVelocityX(this.direction);
+        this.body.setAllowGravity(true);
         this.activated = true;
       }
     }

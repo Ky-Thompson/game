@@ -8,3 +8,20 @@ export enum Modifiers {
   Checkpoint = 'checkpoint',
   Image = 'image',
 }
+
+export interface RoomSize {
+  width: number;
+  height: number;
+}
+
+export interface Room {
+  x: number;
+  width: number;
+  height: number;
+  backgroundColor: string;
+}
+
+export interface Checkpoint {
+  x: number;
+  y: number;
+}

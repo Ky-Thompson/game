@@ -14,11 +14,15 @@ import {
 } from '@game/models';
 import { GameScene } from '@game/scenes';
 
-import { Enemy } from './enemy';
+import { Enemy } from '../enemies';
 
 const DEFAULT_BODY: Body = { width: 20, height: 20, x: 7, y: 12 };
 const SUPER_BODY: Body = { width: 20, height: 44, x: 23, y: 20 };
+
 const ACCELERATION = 1200;
+const JUMPING_ACCELERATION = ACCELERATION / 2;
+const STATIC_FRICTION_ACCELERATION = ACCELERATION / 2;
+
 const MIN_VELOCITY_X = 20;
 const MIN_VELOCITY_Y = 40;
 const MAX_VELOCITY_X = 400;
@@ -64,8 +68,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     scene.physics.world.enable(this);
     scene.add.existing(this);
 
-    this.body.maxVelocity.x = MAX_VELOCITY_X;
-    this.body.maxVelocity.y = MAX_VELOCITY_Y;
+    this.body.setMaxVelocity(MAX_VELOCITY_X, MAX_VELOCITY_Y);
     this.init();
 
     const onAnimationComplete = () => {
@@ -151,7 +154,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   // Methods to update player
 
   private checkOutsideGame() {
-    const { height } = this.scene.gameConfig();
+    const { height } = this.scene.getGameDimensions();
 
     if (this.y > height * 2) {
       this.scene.playerDied();
@@ -173,12 +176,11 @@ export class Player extends Phaser.GameObjects.Sprite {
     let animation: PlayerActions = PlayerActions.Stand;
 
     // When jumping at the top of the jump, there is a flickr in the animation. This check that the player is really stopped in Y axis
-    // TODO: Fix jumping logic, it appears as jumping when touching ground
     this.lastVelocityY.push(this.body.velocity.y);
     this.lastVelocityY = this.lastVelocityY.slice(-5);
     const stoppedY = this.lastVelocityY.map((velY) => Math.abs(velY) < MIN_VELOCITY_Y).reduce((prev, curr) => curr && prev, true);
 
-    if ((!stoppedY && !this.body.blocked.down) || input.jump) {
+    if (!stoppedY && !this.body.blocked.down) {
       // Jumping
       animation = PlayerActions.Jump;
     } else if (this.body.velocity.x !== 0 || input.left || input.right) {
@@ -220,10 +222,10 @@ export class Player extends Phaser.GameObjects.Sprite {
     if (this.wasHurtTimer > 0) {
       this.wasHurtTimer -= delta;
       this.flashToggle = !this.flashToggle;
-      this.alpha = this.flashToggle ? WAS_HURT_ALPHA : 1;
+      this.setAlpha(this.flashToggle ? WAS_HURT_ALPHA : 1);
 
       if (this.wasHurtTimer <= 0) {
-        this.alpha = 1;
+        this.setAlpha(1);
       }
     }
   }
@@ -244,11 +246,11 @@ export class Player extends Phaser.GameObjects.Sprite {
 
   private updateMovement(left: boolean, right: boolean) {
     if (left && !this.body.blocked.left) {
-      this.run(this.body.velocity.y === 0 ? -ACCELERATION : -ACCELERATION / 3);
-      this.flipX = true;
+      this.run(this.body.velocity.y === 0 ? -ACCELERATION : -JUMPING_ACCELERATION);
+      this.setFlipX(true);
     } else if (right && !this.body.blocked.right) {
-      this.run(this.body.velocity.y === 0 ? ACCELERATION : ACCELERATION / 3);
-      this.flipX = false;
+      this.run(this.body.velocity.y === 0 ? ACCELERATION : JUMPING_ACCELERATION);
+      this.setFlipX(false);
     } else if (this.body.blocked.down) {
       // If in the ground with no input keys
       if (Math.abs(this.body.velocity.x) < MIN_VELOCITY_X) {
@@ -258,7 +260,7 @@ export class Player extends Phaser.GameObjects.Sprite {
       } else {
         // Static friction reduces movement
         const direction: number = this.body.velocity.x > 0 ? -1 : 1;
-        this.run((direction * ACCELERATION) / 2);
+        this.run(direction * STATIC_FRICTION_ACCELERATION);
       }
     } else if (!this.body.blocked.down) {
       // If in the air, don't run
@@ -282,7 +284,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     } else if (!jump) {
       this.jumpTimer = 0; // Don't resume jump if button is released, prevents mini double-jumps
 
-      if (this.body.blocked.down) {
+      if (this.body.blocked.down || Math.abs(this.body.velocity.y) < MIN_VELOCITY_Y) {
         this.jumping = false;
       }
     }
@@ -398,15 +400,14 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.alive = false;
   }
 
-  enterPipe(destinationTileId: number, pipeDirection: PipeDirection) {
-    // TODO:  fix enter to right
-    // TODO: Fix enter corner pipe
+  enterPipe(destinationTileId: number, pipeDirection: PipeDirection, centerX: number, centerY: number) {
     this.animate(PlayerActions.Bend);
     this.scene.soundEffects.playEffect(Sounds.Die);
 
     this.enteringPipe = true;
     this.body.setVelocity(0);
     this.body.setAcceleration(0, 0);
+    this.body.setEnable(false);
     this.setDepth(Depths.EnterPipe);
 
     let pipeX: number = 0;
@@ -414,19 +415,21 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     switch (pipeDirection) {
       case PipeDirection.Right:
-        pipeX = ENTER_PIPE_TRANSLATION;
+        pipeX = this.x + ENTER_PIPE_TRANSLATION;
+        pipeY = centerY;
         break;
       case PipeDirection.Left:
-        pipeX = -ENTER_PIPE_TRANSLATION;
+        pipeX = this.x - ENTER_PIPE_TRANSLATION;
         break;
       default:
-        pipeY = ENTER_PIPE_TRANSLATION;
+        pipeX = centerX;
+        pipeY = this.y + ENTER_PIPE_TRANSLATION;
     }
 
     this.scene.tweens.add({
       targets: this,
-      x: this.x + pipeX,
-      y: this.y + pipeY,
+      x: pipeX,
+      y: pipeY,
       duration: ENTER_PIPE_DURATION,
       onComplete: () => this.exitPipe(destinationTileId),
     });
@@ -434,6 +437,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
   private exitPipe(destinationTileId: number) {
     const destination = this.scene.modifiers.getDestination(destinationTileId);
+    this.body.setEnable(true);
 
     if (destination.top) {
       this.setDepth(EXIT_PIPE_DEPTH);

@@ -17,7 +17,7 @@ export class TileCandy extends PowerUp {
   protected activate() {
     // Configure power up
     this.body.setVelocity(0, 0);
-    this.body.allowGravity = false;
+    this.body.setAllowGravity(false);
     this.scene.tweens.add({
       targets: this,
       y: this.y - CANDY_MOVEMENT_Y,

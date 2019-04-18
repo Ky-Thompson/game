@@ -1,6 +1,6 @@
 import { ActionKeys, ActionState } from '@game/models';
 
-import { GameScene } from '../scene';
+import { GameScene } from './game-scene';
 import { GamePad } from './pad';
 
 export class Keyboard {

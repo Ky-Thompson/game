@@ -14,7 +14,7 @@ export class Candy extends PowerUp {
   protected activate() {
     // Configure power up
     this.body.setVelocity(0, 0);
-    this.body.allowGravity = false;
+    this.body.setAllowGravity(false);
 
     // Play animation
     this.anims.play(getCandyAnimationKey());
@@ -23,6 +23,6 @@ export class Candy extends PowerUp {
   collect() {
     this.scene.hud.updateScore(Scores.Candy);
     this.scene.soundEffects.playEffect(Sounds.Candy);
-    this.alpha = 0;
+    this.setAlpha(0);
   }
 }

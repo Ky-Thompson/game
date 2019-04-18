@@ -12,7 +12,7 @@ export class Liar extends Enemy {
 
   constructor(scene: GameScene, x: number, y: number) {
     super(scene, x, y);
-    this.flipX = true;
+    this.setFlipX(true);
     this.setBody(DIMENSIONS);
     this.animate();
   }
@@ -46,8 +46,8 @@ export class Liar extends Enemy {
     // The enemy stopped, better try to walk in the other direction.
     if (this.body.velocity.x === 0) {
       this.direction = -this.direction;
-      this.body.velocity.x = this.direction;
-      this.flipX = this.direction < 0;
+      this.body.setVelocityX(this.direction);
+      this.setFlipX(this.direction < 0);
     }
   }
 

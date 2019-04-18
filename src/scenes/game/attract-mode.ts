@@ -1,6 +1,6 @@
 import { ActionState, GameOptions } from '@game/models';
 
-import { GameScene } from '../scene';
+import { GameScene } from './game-scene';
 
 const MAX_ATTRACT_MODE_TIME = 14000;
 
@@ -47,7 +47,7 @@ export class AttractMode {
 
     this.time += delta;
 
-    const { height } = this.scene.gameConfig();
+    const { height } = this.scene.getGameDimensions();
     if (this.scene.player.y > height || this.hasEnded()) {
       this.reset();
       this.scene.player.x = this.scene.start.x;

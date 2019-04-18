@@ -1,11 +1,14 @@
 import { resizeGame } from '@game/helpers';
 import { ActionState, TiledGameObject } from '@game/models';
-import { BlockEmitter, BounceBrick, FinishLine, Player } from '@game/sprites';
+import { TitleScene } from '@game/scenes/title';
+import { BiblesGroup, BlockEmitter, BounceBrick, EnemyGroup, FinishLine, ModifierGroup, Player, PowerUpsGroup, World } from '@game/sprites';
 
 import { BaseScene } from '../base';
-import { TitleScene } from '../title';
-import { AttractMode, GamePad, HUD, Keyboard, SoundEffects } from './interfaces';
-import { BiblesGroup, EnemyGroup, ModifierGroup, PowerUpsGroup, World } from './sprite-groups';
+import { AttractMode } from './attract-mode';
+import { HUD } from './hud';
+import { Keyboard } from './keyboard';
+import { SoundEffects } from './music';
+import { GamePad } from './pad';
 
 export class GameScene extends BaseScene {
   static readonly SceneKey = 'GameScene';
@@ -44,9 +47,9 @@ export class GameScene extends BaseScene {
     this.world = new World(this);
     this.soundEffects = new SoundEffects(this);
 
-    this.enemies = new EnemyGroup(this, this.world);
-    this.powerUps = new PowerUpsGroup(this, this.world);
-    this.modifiers = new ModifierGroup(this, this.world);
+    this.enemies = new EnemyGroup(this);
+    this.powerUps = new PowerUpsGroup(this);
+    this.modifiers = new ModifierGroup(this);
     this.bibles = new BiblesGroup(this);
 
     this.blockEmitter = new BlockEmitter(this);

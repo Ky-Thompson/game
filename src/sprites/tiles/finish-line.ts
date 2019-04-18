@@ -73,7 +73,7 @@ export class FinishLine {
   private playerWalk() {
     this.scene.soundEffects.playEffect(Sounds.StageClear);
     this.scene.player.animate(PlayerActions.Walk, true);
-    this.scene.player.flipX = false;
+    this.scene.player.setFlipX(false);
     this.scene.physics.world.resume();
   }
 

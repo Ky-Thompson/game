@@ -19,8 +19,8 @@ export class BounceBrick extends Phaser.GameObjects.Sprite {
     scene.add.existing(this);
     scene.physics.world.enable(this);
 
-    this.alpha = 0;
-    this.body.allowGravity = false;
+    this.setAlpha(0);
+    this.body.setAllowGravity(false);
     this.play(BrickAnimations.Brick);
   }
 
@@ -30,8 +30,8 @@ export class BounceBrick extends Phaser.GameObjects.Sprite {
 
   restart(tile: TiledGameObject) {
     // Hide original tile and show this animation
-    tile.alpha = 0;
-    this.alpha = 1;
+    tile.setAlpha(0);
+    this.setAlpha(1);
 
     // Play animation
     this.play(tile.index === TilemapIds.BlockTile + 1 ? BrickAnimations.Block : BrickAnimations.Brick);
@@ -48,8 +48,8 @@ export class BounceBrick extends Phaser.GameObjects.Sprite {
       onUpdate: () => this.update(),
       onComplete: () => {
         // Reveal original tile and hide this animation
-        tile.alpha = 1;
-        this.alpha = 0;
+        tile.setAlpha(1);
+        this.setAlpha(0);
         this.x = HIDDEN_X;
       },
     });

@@ -1,17 +1,17 @@
-import { TiledGameObject } from '@game/models';
-import { Bible, BounceBrick, Car, Enemy, EnemyTypes, Liar } from '@game/sprites';
+import { EnemyTypes, TiledGameObject, WorldLayers } from '@game/models';
+import { GameScene } from '@game/scenes';
+import { Bible, Car, Enemy, Liar } from '@game/sprites';
 
-import { GameScene } from '../scene';
-import { World, WorldLayers } from './world';
+import { BounceBrick } from '../tiles';
 
 export class EnemyGroup {
   private readonly group: Phaser.GameObjects.Group;
   private readonly mapLayer: Phaser.Tilemaps.ObjectLayer;
   private readonly tileset: Phaser.Tilemaps.Tileset;
 
-  constructor(private scene: GameScene, private world: World) {
-    this.mapLayer = this.world.getLayer(WorldLayers.Enemies);
-    this.tileset = this.world.getTileset();
+  constructor(private scene: GameScene) {
+    this.mapLayer = this.scene.world.getLayer(WorldLayers.Enemies);
+    this.tileset = this.scene.world.getTileset();
     this.group = this.scene.add.group();
 
     this.mapLayer.objects.forEach((enemy: TiledGameObject) => {

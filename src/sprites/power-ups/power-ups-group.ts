@@ -1,18 +1,16 @@
 import { TILE_SIZE } from '@game/config';
-import { PowerUps, PowerUpTypes, TiledGameObject } from '@game/models';
+import { PowerUps, PowerUpTypes, TiledGameObject, WorldLayers } from '@game/models';
+import { GameScene } from '@game/scenes';
 import { createPowerUp } from '@game/sprites';
-
-import { GameScene } from '../scene';
-import { World, WorldLayers } from './world';
 
 export class PowerUpsGroup {
   private readonly group: Phaser.GameObjects.Group;
   private readonly mapLayer: Phaser.Tilemaps.ObjectLayer;
   private readonly tileset: Phaser.Tilemaps.Tileset;
 
-  constructor(private scene: GameScene, private world: World) {
-    this.mapLayer = this.world.getLayer(WorldLayers.PowerUps);
-    this.tileset = this.world.getTileset();
+  constructor(private scene: GameScene) {
+    this.mapLayer = this.scene.world.getLayer(WorldLayers.PowerUps);
+    this.tileset = this.scene.world.getTileset();
     this.group = this.scene.add.group();
 
     this.mapLayer.objects.forEach((powerUp: TiledGameObject) => {
@@ -24,7 +22,7 @@ export class PowerUpsGroup {
           break;
         default:
           // Other power-ups are just linked to the underlying question mark
-          const tile: Phaser.Tilemaps.Tile = this.world.getTileAt(powerUp.x / TILE_SIZE, powerUp.y / TILE_SIZE - 1);
+          const tile: Phaser.Tilemaps.Tile = this.scene.world.getTileAt(powerUp.x / TILE_SIZE, powerUp.y / TILE_SIZE - 1);
           tile.properties['powerUp'] = <PowerUpTypes>tileProperties.name;
       }
     });

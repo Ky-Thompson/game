@@ -1,43 +1,25 @@
 import { SUNSET_DURATION, TILE_SIZE } from '@game/config';
 import {
+  Checkpoint,
   Colors,
   Depths,
+  PipeDirection as PipeDirections,
   PlayerStates,
   PowerUpTypes,
+  Room,
+  RoomSize,
   Scores,
   Sounds,
   TileCallbacks,
   TiledGameObject,
   Tilemap,
   TilemapIds,
+  WorldLayers,
 } from '@game/models';
+import { GameScene } from '@game/scenes';
 import { Car, createPowerUp, Player } from '@game/sprites';
 
-import { GameScene } from '../scene';
-
-// TODO: Review and refactor constants / enums
-export enum WorldLayers {
-  Enemies = 'enemies',
-  PowerUps = 'power-ups',
-  Modifiers = 'modifiers',
-}
-
-export interface RoomSize {
-  width: number;
-  height: number;
-}
-
-export interface Room {
-  x: number;
-  width: number;
-  height: number;
-  backgroundColor: string;
-}
-
-export interface Checkpoint {
-  x: number;
-  y: number;
-}
+const PIPE_PADDING = TILE_SIZE / 8;
 
 export class World {
   private tilemap: Phaser.Tilemaps.Tilemap;
@@ -51,15 +33,15 @@ export class World {
   private checkpoints: Checkpoint[] = [];
 
   constructor(private scene: GameScene) {
-    this.createWorld();
+    this.initWorld();
   }
 
   init() {
-    this.createSky();
-    this.createCity();
+    this.initSky();
+    this.initCity();
   }
 
-  private createWorld() {
+  private initWorld() {
     this.tilemap = this.scene.make.tilemap({ key: Tilemap.MapKey });
 
     this.tileset = this.tilemap.addTilesetImage(Tilemap.TilesetName, Tilemap.TilesetKey);
@@ -69,8 +51,8 @@ export class World {
     this.groundLayer.setCollisionByProperty({ collide: true });
   }
 
-  private createSky() {
-    const { height, width } = this.scene.gameConfig();
+  private initSky() {
+    const { height, width } = this.scene.getGameDimensions();
 
     // Create the sky background color
     this.sunset = this.scene.add
@@ -103,7 +85,7 @@ export class World {
     }
   }
 
-  private createCity() {
+  private initCity() {
     this.city = this.scene.add
       .image(0, 0, Tilemap.CityKey)
       .setDepth(Depths.City)
@@ -113,7 +95,7 @@ export class World {
 
   private setBackgroundSprite(sprite: Phaser.GameObjects.Image) {
     const worldWidth = this.size().width;
-    const { width } = this.scene.gameConfig();
+    const { width } = this.scene.getGameDimensions();
 
     const scrollFactorX: number = (sprite.width - width) / (worldWidth - width);
     sprite
@@ -203,8 +185,27 @@ export class World {
       }
     } else if (sprite instanceof Player) {
       // Player is bending on a pipe that leads somewhere:
-      if (sprite.isBending() && tile.properties.pipe && tile.properties.goto) {
-        sprite.enterPipe(tile.properties.goto, tile.properties.direction);
+      if (sprite.isBending() && !!tile.properties.pipe && !!tile.properties.goto) {
+        let fitsPipe: boolean;
+        const { x, y, width, height } = tile.properties;
+
+        // Make sure player fits within the pipe
+        switch (tile.properties.direction) {
+          case PipeDirections.Down:
+          case PipeDirections.Up:
+            fitsPipe = x < sprite.x - sprite.body.width / 2 - PIPE_PADDING && x + width > sprite.x + sprite.body.width / 2 + PIPE_PADDING;
+            break;
+          case PipeDirections.Right:
+          case PipeDirections.Left:
+            fitsPipe = y < sprite.y - sprite.body.height / 2 - PIPE_PADDING;
+            break;
+          default:
+            fitsPipe = true;
+        }
+
+        if (fitsPipe) {
+          sprite.enterPipe(tile.properties.goto, tile.properties.direction, x + width / 2, y + height / 2);
+        }
       }
 
       // If it's player and the body isn't blocked up it can't hit question marks or break bricks

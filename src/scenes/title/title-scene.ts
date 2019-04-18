@@ -1,26 +1,27 @@
 import { getPlayerAnimationKey, SPRITES_KEY, TitleAnimations } from '@game/animations';
-import { FONT } from '@game/config';
+import { FONT, TILE_SIZE } from '@game/config';
 import { Colors, GameOptions, PlayerActions, Players, PlayerStates } from '@game/models';
 
 import { BaseScene } from '../base';
 import { GameScene } from '../game';
-import {
-  PLAYER_SELECT_DELAY,
-  PLAYER_SELECT_DURATION,
-  PLAYER_SELECT_EASE,
-  PLAYER_SELECT_SCALE,
-  PLAYER_SELECT_X,
-  PLAYER_SPRITE_SCALE,
-  START_SIZE,
-  START_TEXT,
-  START_X,
-  START_Y,
-  TITLE_BACKGROUND_ALPHA,
-  TITLE_BACKGROUND_HEIGHT,
-  TITLE_BACKGROUND_Y,
-  TITLE_BLINK_TIME,
-  TITLE_Y,
-} from './constants';
+
+const TITLE_BACKGROUND_HEIGHT = 8 * TILE_SIZE;
+const TITLE_BACKGROUND_Y = 5 * TILE_SIZE;
+const TITLE_BACKGROUND_ALPHA = 0.4;
+const TITLE_BLINK_TIME = 500;
+const TITLE_Y = TILE_SIZE * 5;
+
+const START_TEXT = 'SELECT PLAYER TO START';
+const START_X = 7 * TILE_SIZE;
+const START_Y = 8 * TILE_SIZE;
+const START_SIZE = TILE_SIZE / 2;
+
+const PLAYER_SELECT_X = 8 * TILE_SIZE;
+const PLAYER_SELECT_SCALE = 1.1;
+const PLAYER_SELECT_DELAY = 100;
+const PLAYER_SELECT_EASE = 'Quad.easeIn';
+const PLAYER_SELECT_DURATION = 200;
+const PLAYER_SPRITE_SCALE = 2;
 
 export class TitleScene extends BaseScene {
   static readonly SceneKey = 'TitleScene';
@@ -37,9 +38,9 @@ export class TitleScene extends BaseScene {
   }
 
   create() {
-    this.createTitle();
-    this.createAttractMode();
-    this.createPlayerSelection();
+    this.initTitle();
+    this.initAttractMode();
+    this.initPlayerSelection();
   }
 
   update(time: number, delta: number) {
@@ -49,7 +50,7 @@ export class TitleScene extends BaseScene {
 
   // Methods for attract mode
 
-  private createAttractMode() {
+  private initAttractMode() {
     this.setRegistry(GameOptions.AttractMode, true);
     this.setRegistry(GameOptions.RestartScene, false);
     this.scene.launch(GameScene.SceneKey);
@@ -73,8 +74,8 @@ export class TitleScene extends BaseScene {
 
   // Methods for the title
 
-  private createTitle() {
-    const { width } = this.gameConfig();
+  private initTitle() {
+    const { width } = this.getGameDimensions();
 
     this.add.rectangle(width / 2, TITLE_BACKGROUND_Y, width, TITLE_BACKGROUND_HEIGHT, Colors.White, TITLE_BACKGROUND_ALPHA);
 
@@ -84,8 +85,8 @@ export class TitleScene extends BaseScene {
     this.startSprite = this.add.bitmapText(START_X, START_Y, FONT, START_TEXT, START_SIZE);
   }
 
-  private createPlayerSelection() {
-    const { width } = this.gameConfig();
+  private initPlayerSelection() {
+    const { width } = this.getGameDimensions();
 
     // Create player selection
     this.playerSprite = this.add.sprite(width / 2 - PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
@@ -109,7 +110,7 @@ export class TitleScene extends BaseScene {
     // Create Caleb sprite
     this.calebSprite = this.add.sprite(width / 2 - PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
     const calebAnimation = getPlayerAnimationKey(Players.Caleb, PlayerActions.Walk, PlayerStates.Big);
-    this.calebSprite.flipX = true;
+    this.calebSprite.setFlipX(true);
     this.calebSprite.setScale(PLAYER_SPRITE_SCALE);
     this.calebSprite.play(calebAnimation);
     this.calebSprite.setInteractive();
@@ -122,7 +123,7 @@ export class TitleScene extends BaseScene {
     // Create Sophia sprite
     this.sophiaSprite = this.add.sprite(width / 2 + PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
     const sophiaAnimation = getPlayerAnimationKey(Players.Sophia, PlayerActions.Walk, PlayerStates.Big);
-    this.sophiaSprite.flipX = false;
+    this.sophiaSprite.setFlipX(false);
     this.sophiaSprite.setScale(PLAYER_SPRITE_SCALE);
     this.sophiaSprite.play(sophiaAnimation);
     this.sophiaSprite.setInteractive();
@@ -153,20 +154,18 @@ export class TitleScene extends BaseScene {
     this.blinkTimer -= delta;
 
     if (this.blinkTimer < 0) {
-      this.startSprite.alpha = this.startSprite.alpha === 1 ? 0 : 1; // Toggle alpha
+      this.startSprite.setAlpha(this.startSprite.alpha === 1 ? 0 : 1); // Toggle alpha
       this.blinkTimer = TITLE_BLINK_TIME; // Restart timer
     }
   }
 
-  /**
-   * Methods for the player selection
-   */
+  // Methods for the player selection
 
   private selectPlayer(player: Players) {
     this.selectedPlayer = player;
     this.setRegistry(GameOptions.Player, player);
 
-    const { width } = this.gameConfig();
+    const { width } = this.getGameDimensions();
     const position: number = player === Players.Caleb ? -1 : 1;
     this.playerSprite.setPosition(width / 2 + PLAYER_SELECT_X * position, TITLE_Y);
 

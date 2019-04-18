@@ -1,20 +1,13 @@
-import { GameOptions, TiledGameObject, TileProperties } from '@game/models';
-
-export interface GameConfig extends Phaser.Core.Config {
-  height: number;
-  width: number;
-}
+import { Dimensions, GameOptions, TiledGameObject, TileProperties } from '@game/models';
 
 export abstract class BaseScene extends Phaser.Scene {
   constructor(config: Phaser.Scenes.Settings.Config) {
     super(config);
   }
 
-  /**
-   * Game properties
-   */
+  // Game properties
 
-  gameConfig(): GameConfig {
+  getGameDimensions(): Dimensions {
     return <any>this.sys.game.config;
   }
 
@@ -24,9 +17,7 @@ export abstract class BaseScene extends Phaser.Scene {
     return isAndroid || isIOS;
   }
 
-  /**
-   * Registry for global settings
-   */
+  // Registry for global settings
 
   getRegistry(option: GameOptions) {
     return this.registry.get(String(option));
@@ -36,9 +27,7 @@ export abstract class BaseScene extends Phaser.Scene {
     return this.registry.set(String(option), value);
   }
 
-  /**
-   * Helpers to handle Tiled tiles
-   */
+  // Helpers to handle Tiled tiles
 
   getTilesetProperties(tile: TiledGameObject, tileset: Phaser.Tilemaps.Tileset): TileProperties {
     return tileset.tileProperties[tile.gid - 1] as TileProperties;

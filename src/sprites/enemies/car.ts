@@ -13,7 +13,7 @@ export class Car extends Enemy {
   constructor(scene: GameScene, x: number, y: number) {
     super(scene, x, y);
 
-    this.flipX = true;
+    this.setFlipX(true);
     this.setBody(DIMENSIONS);
     this.animate();
   }
@@ -43,8 +43,8 @@ export class Car extends Enemy {
     // The enemy stopped, better try to walk in the other direction.
     if (this.body.velocity.x === 0) {
       this.direction = -this.direction;
-      this.body.velocity.x = this.direction;
-      this.flipX = this.direction < 0;
+      this.body.setVelocityX(this.direction);
+      this.setFlipX(this.direction < 0);
     }
   }
 
@@ -63,12 +63,12 @@ export class Car extends Enemy {
         this.scene.soundEffects.playEffect(Sounds.Kick);
 
         this.direction = SLIDE_VELOCITY * (this.scene.player.x < this.x ? 1 : -1);
-        this.body.velocity.x = this.direction;
+        this.body.setVelocityX(this.direction);
       } else {
         this.scene.soundEffects.playEffect(Sounds.Stomp);
 
         this.direction = 0;
-        this.body.velocity.x = 0;
+        this.body.setVelocityX(0);
       }
 
       this.sliding = true;
@@ -80,7 +80,7 @@ export class Car extends Enemy {
         this.scene.soundEffects.playEffect(Sounds.Kick);
 
         this.direction = SLIDE_VELOCITY;
-        this.body.velocity.x = SLIDE_VELOCITY;
+        this.body.setVelocityX(SLIDE_VELOCITY);
       }
       this.hurtPlayer();
     }

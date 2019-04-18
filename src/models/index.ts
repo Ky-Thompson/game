@@ -3,6 +3,8 @@ export * from './audio';
 export * from './body';
 export * from './colors';
 export * from './depths';
+export * from './dimensions';
+export * from './enemies';
 export * from './modifers';
 export * from './options';
 export * from './pipes';

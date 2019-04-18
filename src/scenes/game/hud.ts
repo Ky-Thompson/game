@@ -2,7 +2,7 @@ import { HUDAnimations, SPRITES_KEY } from '@game/animations';
 import { FONT, GAME_TIMEOUT, HURRY_TIME, MS_TO_S, TILE_SIZE, TIME_FACTOR } from '@game/config';
 import { Colors, Scores, Sounds } from '@game/models';
 
-import { GameScene } from '../scene';
+import { GameScene } from './game-scene';
 
 const FONT_SIZE = TILE_SIZE / 2;
 const HUD_PADDING = TILE_SIZE * 2;
@@ -28,9 +28,9 @@ export class HUD {
   private lifes: number = START_LIFES;
 
   constructor(private scene: GameScene) {
-    this.createPlayerScore();
-    this.createTimer();
-    this.createLifes();
+    this.initPlayerScore();
+    this.initTimer();
+    this.initLifes();
 
     if (this.scene.attractMode.isActive()) {
       this.playerText.setAlpha(0);
@@ -41,7 +41,7 @@ export class HUD {
     }
   }
 
-  private createPlayerScore() {
+  private initPlayerScore() {
     this.playerText = this.scene.add
       .bitmapText(HUD_PADDING, TILE_SIZE / 2, FONT, this.scene.player.getPlayerType().toUpperCase(), FONT_SIZE)
       .setScrollFactor(0, 0);
@@ -51,8 +51,8 @@ export class HUD {
       .setScrollFactor(0, 0);
   }
 
-  private createTimer() {
-    const { width } = this.scene.gameConfig();
+  private initTimer() {
+    const { width } = this.scene.getGameDimensions();
     const timePosition = width - HUD_PADDING;
 
     this.timeText = this.scene.add
@@ -67,7 +67,7 @@ export class HUD {
     this.displayedTime = GAME_TIMEOUT;
   }
 
-  private createLifes() {
+  private initLifes() {
     const lifesX = HUD_PADDING + this.scene.player.getPlayerType().toUpperCase().length * FONT_SIZE + TILE_SIZE / 2;
 
     for (let i = 0; i < MAX_LIFES; i++) {

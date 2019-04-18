@@ -2,7 +2,7 @@ import { PadAnimations, SPRITES_KEY } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
 import { ActionState, Colors, Depths, PlayerStates } from '@game/models';
 
-import { GameScene } from '../scene';
+import { GameScene } from './game-scene';
 
 const GAME_PAD_ALPHA = 0.9;
 
@@ -21,7 +21,7 @@ export class GamePad {
       return; // Don't add pad if not needed
     }
 
-    const { width, height } = this.scene.gameConfig();
+    const { width, height } = this.scene.getGameDimensions();
 
     const RIGHT_BUTTON_X = width - BUTTON_SIZE / 2 - PADDING;
     const RIGHT_BUTTON_Y = height - BUTTON_SIZE / 2 - PADDING;

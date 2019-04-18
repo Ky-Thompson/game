@@ -32,7 +32,7 @@ export class Bible extends Phaser.GameObjects.Sprite {
 
   private collided() {
     if (this.body.velocity.y === 0) {
-      this.body.velocity.y = COLLIDE_VELOCITY_Y; // Bounce on horizontal collision
+      this.body.setVelocityY(COLLIDE_VELOCITY_Y); // Bounce on horizontal collision
     }
 
     if (this.body.velocity.x === 0) {
@@ -48,10 +48,10 @@ export class Bible extends Phaser.GameObjects.Sprite {
 
   throw(x: number, y: number, leftDirection: boolean) {
     this.setPosition(x, y);
-    this.body.velocity.y = 0;
-    this.body.velocity.x = VELOCITY_X * (leftDirection ? -1 : 1);
+    this.body.setVelocityY(0);
+    this.body.setVelocityX(VELOCITY_X * (leftDirection ? -1 : 1));
     this.body.angularVelocity = ANGULAR_VELOCITY;
-    this.body.allowGravity = true;
+    this.body.setAllowGravity(true);
     this.body.gravity.y = -GRAVITY + BIBLE_GRAVITY;
 
     this.setActive(true);

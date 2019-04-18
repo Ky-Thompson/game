@@ -4,6 +4,10 @@ import { Body, PlayerStates, Scores, Sounds } from '@game/models';
 import { GameScene } from '@game/scenes';
 
 export abstract class PowerUp extends Phaser.GameObjects.Sprite {
+  static readonly VELOCITY_X = 140;
+  static readonly ACTIVATE_VELOCITY_Y = -300;
+  static readonly ANIMATION_DURATION = 500;
+
   body: Phaser.Physics.Arcade.Body;
 
   constructor(public scene: GameScene, x: number, y: number, public direction: number, public dimensions: Body) {
@@ -38,7 +42,7 @@ export abstract class PowerUp extends Phaser.GameObjects.Sprite {
 
   update() {
     // Check if power up needs to be destroyed
-    const { height } = this.scene.gameConfig();
+    const { height } = this.scene.getGameDimensions();
     if (this.alpha === 0 || this.y > height * 2) {
       this.scene.powerUps.remove(this);
       this.destroy();
@@ -55,15 +59,15 @@ export abstract class PowerUp extends Phaser.GameObjects.Sprite {
     // Invert direction
     if (this.body.velocity.x === 0) {
       this.direction = -this.direction;
-      this.body.velocity.x = this.direction;
-      this.flipX = this.direction < 0;
+      this.body.setVelocityX(this.direction);
+      this.setFlipX(this.direction < 0);
     }
   }
 
   protected collect() {
     // Get points
     this.scene.hud.updateScore(Scores.PowerUp);
-    this.alpha = 0;
+    this.setAlpha(0);
   }
 
   protected upgradePlayer() {

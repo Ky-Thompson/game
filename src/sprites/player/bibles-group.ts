@@ -1,6 +1,5 @@
+import { GameScene } from '@game/scenes';
 import { Bible } from '@game/sprites';
-
-import { GameScene } from '../scene';
 
 export class BiblesGroup {
   private readonly group: Phaser.GameObjects.Group;

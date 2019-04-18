@@ -1,8 +1,6 @@
 import { TILE_SIZE } from '@game/config';
-import { Depths, Modifiers, PipeDestination, PipeDestinations, PipeDirection, TiledGameObject } from '@game/models';
-
-import { GameScene } from '../scene';
-import { World, WorldLayers } from './world';
+import { Depths, Modifiers, PipeDestination, PipeDestinations, PipeDirection, TiledGameObject, WorldLayers } from '@game/models';
+import { GameScene } from '@game/scenes';
 
 export class ModifierGroup {
   private readonly mapLayer: Phaser.Tilemaps.ObjectLayer;
@@ -12,8 +10,8 @@ export class ModifierGroup {
   private start: TiledGameObject;
   private end: TiledGameObject;
 
-  constructor(private scene: GameScene, private world: World) {
-    this.mapLayer = this.world.getLayer(WorldLayers.Modifiers);
+  constructor(private scene: GameScene) {
+    this.mapLayer = this.scene.world.getLayer(WorldLayers.Modifiers);
 
     this.mapLayer.objects.forEach((modifier: TiledGameObject) => {
       this.scene.consolidateProperties(modifier);
@@ -53,10 +51,14 @@ export class ModifierGroup {
     // Adds info on where to go from a pipe under the modifier
     for (let x = 0; x < modifier.width / TILE_SIZE; x++) {
       for (let y = 0; y < modifier.height / TILE_SIZE; y++) {
-        const tile: Phaser.Tilemaps.Tile = this.world.getTileAt(modifier.x / TILE_SIZE + x, modifier.y / TILE_SIZE + y);
+        const tile: Phaser.Tilemaps.Tile = this.scene.world.getTileAt(modifier.x / TILE_SIZE + x, modifier.y / TILE_SIZE + y);
         tile.properties['goto'] = modifier.properties.goto;
         tile.properties['direction'] = modifier.properties.direction;
         tile.properties['pipe'] = true;
+        tile.properties['x'] = modifier.x;
+        tile.properties['y'] = modifier.y;
+        tile.properties['width'] = modifier.width;
+        tile.properties['height'] = modifier.height;
       }
     }
   }

@@ -1,6 +1,6 @@
 import { AUDIO_SPRITE_KEY, Sounds } from '@game/models';
 
-import { GameScene } from '../scene';
+import { GameScene } from './game-scene';
 
 export enum MusicPlaylist {
   Song89 = '89',

@@ -2,7 +2,6 @@ import { PowerUpAnimations } from '@game/animations';
 import { Body, Sounds } from '@game/models';
 import { GameScene } from '@game/scenes';
 
-import { ACTIVATE_VELOCITY_Y } from './constants';
 import { PowerUp } from './power-up';
 
 const ROBOT_DIMENSIONS: Body = { width: 32, height: 32, x: 0, y: 0 };
@@ -16,7 +15,7 @@ export class Robot extends PowerUp {
   protected activate() {
     // Configure power up
     this.scene.powerUps.add(this);
-    this.body.velocity.y = ACTIVATE_VELOCITY_Y;
+    this.body.setVelocityY(PowerUp.ACTIVATE_VELOCITY_Y);
 
     // Play sounds
     this.scene.soundEffects.playEffect(Sounds.PowerUpAppears);
