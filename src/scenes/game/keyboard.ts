@@ -23,7 +23,7 @@ export class Keyboard {
     return {
       left: this.keys.left.isDown || gamePadKeys.left,
       right: this.keys.right.isDown || gamePadKeys.right,
-      down: this.keys.down.isDown,
+      down: this.keys.down.isDown || gamePadKeys.down,
       jump: this.keys.jump.isDown || this.keys.jump2.isDown || gamePadKeys.jump,
       throwBible: this.keys.throwBible.isDown || gamePadKeys.throwBible,
     };

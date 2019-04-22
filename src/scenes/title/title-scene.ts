@@ -113,8 +113,7 @@ export class TitleScene extends BaseScene {
     this.calebSprite.setFlipX(true);
     this.calebSprite.setScale(PLAYER_SPRITE_SCALE);
     this.calebSprite.play(calebAnimation);
-    this.calebSprite.setInteractive();
-    this.calebSprite.input.cursor = 'pointer';
+    this.calebSprite.setInteractive({ useHandCursor: true });
     this.calebSprite.on('pointerdown', () => {
       this.selectPlayer(Players.Caleb);
       this.startGame();
@@ -126,8 +125,7 @@ export class TitleScene extends BaseScene {
     this.sophiaSprite.setFlipX(false);
     this.sophiaSprite.setScale(PLAYER_SPRITE_SCALE);
     this.sophiaSprite.play(sophiaAnimation);
-    this.sophiaSprite.setInteractive();
-    this.sophiaSprite.input.cursor = 'pointer';
+    this.sophiaSprite.setInteractive({ useHandCursor: true });
     this.sophiaSprite.on('pointerdown', () => {
       this.selectPlayer(Players.Sophia);
       this.startGame();
