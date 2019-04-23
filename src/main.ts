@@ -2,6 +2,7 @@
 import 'phaser';
 
 import { GAME_HEIGHT, GAME_WIDTH, GRAVITY, TILE_SIZE } from './config';
+import { initApp } from './firebase';
 import { resizeGame, setFullscreen } from './helpers';
 import { BootScene, GameScene, TitleScene } from './scenes';
 
@@ -34,28 +35,34 @@ const config: GameConfig = {
 export class Game extends Phaser.Game {
   constructor(config: GameConfig) {
     super(config);
+
+    // Allow multitouch
+    this.input.addPointer();
+    this.input.addPointer();
+    this.input.addPointer();
+    this.input.addPointer();
+    this.input.addPointer();
+
+    // Sound and fullscreen
+    const setupSoundFullscreen = () => {
+      setFullscreen();
+      (<any>this.sound).context.resume();
+    };
+
+    this.input.addDownCallback(setupSoundFullscreen, true);
+
+    // Resize
+    resizeGame();
+    window.addEventListener('resize', resizeGame, false);
   }
 }
 
 window.addEventListener('load', () => {
-  const game = new Game(config);
+  initApp().then((user) => {
+    if (user) {
+      const game = new Game(config);
+    }
 
-  // Allow multitouch
-  game.input.addPointer();
-  game.input.addPointer();
-  game.input.addPointer();
-  game.input.addPointer();
-  game.input.addPointer();
-
-  // Sound and fullscreen
-  const setupSoundFullscreen = () => {
-    setFullscreen();
-    (<any>game.sound).context.resume();
-  };
-
-  game.input.addDownCallback(setupSoundFullscreen, true);
-
-  // Resize
-  resizeGame();
-  window.addEventListener('resize', resizeGame, false);
+    console.log(user);
+  });
 });

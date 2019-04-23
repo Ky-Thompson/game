@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="m-0 p-0 h-100">
 
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <title>Caleb & Sophia Game</title>
   <link rel="manifest" href="manifest.json">
-  <meta charset="UTF-8">
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, minimum-scale = 1, maximum-scale = 1, user-scalable = no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -13,12 +12,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
   <style>
+    /* TODO: Clean-up */
     html,
     body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
       image-rendering: optimizeSpeed;
       image-rendering: -moz-crisp-edges;
       image-rendering: -webkit-optimize-contrast;
@@ -28,17 +28,6 @@
       image-rendering: pixelated;
       touch-action: none;
       overflow: hidden;
-    }
-
-    body {
-      background: black;
-      text-align: center;
-    }
-
-    #game-container {
-      width: 100%;
-      height: 100%;
-      min-height: 100%;
     }
 
     #game {
@@ -54,6 +43,14 @@
       width: 100% !important;
       height: 100% !important;
       object-fit: initial !important;
+    }
+
+    div,
+    article,
+    section {
+      transition-duration: 240ms;
+      transition-property: height, width, margin, padding;
+      transition-timing-function: ease-in;
     }
 
     /* Full screen in safari */
@@ -101,10 +98,42 @@
   </style>
 </head>
 
-<body>
-  <div id="game-container">
+<body class="m-0 p-0 h-100 bg-dark text-center">
+  <article id="game-container" style="display: none" class="w-100 h-100">
     <div id="game"></div>
-  </div>
+  </article>
+
+  <article id="auth" style="display: none" class="card m-0 m-sm-2 m-md-3 m-lg-5 p-0 p-sm-1 p-md-2 p-lg-3 text-center">
+    <header><img src="./assets/images/convention-logo.png" class="card-img-top mw-100" style="width: 20rem"></header>
+
+    <section id="login">
+      <header>
+        <h1 class="card-title mt-4">Login</h1>
+      </header>
+
+      <div class="card-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12 col-md-4 mb-4">
+              <h4 class="card-subtitle mb-3 text-muted">User your account</h4>
+              <button class="btn btn-primary">Login with Google</button>
+            </div>
+
+            <div class="col-12 col-md-4 mb-4">
+              <h4 class="card-subtitle mb-3 text-muted">Create a user</h4>
+              <button class="btn btn-primary">Sign-up</button>
+            </div>
+
+            <div class="col-12 col-md-4 mb-4">
+              <h4 class="card-subtitle mb-3 text-muted">Get a link to the game</h4>
+              <button class="btn btn-primary">Get link</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </article>
 </body>
 
 </html>

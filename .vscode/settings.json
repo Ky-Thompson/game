@@ -37,6 +37,8 @@
   "importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.count": 140,
   "importSorter.importStringConfiguration.tabSize": 2,
   "importSorter.sortConfiguration.customOrderingRules.rules": [
+    { "regex": "firebase/app", "orderLevel": 1 },
+    { "regex": "firebase/.*", "orderLevel": 2 },
     {
       "type": "importMember",
       "regex": "^$",
