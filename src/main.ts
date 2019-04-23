@@ -59,10 +59,7 @@ export class Game extends Phaser.Game {
 
 window.addEventListener('load', () => {
   initApp().then((user) => {
-    if (user) {
-      const game = new Game(config);
-    }
-
+    const game = new Game(config);
     console.log(user);
   });
 });

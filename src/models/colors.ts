@@ -1,5 +1,6 @@
 export enum Colors {
   White = 0xffffff,
+  Gray = 0x343a40,
   Red = 0xff4d4d,
   Green = 0x00ff00,
   Blue = 0x0000ff,

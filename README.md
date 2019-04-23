@@ -6,6 +6,7 @@
 
 * Production web: https://caleb-sophia-madrid.github.io/game/
 * Staging web: https://caleb-sophia-madrid-dev.herokuapp.com/
+* Firebase Users Console: https://console.firebase.google.com/project/caleb-sophia-madrid/authentication/users
 
 ## Pre-requisites
 

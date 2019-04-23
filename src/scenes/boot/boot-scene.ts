@@ -37,6 +37,8 @@ export class BootScene extends BaseScene {
 
     resizeGame();
 
+    this.cameras.main.setBackgroundColor(Colors.Gray);
+
     this.load.on('progress', (value: number) => {
       progress.clear();
       progress.fillStyle(Colors.White, 1);
