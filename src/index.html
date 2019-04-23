@@ -17,6 +17,8 @@
 
   <style>
     /* TODO: Clean-up */
+    /* TODO: move to scss file and use bootstrap from local install */
+    /* TODO: Purify bootstrap */
     html,
     body {
       image-rendering: optimizeSpeed;
@@ -166,6 +168,21 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <section id="email-verification" style="display: none">
+      <header>
+        <h1 class="card-title mt-4">Email verification</h1>
+      </header>
+
+      <div class="card-body">
+        <p class="card-text">Your email needs to be verified in order to access this app.
+          Check your inbox and open the link you will find.</p>
+        <p class="card-text">If you need your email to be resent click the button below.</p>
+
+        <button id="email-verification-button" class="btn btn-primary">Send verification email</button>
+        <button id="email-verification-sign-out-button" class="btn btn-danger">Sign out</button>
       </div>
     </section>
   </article>

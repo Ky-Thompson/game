@@ -16,19 +16,21 @@ export function initApp(): Promise<firebase.User> {
   let initialized: boolean;
 
   // Initialize UI
-  registerAuthButton(AuthButtons.LoginGoogle, () => login(LoginTypes.Google));
-  registerAuthButton(AuthButtons.LoginEmailPassword, (event: Event) => {
+  registerAuthButton(AuthButtons.LoginGoogle, async () => await login(LoginTypes.Google));
+  registerAuthButton(AuthButtons.LoginEmailPassword, async (event: Event) => {
     const form: HTMLFormElement = <any>event.target;
     const email: string = form.elements['email'].value;
     const password: string = form.elements['password'].value;
-    loginEmailPassword(email, password);
+    await loginEmailPassword(email, password);
   });
-  registerAuthButton(AuthButtons.SignUp, (event: Event) => {
+  registerAuthButton(AuthButtons.SignUp, async (event: Event) => {
     const form: HTMLFormElement = <any>event.target;
     const email: string = form.elements['email'].value;
     const password: string = form.elements['password'].value;
-    signUp(email, password);
+    await signUp(email, password);
   });
+  registerAuthButton(AuthButtons.EmailVerification, async () => await sendEmailVerification());
+  registerAuthButton(AuthButtons.SignOut, async () => await signOut());
 
   // Wait for user's authentication
   return new Promise((resolve, reject) => {
@@ -37,7 +39,12 @@ export function initApp(): Promise<firebase.User> {
     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     auth.onAuthStateChanged((user: firebase.User) => {
       // TODO: Handle user states: email not verified, fill display name
-      if (user) {
+
+      if (!user) {
+        showAuth(AuthSteps.Login);
+      } else if (user && user.email && !user.emailVerified) {
+        showAuth(AuthSteps.EmailVerification);
+      } else if (user) {
         showGame();
 
         if (!initialized) {
@@ -45,7 +52,6 @@ export function initApp(): Promise<firebase.User> {
           resolve(user);
         }
       } else {
-        showAuth(AuthSteps.Login);
       }
     });
   });
@@ -73,8 +79,9 @@ export async function signOut(): Promise<void> {
 
 export async function signUp(email: string, password: string): Promise<firebase.User> {
   try {
-    const credential: firebase.auth.UserCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-    return credential.user;
+    const result: firebase.auth.UserCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+    await sendEmailVerification(result.user);
+    return result.user;
   } catch (e) {
     if (e.code === AuthErrors.EmailAlreadyInUse) {
       return await loginEmailPassword(email, password);
@@ -112,10 +119,14 @@ export async function loginEmailPassword(email: string, password: string): Promi
   // TODO: Handle errors
 }
 
-export async function sendEmailVerification(): Promise<void> {
-  const user: firebase.User = firebase.auth().currentUser;
+export async function sendEmailVerification(user?: firebase.User): Promise<void> {
+  user = user || firebase.auth().currentUser;
 
   if (user) {
-    await user.sendEmailVerification();
+    try {
+      await user.sendEmailVerification();
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
