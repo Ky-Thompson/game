@@ -38,7 +38,7 @@ export function initApp(): Promise<firebase.User> {
     auth.useDeviceLanguage();
     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     auth.onAuthStateChanged((user: firebase.User) => {
-      // TODO: Handle user states: email not verified, fill display name
+      // TODO: Handle user states: fill display name
 
       if (!user) {
         showAuth(AuthSteps.Login);

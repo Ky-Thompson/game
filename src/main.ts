@@ -1,5 +1,7 @@
 /// <reference path="./phaser.d.ts"/>
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'phaser';
+import './style.scss';
 
 import { GAME_HEIGHT, GAME_WIDTH, GRAVITY, TILE_SIZE } from './config';
 import { initApp } from './firebase';

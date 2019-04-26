@@ -51,8 +51,6 @@ export function showAuth(step: AuthSteps) {
   show(auth);
 }
 
-// TODO: Disable buttons on async work
-
 export function registerAuthButton(button: AuthButtons, callback: (event: Event) => Promise<any>) {
   switch (button) {
     case AuthButtons.LoginGoogle:
