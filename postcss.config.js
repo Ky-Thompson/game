@@ -3,5 +3,5 @@ const cssnano = require('cssnano');
 const uncss = require('uncss');
 
 module.exports = {
-  plugins: [autoprefixer, cssnano({ preset: 'default' }), uncss.postcssPlugin({ html: ['./src/index.html'] })],
+  plugins: [autoprefixer, cssnano({ preset: 'default' }), uncss.postcssPlugin({ html: ['./src/index.hbs', './src/partials/*.hbs'] })],
 };
