@@ -34,6 +34,13 @@ module.exports.webpackConfig = (mode) => {
         { test: /\.ts$/, loader: 'ts-loader', include: join(__dirname, 'src'), exclude: '/node_modules/' },
         { test: /phaser\.js$/, loader: 'expose-loader?Phaser' },
         { test: [/\.vert$/, /\.frag$/], use: 'raw-loader' },
+        {
+          test: /\.hbs$/,
+          loader: 'handlebars-loader',
+          options: {
+            partialDirs: [join(__dirname, 'src/partials')],
+          },
+        },
         { test: /\.scss$/, use: scssLoaders },
       ],
     },
@@ -56,7 +63,7 @@ module.exports.webpackConfig = (mode) => {
       }),
       new HtmlWebpackPlugin({
         hash: true,
-        template: join(__dirname, 'src/index.html'),
+        template: join(__dirname, 'src/index.hbs'),
         filename: join(__dirname, 'dist/index.html'),
       }),
       new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
