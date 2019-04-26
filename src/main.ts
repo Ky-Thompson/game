@@ -1,5 +1,4 @@
 /// <reference path="./phaser.d.ts"/>
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'phaser';
 import './style.scss';
 

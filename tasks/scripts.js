@@ -2,9 +2,12 @@ const chalk = require('chalk');
 const webpack = require('webpack');
 const { webpackConfig, DEVELOPMENT_MODE, PRODUCTION_MODE } = require('../webpack.config');
 
-module.exports.buildScripts = () =>
+module.exports.DEVELOPMENT_MODE = DEVELOPMENT_MODE;
+module.exports.PRODUCTION_MODE = PRODUCTION_MODE;
+
+module.exports.buildScripts = (mode) => () =>
   new Promise((resolve, reject) => {
-    webpack(webpackConfig(PRODUCTION_MODE), (error, stats) => {
+    webpack(webpackConfig(mode), (error, stats) => {
       if (error) {
         console.log(chalk.red(error));
         reject();

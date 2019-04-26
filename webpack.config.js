@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const DEVELOPMENT_MODE = 'development';
 const PRODUCTION_MODE = 'production';
@@ -27,7 +28,7 @@ module.exports.webpackConfig = (mode) => ({
       { test: /phaser\.js$/, loader: 'expose-loader?Phaser' },
       { test: [/\.vert$/, /\.frag$/], use: 'raw-loader' },
       { test: /\.css$/, use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader'] },
-      { test: /\.scss$/, use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'] },
+      { test: /\.scss$/, use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'] },
     ],
   },
   resolve: {
@@ -44,7 +45,7 @@ module.exports.webpackConfig = (mode) => ({
       CANVAS_RENDERER: JSON.stringify(true),
     }),
     new MiniCssExtractPlugin({
-      filename: mode === PRODUCTION_MODE ? '[name].[hash].css' : '[name].css',
+      filename: mode === PRODUCTION_MODE ? 'style.[hash].css' : 'style.css',
       chunkFilename: mode === PRODUCTION_MODE ? '[id].[hash].css' : '[id].css',
     }),
     new HtmlWebpackPlugin({
@@ -52,9 +53,10 @@ module.exports.webpackConfig = (mode) => ({
       template: join(__dirname, 'src/index.html'),
       filename: join(__dirname, 'dist/index.html'),
     }),
+    new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
   ],
   performance: {
-    maxEntrypointSize: 1048576, // 1MB
-    maxAssetSize: 1048576, // 1MB
+    maxEntrypointSize: 1500000, // 1.5MB
+    maxAssetSize: 1500000, // 1.5MB
   },
 });
