@@ -1,0 +1,7 @@
+div,
+article,
+section {
+  transition-duration: 240ms;
+  transition-property: height, width, margin, padding;
+  transition-timing-function: ease-in;
+}

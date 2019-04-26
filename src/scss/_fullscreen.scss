@@ -1,0 +1,42 @@
+/* Full screen in safari */
+/* https://dev.to/marvindanig/fullscreen-web-apps-on-ipad-safari--3p9b */
+
+:-webkit-full-screen body,
+:-moz-full-screen body,
+:-ms-fullscreen body {
+  /* properties */
+  width: 100vw;
+  height: 100vh;
+}
+
+:full-screen body {
+  /*pre-spec */
+  /* properties */
+  width: 100vw;
+  height: 100vh;
+}
+
+:fullscreen body {
+  /* spec */
+  /* properties */
+  width: 100vw;
+  height: 100vh;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* deeper elements */
+
+:-webkit-full-screen body {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* styling the backdrop*/
+
+::backdrop,
+::-ms-backdrop {
+  /* Custom styles */
+}

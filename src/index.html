@@ -11,96 +11,14 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-
-  <style>
-    /* TODO: Clean-up */
-    /* TODO: move to scss file and use bootstrap from local install */
-    /* TODO: Purify bootstrap */
-    html,
-    body {
-      image-rendering: optimizeSpeed;
-      image-rendering: -moz-crisp-edges;
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: -o-crisp-edges;
-      image-rendering: crisp-edges;
-      -ms-interpolation-mode: nearest-neighbor;
-      image-rendering: pixelated;
-      touch-action: none;
-      overflow: hidden;
-    }
-
-    #game {
-      margin: auto;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
-
-    canvas {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: initial !important;
-    }
-
-    div,
-    article,
-    section {
-      transition-duration: 240ms;
-      transition-property: height, width, margin, padding;
-      transition-timing-function: ease-in;
-    }
-
-    /* Full screen in safari */
-    /* https://dev.to/marvindanig/fullscreen-web-apps-on-ipad-safari--3p9b */
-
-    :-webkit-full-screen body,
-    :-moz-full-screen body,
-    :-ms-fullscreen body {
-      /* properties */
-      width: 100vw;
-      height: 100vh;
-    }
-
-    :full-screen body {
-      /*pre-spec */
-      /* properties */
-      width: 100vw;
-      height: 100vh;
-    }
-
-    :fullscreen body {
-      /* spec */
-      /* properties */
-      width: 100vw;
-      height: 100vh;
-    }
-
-    ::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* deeper elements */
-
-    :-webkit-full-screen body {
-      width: 100vw;
-      height: 100vh;
-    }
-
-    /* styling the backdrop*/
-
-    ::backdrop,
-    ::-ms-backdrop {
-      /* Custom styles */
-    }
-  </style>
 </head>
 
 <body class="m-0 p-0 h-100 bg-dark text-center">
   <article id="game-container" style="display: none" class="w-100 h-100">
     <div id="game"></div>
   </article>
+
+  <!-- TODO: Use Handlebars for templates -->
 
   <article id="auth" style="display: none" class="card m-0 m-sm-2 m-md-3 m-lg-5 p-0 p-sm-1 p-md-2 p-lg-3">
     <header>
