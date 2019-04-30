@@ -1,0 +1,27 @@
+#auth {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow-y: auto;
+  border-radius: 0;
+}
+
+#logo-img {
+  max-width: 20rem;
+}
+
+@include media-breakpoint-up(sm) {
+  @media (min-height: 38rem) {
+    #auth {
+      max-width: 25rem;
+      max-height: 35rem;
+      border-radius: 0.5rem;
+    }
+    #logo-img {
+      max-width: 25rem;
+    }
+  }
+}

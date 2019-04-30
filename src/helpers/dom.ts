@@ -1,5 +1,5 @@
 export function show(element: HTMLElement) {
-  element.style.display = 'block';
+  element.style.display = '';
   element.hidden = false;
 }
 

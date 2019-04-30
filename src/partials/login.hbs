@@ -1,63 +1,10 @@
 <section id="login" style="display: none">
-  <header>
-    <h1 class="card-title mt-4">Login</h1>
-  </header>
-
   <div class="card-body">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-12 col-md-6 mt-1 mb-1">
-          <h4 class="card-subtitle mb-3 text-muted">User your account</h4>
-          <button id="login-google-button" class="btn btn-primary">Login with Google</button>
-        </div>
-
-        <div class="col-12 col-md-6 mt-1 mb-1">
-          <hr class="d-block d-md-none">
-          <h4 class="card-subtitle mb-3 text-muted">Get a link</h4>
-          <button id="get-link-button" class="btn btn-primary">Get link</button>
-        </div>
-
-        <div class="col-12 col-md-6 mt-1 mb-1">
-          <hr>
-          <h4 class="card-subtitle mb-3 text-muted">Login</h4>
-          <form id="login-form">
-            <div class="form-group text-left">
-              <label for="login-email-input">Email address</label>
-              <input type="email" class="form-control" name="email" id="login-email-input" placeholder="Enter email"
-                required>
-            </div>
-
-            <div class="form-group text-left">
-              <label for="login-password">Email address</label>
-              <input type="password" class="form-control" name="password" id="login-password" placeholder="Password"
-                required minlength="6">
-            </div>
-
-            <button id="login-button" class="btn btn-primary">Login</button>
-          </form>
-        </div>
-
-        <div class="col-12 col-md-6 mt-1 mb-1">
-          <hr>
-          <h4 class="card-subtitle mb-3 text-muted">Create a user</h4>
-          <form id="sign-up-form">
-            <div class="form-group text-left">
-              <label for="sign-up-email-input">Email address</label>
-              <input type="email" class="form-control" name="email" id="sign-up-email-input" placeholder="Enter email"
-                required>
-            </div>
-
-            <div class="form-group text-left">
-              <label for="sign-up-password">Email address</label>
-              <input type="password" class="form-control" name="password" id="sign-up-password" placeholder="Password"
-                required minlength="6">
-            </div>
-
-            <button id="sign-up-button" class="btn btn-primary">Sign-up</button>
-          </form>
-        </div>
-      </div>
+      {{> login-toc}}
+      {{> login-email}}
+      {{> login-link}}
+      {{> login-signup}}
     </div>
-
   </div>
 </section>

@@ -3,15 +3,31 @@ import { hide, show } from '@game/helpers';
 const game: HTMLElement = document.getElementById('game-container');
 const auth: HTMLElement = document.getElementById('auth');
 
-const login: HTMLElement = document.getElementById('login');
-const loginGoogleButton: HTMLButtonElement = <any>document.getElementById('login-google-button');
-const getLinkButton: HTMLButtonElement = <any>document.getElementById('get-link-button');
-const loginForm: HTMLFormElement = <any>document.getElementById('login-form');
-const loginButton: HTMLButtonElement = <any>document.getElementById('login-button');
-const signUpForm: HTMLFormElement = <any>document.getElementById('sign-up-form');
-const signUpButton: HTMLButtonElement = <any>document.getElementById('sign-up-button');
+const loginSection: HTMLElement = document.getElementById('login');
 
-const emailVerification: HTMLElement = document.getElementById('email-verification');
+const loginTOCSection: HTMLDivElement = <any>document.getElementById('login-toc-section');
+const loginTOCGoogleButton: HTMLButtonElement = <any>document.getElementById('login-toc-google-button');
+const loginTOCEmailButton: HTMLButtonElement = <any>document.getElementById('login-toc-email-button');
+const loginTOCSignUpButton: HTMLButtonElement = <any>document.getElementById('login-toc-sign-up-button');
+const loginTOCLinkButton: HTMLButtonElement = <any>document.getElementById('login-toc-link-button');
+
+const loginSignUpSection: HTMLDivElement = <any>document.getElementById('sign-up-section');
+const signUpForm: HTMLFormElement = <any>document.getElementById('sign-up-form');
+const signUpSubmitButton: HTMLButtonElement = <any>document.getElementById('sign-up-button');
+const signUpBackButton: HTMLButtonElement = <any>document.getElementById('sign-up-back-button');
+
+const loginLinkSection: HTMLDivElement = <any>document.getElementById('get-link-section');
+const getLinkForm: HTMLFormElement = <any>document.getElementById('get-link-form');
+const getLinkSubmitButton: HTMLButtonElement = <any>document.getElementById('get-link-button');
+const getLinkBackButton: HTMLButtonElement = <any>document.getElementById('get-link-back-button');
+const getLinkSuccessMsg: HTMLDivElement = <any>document.getElementById('get-link-success-msg');
+
+const loginEmailSection: HTMLDivElement = <any>document.getElementById('login-email-section');
+const loginForm: HTMLFormElement = <any>document.getElementById('login-email-form');
+const loginSubmitButton: HTMLButtonElement = <any>document.getElementById('login-email-button');
+const loginBackButton: HTMLButtonElement = <any>document.getElementById('login-email-back-button');
+
+const emailVerificationSection: HTMLElement = document.getElementById('email-verification');
 const emailVerificationButton: HTMLButtonElement = <any>document.getElementById('email-verification-button');
 const emailVerificationSignOutButton: HTMLButtonElement = <any>document.getElementById('email-verification-sign-out-button');
 
@@ -26,6 +42,9 @@ export enum AuthButtons {
 
 export enum AuthSteps {
   Login,
+  LoginEmail,
+  LoginSignUp,
+  LoginGetLink,
   EmailVerification,
 }
 
@@ -36,15 +55,33 @@ export function showGame() {
 
 export function showAuth(step: AuthSteps) {
   hide(game);
-  hide(login);
-  hide(emailVerification);
+  hide(loginSection);
+  hide(loginTOCSection);
+  hide(loginEmailSection);
+  hide(loginLinkSection);
+  hide(loginSignUpSection);
+  hide(emailVerificationSection);
 
   switch (step) {
     case AuthSteps.Login:
-      show(login);
+      show(loginSection);
+      show(loginTOCSection);
+      break;
+    case AuthSteps.LoginEmail:
+      show(loginSection);
+      show(loginEmailSection);
+      break;
+    case AuthSteps.LoginGetLink:
+      show(loginSection);
+      show(loginLinkSection);
+      hide(getLinkSuccessMsg);
+      break;
+    case AuthSteps.LoginSignUp:
+      show(loginSection);
+      show(loginSignUpSection);
       break;
     case AuthSteps.EmailVerification:
-      show(emailVerification);
+      show(emailVerificationSection);
       break;
   }
 
@@ -54,65 +91,69 @@ export function showAuth(step: AuthSteps) {
 export function registerAuthButton(button: AuthButtons, callback: (event: Event) => Promise<any>) {
   switch (button) {
     case AuthButtons.LoginGoogle:
-      loginGoogleButton.addEventListener('click', async (event: Event) => {
-        loginGoogleButton.disabled = true;
-        await callback(event);
-        loginGoogleButton.disabled = false;
-      });
+      addClickEvent(loginTOCGoogleButton, callback);
       break;
 
     case AuthButtons.GetLink:
-      getLinkButton.addEventListener('click', async (event: Event) => {
-        getLinkButton.disabled = true;
-        await callback(event);
-        getLinkButton.disabled = false;
+      loginTOCLinkButton.addEventListener('click', () => showAuth(AuthSteps.LoginGetLink));
+      getLinkBackButton.addEventListener('click', () => showAuth(AuthSteps.Login));
+      addSubmitEvent(getLinkForm, getLinkSubmitButton, callback, () => {
+        getLinkSubmitButton.disabled = true;
+        show(getLinkSuccessMsg);
       });
       break;
 
     case AuthButtons.LoginEmailPassword:
-      loginForm.addEventListener('submit', (event: Event) => {
-        event.preventDefault();
-        event.stopPropagation();
-
-        loginButton.disabled = true;
-        loginForm.classList.add('was-validated');
-
-        if (loginForm.checkValidity()) {
-          callback(event).then(() => (loginButton.disabled = false));
-        }
-        return false;
-      });
+      loginTOCEmailButton.addEventListener('click', () => showAuth(AuthSteps.LoginEmail));
+      loginBackButton.addEventListener('click', () => showAuth(AuthSteps.Login));
+      addSubmitEvent(loginForm, loginSubmitButton, callback);
       break;
 
     case AuthButtons.SignUp:
-      signUpForm.addEventListener('submit', (event: Event) => {
-        event.preventDefault();
-        event.stopPropagation();
-
-        signUpButton.disabled = true;
-        signUpForm.classList.add('was-validated');
-
-        if (signUpForm.checkValidity()) {
-          callback(event).then(() => (signUpButton.disabled = false));
-        }
-        return false;
-      });
+      loginTOCSignUpButton.addEventListener('click', () => showAuth(AuthSteps.LoginSignUp));
+      signUpBackButton.addEventListener('click', () => showAuth(AuthSteps.Login));
+      addSubmitEvent(signUpForm, signUpSubmitButton, callback);
       break;
 
     case AuthButtons.EmailVerification:
-      emailVerificationButton.addEventListener('click', async (event: Event) => {
-        emailVerificationButton.disabled = true;
-        await callback(event);
-        emailVerificationButton.disabled = false;
-      });
+      addClickEvent(emailVerificationButton, callback);
       break;
 
     case AuthButtons.SignOut:
-      emailVerificationSignOutButton.addEventListener('click', async (event: Event) => {
-        emailVerificationSignOutButton.disabled = true;
-        await callback(event);
-        emailVerificationSignOutButton.disabled = false;
-      });
+      addClickEvent(emailVerificationSignOutButton, callback);
       break;
   }
+}
+
+export function addClickEvent(button: HTMLButtonElement, callback: (event: Event) => Promise<any>) {
+  button.addEventListener('click', async (event: Event) => {
+    button.disabled = true;
+    await callback(event);
+    button.disabled = false;
+  });
+}
+
+export function addSubmitEvent(
+  form: HTMLFormElement,
+  submitButton: HTMLButtonElement,
+  callback: (event: Event) => Promise<any>,
+  onSuccess?: Function
+) {
+  form.addEventListener('submit', (event: Event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    submitButton.disabled = true;
+    form.classList.add('was-validated');
+
+    if (form.checkValidity()) {
+      callback(event).then(() => {
+        submitButton.disabled = false;
+        if (onSuccess) {
+          onSuccess();
+        }
+      });
+    }
+    return false;
+  });
 }
