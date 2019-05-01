@@ -57,12 +57,10 @@ export class GamePad {
       this.updatePad();
     });
     this.pad.on('pointermove', (pointer: Phaser.Input.Pointer) => {
-      console.log('pointermove', pointer.isDown);
       this.handlePointer(pointer);
       this.updatePad();
     });
     this.pad.on('pointerout', (pointer: Phaser.Input.Pointer) => {
-      console.log('pointerout');
       this.handlePointer(pointer, true);
       this.updatePad();
     });

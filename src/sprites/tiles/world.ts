@@ -219,7 +219,7 @@ export class World {
     if (tile.properties.callback) {
       switch (tile.properties.callback) {
         case TileCallbacks.QuestionMark:
-          tile.index = TilemapIds.BlockTile + 1; // Shift to a metallic block TODO: Avoid using +1
+          tile.index = TilemapIds.BlockTile + 1; // Shift to a metallic block
           this.scene.bounceBrick.restart(tile); // Bounce it a bit
           delete tile.properties.callback;
           tile.setCollision(true); // Invincible blocks are only collidable from above, but everywhere once revealed
@@ -238,7 +238,7 @@ export class World {
             this.scene.soundEffects.playEffect(Sounds.Bump);
           } else {
             // Get points
-            this.scene.hud.updateScore(Scores.Brick);
+            this.scene.hud.updateScore(Scores.Brick, tile.x * TILE_SIZE, tile.y * TILE_SIZE);
             this.removeTileAt(tile.x, tile.y);
             this.scene.soundEffects.playEffect(Sounds.BreakBlock);
             this.scene.blockEmitter.emit(tile.x * TILE_SIZE, tile.y * TILE_SIZE);

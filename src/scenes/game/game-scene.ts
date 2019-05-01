@@ -110,6 +110,7 @@ export class GameScene extends BaseScene {
       // Still alive, go back to last checkpoint or start!
       const checkpoint = this.world.getCurrentCheckpoint();
       this.player.setPosition(checkpoint.x, checkpoint.y);
+      this.world.setRoomBounds();
       this.player.init();
       this.player.startGraceTime();
     } else {

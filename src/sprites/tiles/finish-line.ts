@@ -1,3 +1,4 @@
+import { GtmEventTypes, pushEvent } from '@game/analytics';
 import { SPRITES_KEY, TileAnimations } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
 import { PlayerActions, Sounds, TiledGameObject } from '@game/models';
@@ -84,7 +85,11 @@ export class FinishLine {
       targets: this.scene.player,
       alpha: 0,
       duration: DISAPPEAR_ANIMATION_DURATION,
-      onComplete: () => this.scene.restart(), // TODO: Go to scoreboard
+      onComplete: () => {
+        pushEvent({ event: GtmEventTypes.GameCompleted, score: this.scene.hud.getScore() });
+        this.scene.restart();
+        // TODO: Go to scoreboard
+      },
     });
   }
 }

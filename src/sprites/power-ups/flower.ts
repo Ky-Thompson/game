@@ -6,6 +6,7 @@ import { GameScene } from '@game/scenes';
 import { PowerUp } from './power-up';
 
 const FLOWER_DIMENSIONS: Body = { width: 32, height: 32, x: 0, y: 0 };
+const FLOWER_EASING = 'Quad.easeOut';
 
 export class Flower extends PowerUp {
   constructor(public scene: GameScene, x: number, y: number) {
@@ -22,6 +23,7 @@ export class Flower extends PowerUp {
     this.y += TILE_SIZE;
     this.scene.tweens.add({
       targets: this,
+      ease: FLOWER_EASING,
       y: this.y - TILE_SIZE,
       duration: PowerUp.ANIMATION_DURATION,
     });

@@ -28,7 +28,7 @@ export class TileCandy extends PowerUp {
 
     // Play sounds and collect points
     this.scene.soundEffects.playEffect(Sounds.Candy);
-    this.scene.hud.updateScore(Scores.Candy);
+    this.scene.hud.updateScore(Scores.Candy, this.body.x, this.body.y);
 
     // Play animation
     this.anims.play(getCandyAnimationKey());

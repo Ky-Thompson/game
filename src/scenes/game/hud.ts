@@ -1,12 +1,17 @@
 import { HUDAnimations, SPRITES_KEY } from '@game/animations';
 import { FONT, GAME_TIMEOUT, HURRY_TIME, MS_TO_S, TILE_SIZE, TIME_FACTOR } from '@game/config';
-import { Colors, Scores, Sounds } from '@game/models';
+import { Colors, Depths, Scores, Sounds } from '@game/models';
 
 import { GameScene } from './game-scene';
 
 const FONT_SIZE = TILE_SIZE / 2;
 const HUD_PADDING = TILE_SIZE * 2;
 const SCORE_TEXT_PADDING = 5;
+const SCORE_POP_TEXT_SIZE = TILE_SIZE / 3;
+const SCORE_POP_Y = TILE_SIZE;
+const SCORE_POP_DURATION = 800;
+const SCORE_POP_ALPHA = 0.8;
+const SCORE_POP_EASE = 'Quad.easeOut';
 const TIME_TEXT_PADDING = 3;
 const TIME_TEXT = 'TIME';
 const LIFES_Y = (TILE_SIZE * 3) / 4;
@@ -92,7 +97,7 @@ export class HUD {
   }
 
   update(delta: number) {
-    if (this.displayedTime <= 0) {
+    if (this.displayedTime <= 0 || this.scene.finishLine.succeeded()) {
       return;
     }
 
@@ -135,9 +140,30 @@ export class HUD {
     }
   }
 
-  updateScore(score: Scores) {
+  getScore(): number {
+    return this.score;
+  }
+
+  updateScore(score: Scores, x: number, y: number) {
+    // Update HUD score
     this.score += score;
     this.scoreText.setText(String(this.score).padStart(SCORE_TEXT_PADDING, '0'));
+
+    y -= TILE_SIZE; // Start above element
+
+    // Show score
+    const scoreText: Phaser.GameObjects.BitmapText = this.scene.add
+      .bitmapText(x, y, FONT, String(score), SCORE_POP_TEXT_SIZE)
+      .setDepth(Depths.HUD);
+
+    this.scene.tweens.add({
+      targets: scoreText,
+      y: y - SCORE_POP_Y,
+      alpha: SCORE_POP_ALPHA,
+      duration: SCORE_POP_DURATION,
+      ease: SCORE_POP_EASE,
+      onComplete: () => scoreText.destroy(),
+    });
   }
 
   hasTimedOut(): boolean {

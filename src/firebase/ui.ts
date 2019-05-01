@@ -3,6 +3,9 @@ import { hide, show } from '@game/helpers';
 const game: HTMLElement = document.getElementById('game-container');
 const auth: HTMLElement = document.getElementById('auth');
 
+const loadingIndicator: HTMLDivElement = <any>document.getElementById('loading-indicator');
+const errorMsg: HTMLDivElement = <any>document.getElementById('error-msg');
+
 const loginSection: HTMLElement = document.getElementById('login');
 
 const loginTOCSection: HTMLDivElement = <any>document.getElementById('login-toc-section');
@@ -31,12 +34,18 @@ const emailVerificationSection: HTMLElement = document.getElementById('email-ver
 const emailVerificationButton: HTMLButtonElement = <any>document.getElementById('email-verification-button');
 const emailVerificationSignOutButton: HTMLButtonElement = <any>document.getElementById('email-verification-sign-out-button');
 
+const displayNameSection: HTMLElement = document.getElementById('display-name');
+const displayNameForm: HTMLFormElement = <any>document.getElementById('display-name-form');
+const displayNameButton: HTMLButtonElement = <any>document.getElementById('display-name-button');
+const displayNameSignOutButton: HTMLButtonElement = <any>document.getElementById('display-name-sign-out-button');
+
 export enum AuthButtons {
   LoginGoogle,
   GetLink,
   LoginEmailPassword,
   SignUp,
   EmailVerification,
+  DisplayName,
   SignOut,
 }
 
@@ -46,21 +55,33 @@ export enum AuthSteps {
   LoginSignUp,
   LoginGetLink,
   EmailVerification,
+  DisplayName,
+}
+
+export function showError() {
+  show(errorMsg);
+}
+
+export function hideError() {
+  hide(errorMsg);
 }
 
 export function showGame() {
   hide(auth);
+  hide(loadingIndicator);
   show(game);
 }
 
 export function showAuth(step: AuthSteps) {
   hide(game);
+  hide(errorMsg);
   hide(loginSection);
   hide(loginTOCSection);
   hide(loginEmailSection);
   hide(loginLinkSection);
   hide(loginSignUpSection);
   hide(emailVerificationSection);
+  hide(displayNameSection);
 
   switch (step) {
     case AuthSteps.Login:
@@ -82,6 +103,9 @@ export function showAuth(step: AuthSteps) {
       break;
     case AuthSteps.EmailVerification:
       show(emailVerificationSection);
+      break;
+    case AuthSteps.DisplayName:
+      show(displayNameSection);
       break;
   }
 
@@ -119,8 +143,13 @@ export function registerAuthButton(button: AuthButtons, callback: (event: Event)
       addClickEvent(emailVerificationButton, callback);
       break;
 
+    case AuthButtons.DisplayName:
+      addSubmitEvent(displayNameForm, displayNameButton, callback);
+      break;
+
     case AuthButtons.SignOut:
       addClickEvent(emailVerificationSignOutButton, callback);
+      addClickEvent(displayNameSignOutButton, callback);
       break;
   }
 }

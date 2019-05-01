@@ -21,7 +21,7 @@ export class Candy extends PowerUp {
   }
 
   collect() {
-    this.scene.hud.updateScore(Scores.Candy);
+    this.scene.hud.updateScore(Scores.Candy, this.body.x, this.body.y);
     this.scene.soundEffects.playEffect(Sounds.Candy);
     this.setAlpha(0);
   }

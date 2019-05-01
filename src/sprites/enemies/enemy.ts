@@ -37,7 +37,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
     this.body.offset.set(body.x, body.y);
   }
 
-  protected isActivated(): boolean {
+  isActivated(): boolean {
     const { height } = this.scene.getGameDimensions();
 
     // Check if it is alive
@@ -92,7 +92,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
   }
 
   updatePoints() {
-    this.scene.hud.updateScore(Scores.Enemy);
+    this.scene.hud.updateScore(Scores.Enemy, this.body.x, this.body.y);
     this.scene.soundEffects.playEffect(Sounds.Stomp);
   }
 

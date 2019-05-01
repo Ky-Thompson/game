@@ -66,7 +66,7 @@ export abstract class PowerUp extends Phaser.GameObjects.Sprite {
 
   protected collect() {
     // Get points
-    this.scene.hud.updateScore(Scores.PowerUp);
+    this.scene.hud.updateScore(Scores.PowerUp, this.body.x, this.body.y);
     this.setAlpha(0);
   }
 

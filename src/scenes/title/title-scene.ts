@@ -23,6 +23,9 @@ const PLAYER_SELECT_EASE = 'Quad.easeIn';
 const PLAYER_SELECT_DURATION = 200;
 const PLAYER_SPRITE_SCALE = 2;
 
+const EXIT_PADDING = TILE_SIZE / 2;
+const EXIT_SIZE = (TILE_SIZE * 3) / 4;
+
 export class TitleScene extends BaseScene {
   static readonly SceneKey = 'TitleScene';
 
@@ -41,6 +44,7 @@ export class TitleScene extends BaseScene {
     this.initTitle();
     this.initAttractMode();
     this.initPlayerSelection();
+    this.initExit();
   }
 
   update(time: number, delta: number) {
@@ -110,26 +114,28 @@ export class TitleScene extends BaseScene {
     // Create Caleb sprite
     this.calebSprite = this.add.sprite(width / 2 - PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
     const calebAnimation = getPlayerAnimationKey(Players.Caleb, PlayerActions.Walk, PlayerStates.Big);
-    this.calebSprite.setFlipX(true);
-    this.calebSprite.setScale(PLAYER_SPRITE_SCALE);
-    this.calebSprite.play(calebAnimation);
-    this.calebSprite.setInteractive({ useHandCursor: true });
-    this.calebSprite.on('pointerdown', () => {
-      this.selectPlayer(Players.Caleb);
-      this.startGame();
-    });
+    this.calebSprite
+      .setFlipX(true)
+      .setScale(PLAYER_SPRITE_SCALE)
+      .play(calebAnimation)
+      .setInteractive({ useHandCursor: true })
+      .on('pointerdown', () => {
+        this.selectPlayer(Players.Caleb);
+        this.startGame();
+      });
 
     // Create Sophia sprite
     this.sophiaSprite = this.add.sprite(width / 2 + PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
     const sophiaAnimation = getPlayerAnimationKey(Players.Sophia, PlayerActions.Walk, PlayerStates.Big);
-    this.sophiaSprite.setFlipX(false);
-    this.sophiaSprite.setScale(PLAYER_SPRITE_SCALE);
-    this.sophiaSprite.play(sophiaAnimation);
-    this.sophiaSprite.setInteractive({ useHandCursor: true });
-    this.sophiaSprite.on('pointerdown', () => {
-      this.selectPlayer(Players.Sophia);
-      this.startGame();
-    });
+    this.sophiaSprite
+      .setFlipX(false)
+      .setScale(PLAYER_SPRITE_SCALE)
+      .play(sophiaAnimation)
+      .setInteractive({ useHandCursor: true })
+      .on('pointerdown', () => {
+        this.selectPlayer(Players.Sophia);
+        this.startGame();
+      });
 
     // Toggle and select player
     this.selectPlayer(Players.Caleb);
@@ -187,5 +193,17 @@ export class TitleScene extends BaseScene {
     } else {
       this.selectPlayer(Players.Caleb);
     }
+  }
+
+  // Methods for the exit button
+
+  private initExit() {
+    const { width } = this.getGameDimensions();
+
+    this.add
+      .sprite(width - EXIT_PADDING, EXIT_PADDING, SPRITES_KEY)
+      .play(TitleAnimations.Exit)
+      .setInteractive({ useHandCursor: true })
+      .on('pointerdown', () => (<any>window).signOut());
   }
 }
