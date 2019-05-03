@@ -28,7 +28,7 @@ export async function initApp() {
   // Initialize UI
   registerAuthButton(AuthButtons.LoginGoogle, async () => await login(LoginTypes.Google));
   registerAuthButton(AuthButtons.LoginEmailPassword, (event: Event) =>
-    handleForm(event, ({ email, password }) => login(LoginTypes.Google, email, password))
+    handleForm(event, ({ email, password }) => login(LoginTypes.EmailPassword, email, password))
   );
   registerAuthButton(AuthButtons.GetLink, (event: Event) => handleForm(event, ({ email }) => login(LoginTypes.Link, email)));
   registerAuthButton(AuthButtons.SignUp, (event: Event) => handleForm(event, ({ email, password }) => signUp(email, password)));
@@ -141,6 +141,7 @@ export async function loginGoogle(): Promise<firebase.User> {
   }
 
   try {
+    debugger;
     const result: firebase.auth.UserCredential = await firebase.auth(firebaseApp).getRedirectResult();
     if (result.credential) {
       pushEvent({ event: GtmEventTypes.Login, login: GtmLoginTypes.Google });

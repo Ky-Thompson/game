@@ -4,6 +4,7 @@ import { TitleScene } from '@game/scenes/title';
 import { BiblesGroup, BlockEmitter, BounceBrick, EnemyGroup, FinishLine, ModifierGroup, Player, PowerUpsGroup, World } from '@game/sprites';
 
 import { BaseScene } from '../base';
+import { ScoreboardScene } from '../scoreboard';
 import { AttractMode } from './attract-mode';
 import { HUD } from './hud';
 import { Keyboard } from './keyboard';
@@ -103,6 +104,10 @@ export class GameScene extends BaseScene {
 
   restart() {
     this.scene.start(TitleScene.SceneKey);
+  }
+
+  goScoreboard() {
+    this.scene.start(ScoreboardScene.SceneKey);
   }
 
   playerDied() {

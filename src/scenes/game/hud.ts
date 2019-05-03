@@ -31,13 +31,16 @@ export class HUD {
 
   private readonly lifeSprites: Phaser.GameObjects.Sprite[] = [];
   private lifes: number = START_LIFES;
+  private scoreboardActive: boolean = false;
 
   constructor(private scene: GameScene) {
     this.initPlayerScore();
     this.initTimer();
     this.initLifes();
 
-    if (this.scene.attractMode.isActive()) {
+    this.scoreboardActive = this.scene.isScoreboardActive();
+
+    if (this.scene.attractMode.isActive() || this.scoreboardActive) {
       this.playerText.setAlpha(0);
       this.scoreText.setAlpha(0);
       this.timeText.setAlpha(0);
@@ -97,7 +100,7 @@ export class HUD {
   }
 
   update(delta: number) {
-    if (this.displayedTime <= 0 || this.scene.finishLine.succeeded()) {
+    if (this.displayedTime <= 0 || this.scene.finishLine.succeeded() || this.scoreboardActive) {
       return;
     }
 

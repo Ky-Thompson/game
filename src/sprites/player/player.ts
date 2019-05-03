@@ -57,6 +57,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   private superStep: number;
   private superCoolDownTimer: number;
   private lastVelocityY: number[];
+  private hidden: boolean;
 
   body: Phaser.Physics.Arcade.Body;
 
@@ -95,9 +96,13 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.superStep = 0;
     this.superCoolDownTimer = 0;
     this.lastVelocityY = [];
+    this.hidden = this.scene.isScoreboardActive();
+    this.body.setEnable(!this.hidden);
+    this.setAlpha(this.hidden ? 0 : 1);
 
     this.body.setVelocity(0, 0);
     this.setFlipX(false);
+    this.clearTint();
 
     this.playerState = PlayerStates.Default;
     this.small();
@@ -136,7 +141,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.checkOutsideGame();
 
     // Don't do updates while entering the pipe or being dead
-    if (this.enteringPipe || !this.alive) {
+    if (this.enteringPipe || !this.alive || this.hidden) {
       return;
     }
 

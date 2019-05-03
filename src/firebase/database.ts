@@ -10,10 +10,12 @@ export interface FirebaseScore {
   player: Players;
   user: string;
   displayName: string;
+  timestamp: any;
 }
 
 export interface FirebaseUser {
   active: boolean;
+  email?: string;
   admin?: boolean;
   access?: boolean;
 }
@@ -25,7 +27,10 @@ export async function saveUser() {
     return;
   }
 
-  const firebaseUser: FirebaseUser = { active: true };
+  const firebaseUser: FirebaseUser = {
+    active: true,
+    email: user.email,
+  };
 
   try {
     await firebase
@@ -49,6 +54,7 @@ export async function saveScore(score: number, player: Players) {
     player,
     user: user.uid,
     displayName: user.displayName,
+    timestamp: firebase.database.ServerValue.TIMESTAMP,
   };
 
   await firebase

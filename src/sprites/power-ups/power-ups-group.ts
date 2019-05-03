@@ -13,6 +13,10 @@ export class PowerUpsGroup {
     this.tileset = this.scene.world.getTileset();
     this.group = this.scene.add.group();
 
+    if (this.scene.isScoreboardActive()) {
+      return;
+    }
+
     this.mapLayer.objects.forEach((powerUp: TiledGameObject) => {
       const tileProperties = this.scene.getTilesetProperties(powerUp, this.tileset);
 

@@ -3,7 +3,7 @@ import 'phaser';
 
 import { GAME_HEIGHT, GAME_WIDTH, GRAVITY, TILE_SIZE } from './config';
 import { resizeGame, setFullscreen } from './helpers';
-import { BootScene, GameScene, TitleScene } from './scenes';
+import { BootScene, GameScene, ScoreboardScene, TitleScene } from './scenes';
 
 const config: GameConfig = {
   type: Phaser.AUTO,
@@ -27,7 +27,7 @@ const config: GameConfig = {
   input: {
     activePointers: 6,
   },
-  scene: [BootScene, TitleScene, GameScene],
+  scene: [BootScene, TitleScene, GameScene, ScoreboardScene],
   disableContextMenu: true,
 };
 

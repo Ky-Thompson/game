@@ -8,8 +8,10 @@
 
 * Production web: https://caleb-sophia-madrid.github.io/game/
 * Staging web: https://caleb-sophia-madrid-dev.herokuapp.com/
+* Google Analytics: https://analytics.google.com/analytics/web/
 * Google Tag Manager: https://tagmanager.google.com/#/home
 * Firebase Users Console: https://console.firebase.google.com/project/caleb-sophia-madrid/authentication/users
+* Firebase Database Console: https://console.firebase.google.com/project/caleb-sophia-madrid/database/caleb-sophia-madrid/data
 
 ## Pre-requisites
 

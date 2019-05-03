@@ -1,13 +1,14 @@
 import { GtmEventTypes, pushEvent } from '@game/analytics';
 import { SPRITES_KEY, TileAnimations } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
-import { listScores, saveScore } from '@game/firebase';
+import { saveScore } from '@game/firebase';
 import { PlayerActions, Players, Sounds, TiledGameObject } from '@game/models';
-import { GameScene } from '@game/scenes';
+import { GameScene, ScoreboardScene } from '@game/scenes';
 
 const PLAYER_ANIMATION_DURATION = 1000;
 const FLAG_ANIMATION_DURATION = 1500;
 const DISAPPEAR_ANIMATION_DURATION = 500;
+const SCOREBOARD_TIME = 2500;
 
 export class FinishLine {
   private flag: Phaser.GameObjects.Sprite;
@@ -90,14 +91,16 @@ export class FinishLine {
         const score: number = this.scene.hud.getScore();
         const player: Players = this.scene.player.getPlayerType();
         pushEvent({ event: GtmEventTypes.GameCompleted, score });
+
         try {
           await saveScore(score, player);
-          console.log(await listScores());
+          await ScoreboardScene.LoadScores(true);
+          ScoreboardScene.SetLastScore(score);
+          setTimeout(() => this.scene.goScoreboard(), SCOREBOARD_TIME);
         } catch (e) {
           console.error(e);
+          this.scene.restart();
         }
-        this.scene.restart();
-        // TODO: Go to scoreboard
       },
     });
   }

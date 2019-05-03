@@ -42,7 +42,7 @@ export class BootScene extends BaseScene {
     this.load.on('progress', (value: number) => {
       progress.clear();
       progress.fillStyle(Colors.White, 1);
-      progress.fillRect(0, height / 2, width * value, PROGRESS_BAR_HEIGHT);
+      progress.fillRect(0, (height - PROGRESS_BAR_HEIGHT) / 2, width * value, PROGRESS_BAR_HEIGHT);
     });
 
     this.load.on('complete', () => {

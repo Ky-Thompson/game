@@ -27,6 +27,10 @@ export abstract class BaseScene extends Phaser.Scene {
     return this.registry.set(String(option), value);
   }
 
+  isScoreboardActive(): boolean {
+    return !!this.getRegistry(GameOptions.Scoreboard);
+  }
+
   // Helpers to handle Tiled tiles
 
   getTilesetProperties(tile: TiledGameObject, tileset: Phaser.Tilemaps.Tileset): TileProperties {

@@ -1,5 +1,6 @@
 export enum GameOptions {
-  AttractMode = 'attractMode',
-  RestartScene = 'restartScene',
+  AttractMode = 'AttractMode',
+  RestartScene = 'RestartScene',
   Player = 'Player',
+  Scoreboard = 'Scoreboard',
 }

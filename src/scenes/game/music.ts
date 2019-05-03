@@ -13,7 +13,9 @@ export class SoundEffects {
   private music: Phaser.Sound.BaseSound;
 
   constructor(private scene: GameScene) {
-    this.playMusic();
+    if (!this.scene.isScoreboardActive()) {
+      this.playMusic();
+    }
   }
 
   private playMusic() {
@@ -30,8 +32,8 @@ export class SoundEffects {
           sound.destroy();
         });
 
-      this.music = this.scene.sound.add(this.scene.attractMode.isActive() ? MusicPlaylist.Bethel : MusicPlaylist.Song89);
-      this.music.play('', { loop: true });
+      this.music = this.scene.sound.add(this.scene.attractMode.isActive() ? MusicPlaylist.Bethel : MusicPlaylist.Song89, { loop: true });
+      this.music.play('');
     } catch (e) {}
   }
 

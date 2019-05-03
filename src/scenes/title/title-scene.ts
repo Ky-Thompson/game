@@ -57,6 +57,7 @@ export class TitleScene extends BaseScene {
   private initAttractMode() {
     this.setRegistry(GameOptions.AttractMode, true);
     this.setRegistry(GameOptions.RestartScene, false);
+    this.setRegistry(GameOptions.Scoreboard, false);
     this.scene.launch(GameScene.SceneKey);
     this.scene.bringToTop();
   }
@@ -112,8 +113,8 @@ export class TitleScene extends BaseScene {
     }
 
     // Create Caleb sprite
-    this.calebSprite = this.add.sprite(width / 2 - PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
     const calebAnimation = getPlayerAnimationKey(Players.Caleb, PlayerActions.Walk, PlayerStates.Big);
+    this.calebSprite = this.add.sprite(width / 2 - PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
     this.calebSprite
       .setFlipX(true)
       .setScale(PLAYER_SPRITE_SCALE)
