@@ -24,7 +24,7 @@ const PLAYER_SELECT_DURATION = 200;
 const PLAYER_SPRITE_SCALE = 2;
 
 const EXIT_PADDING = TILE_SIZE / 2;
-const EXIT_SIZE = (TILE_SIZE * 3) / 4;
+const EXIT_ALPHA = 0.7;
 
 export class TitleScene extends BaseScene {
   static readonly SceneKey = 'TitleScene';
@@ -203,6 +203,7 @@ export class TitleScene extends BaseScene {
     this.add
       .sprite(width - EXIT_PADDING, EXIT_PADDING, SPRITES_KEY)
       .play(TitleAnimations.Exit)
+      .setAlpha(EXIT_ALPHA)
       .setInteractive({ useHandCursor: true })
       .on('pointerdown', () => (<any>window).signOut());
   }

@@ -30,6 +30,13 @@ deploy:
     local_dir: dist
     on:
       branch: master
+
+  - provider: firebase
+    skip_cleanup: true
+    token: $FIREBASE_TOKEN
+    on:
+      branch: master
+
   - provider: heroku
     skip_cleanup: true
     api_key: $HEROKU_API_KEY

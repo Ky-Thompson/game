@@ -1,7 +1,8 @@
 import { GtmEventTypes, pushEvent } from '@game/analytics';
 import { SPRITES_KEY, TileAnimations } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
-import { PlayerActions, Sounds, TiledGameObject } from '@game/models';
+import { listScores, saveScore } from '@game/firebase';
+import { PlayerActions, Players, Sounds, TiledGameObject } from '@game/models';
 import { GameScene } from '@game/scenes';
 
 const PLAYER_ANIMATION_DURATION = 1000;
@@ -85,8 +86,16 @@ export class FinishLine {
       targets: this.scene.player,
       alpha: 0,
       duration: DISAPPEAR_ANIMATION_DURATION,
-      onComplete: () => {
-        pushEvent({ event: GtmEventTypes.GameCompleted, score: this.scene.hud.getScore() });
+      onComplete: async () => {
+        const score: number = this.scene.hud.getScore();
+        const player: Players = this.scene.player.getPlayerType();
+        pushEvent({ event: GtmEventTypes.GameCompleted, score });
+        try {
+          await saveScore(score, player);
+          console.log(await listScores());
+        } catch (e) {
+          console.error(e);
+        }
         this.scene.restart();
         // TODO: Go to scoreboard
       },

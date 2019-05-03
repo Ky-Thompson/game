@@ -1,0 +1,37 @@
+{
+  "rules": {
+    "users": {
+      ".indexOn": ["access", "admin"],
+      "$user_id": {
+        ".read": "auth !== null && ((auth.uid === $user_id) || (root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true))",
+        ".write": "auth !== null && ((auth.uid === $user_id) || (root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true))",
+        "access": {
+          ".validate": "newData.isBoolean() && root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true"
+        },
+        "admin": {
+          ".validate": "newData.isBoolean() && root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true"
+        }
+      }
+    },
+    "scores": {
+      ".read": "auth !== null && query.orderByChild === 'score' && query.limitToLast <= 20",
+      ".indexOn": ["score", "user"],
+      "$score_id": {
+        ".write": "auth !== null",
+        ".validate": "newData.hasChildren(['player', 'score', 'user', 'displayName'])",
+        "score": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "player": {
+          ".validate": "newData.isString() && (newData.val() === 'caleb' || newData.val() === 'sophia')"
+        },
+        "user": {
+          ".validate": "newData.isString() && newData.val() === auth.uid && newData.val() === auth.uid && root.child('users/'+auth.uid).exists()"
+        },
+        "displayName": {
+          ".validate": "newData.isString()"
+        }
+      }
+    }
+  }
+}

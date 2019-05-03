@@ -1,5 +1,7 @@
 import { hide, show } from '@game/helpers';
 
+import { saveUser } from './database';
+
 const game: HTMLElement = document.getElementById('game-container');
 const auth: HTMLElement = document.getElementById('auth');
 
@@ -70,6 +72,7 @@ export function showGame() {
   hide(auth);
   hide(loadingIndicator);
   show(game);
+  saveUser();
 }
 
 export function showAuth(step: AuthSteps) {
