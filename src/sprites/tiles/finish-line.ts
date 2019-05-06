@@ -1,7 +1,6 @@
 import { GtmEventTypes, pushEvent } from '@game/analytics';
 import { SPRITES_KEY, TileAnimations } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
-import { saveScore } from '@game/firebase';
 import { PlayerActions, Players, Sounds, TiledGameObject } from '@game/models';
 import { GameScene, ScoreboardScene } from '@game/scenes';
 
@@ -93,9 +92,7 @@ export class FinishLine {
         pushEvent({ event: GtmEventTypes.GameCompleted, score });
 
         try {
-          await saveScore(score, player);
-          await ScoreboardScene.LoadScores(true);
-          ScoreboardScene.SetLastScore(score);
+          await ScoreboardScene.SetLastScore(score, player);
           setTimeout(() => this.scene.goScoreboard(), SCOREBOARD_TIME);
         } catch (e) {
           console.error(e);

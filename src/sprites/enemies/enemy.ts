@@ -5,6 +5,7 @@ import { GameScene } from '@game/scenes';
 const INITIAL_POSITION_Y: number = 32;
 const INITIAL_POSITION_X: number = 64;
 const VERTICAL_COLLISION_THRESHOLD: number = 20;
+const MIN_VELOCITY_Y = 40;
 const KILLED_VELOCITY_Y: number = -400;
 const BASE_DIRECTION_VELOCITY: number = -100;
 
@@ -66,9 +67,9 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
     }
 
     // Check if a collision between the enemy and player is from above.
-    const verticalSpeed: boolean = this.scene.player.body.velocity.y >= 0;
+    const verticalSpeed: boolean = this.scene.player.body.velocity.y >= MIN_VELOCITY_Y;
     const verticalCollision: boolean =
-      this.scene.player.body.y + this.scene.player.body.height - this.body.y < VERTICAL_COLLISION_THRESHOLD;
+      this.scene.player.body.y + this.scene.player.body.halfHeight - this.body.y - this.body.halfHeight < VERTICAL_COLLISION_THRESHOLD;
 
     return verticalSpeed && verticalCollision;
   }

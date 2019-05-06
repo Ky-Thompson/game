@@ -65,8 +65,7 @@ export class GameScene extends BaseScene {
     this.world.setRoomBounds();
 
     // The camera should follow the player
-    this.cameras.main.startFollow(this.player);
-    this.cameras.main.roundPixels = true;
+    this.followPlayer();
 
     // Init background images
     this.world.init();
@@ -108,6 +107,14 @@ export class GameScene extends BaseScene {
 
   goScoreboard() {
     this.scene.start(ScoreboardScene.SceneKey);
+  }
+
+  followPlayer() {
+    this.cameras.main.startFollow(this.player, true);
+  }
+
+  stopFollowingPlayer() {
+    this.cameras.main.stopFollow();
   }
 
   playerDied() {

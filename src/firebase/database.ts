@@ -14,13 +14,42 @@ export interface FirebaseScore {
 }
 
 export interface FirebaseUser {
-  active: boolean;
+  displayName: string;
   email?: string;
   admin?: boolean;
   access?: boolean;
+  exhibit?: boolean;
 }
 
-export async function saveUser() {
+export async function getUser(): Promise<FirebaseUser> {
+  const user: firebase.User = firebase.auth().currentUser;
+
+  if (!user || !user.uid) {
+    return;
+  }
+
+  const authUser: FirebaseUser = {
+    displayName: user.displayName,
+    email: user.email,
+  };
+
+  try {
+    const firebaseUser: FirebaseUser = (await firebase
+      .database()
+      .ref(`/users/${user.uid}`)
+      .once('value')).val();
+
+    return {
+      ...firebaseUser,
+      ...authUser,
+    };
+  } catch (e) {
+    console.error(e);
+    return authUser;
+  }
+}
+
+export async function saveUser(): Promise<void> {
   const user: firebase.User = firebase.auth().currentUser;
 
   if (!user || !user.uid) {
@@ -28,7 +57,7 @@ export async function saveUser() {
   }
 
   const firebaseUser: FirebaseUser = {
-    active: true,
+    displayName: user.displayName,
     email: user.email,
   };
 
@@ -42,7 +71,7 @@ export async function saveUser() {
   }
 }
 
-export async function saveScore(score: number, player: Players) {
+export async function saveScore(score: number, player: Players, displayName: string): Promise<void> {
   const user: firebase.User = firebase.auth().currentUser;
 
   if (!user || !user.uid) {
@@ -53,7 +82,7 @@ export async function saveScore(score: number, player: Players) {
     score,
     player,
     user: user.uid,
-    displayName: user.displayName,
+    displayName: displayName || user.displayName,
     timestamp: firebase.database.ServerValue.TIMESTAMP,
   };
 

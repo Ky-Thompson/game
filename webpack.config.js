@@ -62,6 +62,7 @@ module.exports.webpackConfig = (mode) => {
         chunkFilename: isProduction ? '[id].[hash].css' : '[id].css',
       }),
       new HtmlWebpackPlugin({
+        isProduction: isProduction,
         hash: true,
         template: join(__dirname, 'src/index.hbs'),
         filename: join(__dirname, 'dist/index.html'),

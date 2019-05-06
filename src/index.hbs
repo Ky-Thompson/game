@@ -4,6 +4,12 @@
 <head>
   <meta charset="utf-8">
   <title>Caleb & Sophia Game</title>
+
+  {{#if htmlWebpackPlugin.options.isProduction}}
+  <link href="https://www.googletagmanager.com" rel="preconnect" crossorigin />
+  <link href="https://www.google-analytics.com" rel="preconnect" crossorigin />
+  {{/if}}
+
   <link rel="manifest" href="manifest.json">
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, minimum-scale = 1, maximum-scale = 1, user-scalable = no">
@@ -12,6 +18,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
+  {{#if htmlWebpackPlugin.options.isProduction}}
   <!-- Google Tag Manager -->
   <script>(function (w, d, s, l, i) {
       w[l] = w[l] || []; w[l].push({
@@ -22,7 +29,7 @@
           'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-56JKFTL');</script>
   <!-- End Google Tag Manager -->
-
+  {{/if}}
 </head>
 
 <body class="m-0 p-0 h-100 bg-dark text-center">

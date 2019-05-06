@@ -141,7 +141,6 @@ export async function loginGoogle(): Promise<firebase.User> {
   }
 
   try {
-    debugger;
     const result: firebase.auth.UserCredential = await firebase.auth(firebaseApp).getRedirectResult();
     if (result.credential) {
       pushEvent({ event: GtmEventTypes.Login, login: GtmLoginTypes.Google });

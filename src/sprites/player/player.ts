@@ -367,7 +367,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
   enemyBounce(enemy: Enemy) {
     // Force Player y-position up a bit (on top of the enemy) to avoid getting killed by neighboring enemy before being able to bounce
-    this.body.y = enemy.body.y - this.body.height;
+    this.body.y = enemy.body.y - enemy.body.height - this.body.halfHeight;
     this.body.setVelocityY(JUMP_VELOCITY);
   }
 
@@ -407,13 +407,14 @@ export class Player extends Phaser.GameObjects.Sprite {
 
   enterPipe(destinationTileId: number, pipeDirection: PipeDirection, centerX: number, centerY: number) {
     this.animate(PlayerActions.Bend);
-    this.scene.soundEffects.playEffect(Sounds.Die);
+    this.scene.soundEffects.playEffect(Sounds.Pipe);
 
     this.enteringPipe = true;
     this.body.setVelocity(0);
     this.body.setAcceleration(0, 0);
     this.body.setEnable(false);
     this.setDepth(Depths.EnterPipe);
+    this.scene.stopFollowingPlayer();
 
     let pipeX: number = 0;
     let pipeY: number = 0;
@@ -443,6 +444,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   private exitPipe(destinationTileId: number) {
     const destination = this.scene.modifiers.getDestination(destinationTileId);
     this.body.setEnable(true);
+    this.scene.followPlayer();
 
     if (destination.top) {
       this.setDepth(EXIT_PIPE_DEPTH);

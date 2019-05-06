@@ -92,7 +92,7 @@ export class GamePad {
   }
 
   private show() {
-    return !this.scene.attractMode.isActive() && this.scene.isMobile();
+    return !this.scene.attractMode.isActive() && !this.scene.isScoreboardActive() && this.scene.isMobile();
   }
 
   getActions(): Partial<ActionState> {
