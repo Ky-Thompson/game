@@ -39,13 +39,13 @@ export class BootScene extends BaseScene {
 
     this.cameras.main.setBackgroundColor(Colors.Gray);
 
-    this.load.on('progress', (value: number) => {
+    this.load.on(Phaser.Loader.Events.PROGRESS, (value: number) => {
       progress.clear();
       progress.fillStyle(Colors.White, 1);
       progress.fillRect(0, (height - PROGRESS_BAR_HEIGHT) / 2, width * value, PROGRESS_BAR_HEIGHT);
     });
 
-    this.load.on('complete', () => {
+    this.load.on(Phaser.Loader.Events.COMPLETE, () => {
       this.makeAnimations();
       progress.destroy();
       this.scene.start(TitleScene.SceneKey);

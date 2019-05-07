@@ -9,14 +9,14 @@ import { AttractMode } from './attract-mode';
 import { HUD } from './hud';
 import { Keyboard } from './keyboard';
 import { SoundEffects } from './music';
-import { GamePad } from './pad';
+import { VirtualPad } from './pad';
 
 export class GameScene extends BaseScene {
   static readonly SceneKey = 'GameScene';
 
   // Game
   attractMode: AttractMode;
-  private gamePad: GamePad;
+  private virtualPad: VirtualPad;
   private keyboard: Keyboard;
   world: World;
   soundEffects: SoundEffects;
@@ -43,8 +43,8 @@ export class GameScene extends BaseScene {
     resizeGame();
 
     this.attractMode = new AttractMode(this);
-    this.gamePad = new GamePad(this);
-    this.keyboard = new Keyboard(this, this.gamePad);
+    this.virtualPad = new VirtualPad(this);
+    this.keyboard = new Keyboard(this, this.virtualPad);
     this.world = new World(this);
     this.soundEffects = new SoundEffects(this);
 
@@ -74,6 +74,8 @@ export class GameScene extends BaseScene {
   }
 
   update(time: number, delta: number) {
+    this.updateGamepad();
+
     this.attractMode.update(delta);
     this.bibles.update();
 
@@ -98,7 +100,7 @@ export class GameScene extends BaseScene {
 
     this.player.update(delta, actions);
     this.world.update();
-    this.gamePad.update();
+    this.virtualPad.update();
   }
 
   restart() {

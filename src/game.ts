@@ -25,6 +25,7 @@ const config: GameConfig = {
     powerPreference: 'high-performance',
   },
   input: {
+    gamepad: true,
     activePointers: 6,
   },
   scene: [BootScene, TitleScene, GameScene, ScoreboardScene],
@@ -34,6 +35,8 @@ const config: GameConfig = {
 export class Game extends Phaser.Game {
   constructor(config: GameConfig) {
     super(config);
+
+    // Allow gamepad
 
     // Allow multitouch
     this.input.addPointer();

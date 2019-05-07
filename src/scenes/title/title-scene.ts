@@ -2,7 +2,7 @@ import { getPlayerAnimationKey, SPRITES_KEY, TitleAnimations } from '@game/anima
 import { FONT, TILE_SIZE } from '@game/config';
 import { Colors, GameOptions, PlayerActions, Players, PlayerStates } from '@game/models';
 
-import { BaseScene } from '../base';
+import { BaseScene, GamepadButtons } from '../base';
 import { GameScene } from '../game';
 
 const TITLE_BACKGROUND_HEIGHT = 8 * TILE_SIZE;
@@ -48,6 +48,7 @@ export class TitleScene extends BaseScene {
   }
 
   update(time: number, delta: number) {
+    this.updateGamepad();
     this.checkRestartAttractMode();
     this.blinkTitle(delta);
   }
@@ -120,7 +121,7 @@ export class TitleScene extends BaseScene {
       .setScale(PLAYER_SPRITE_SCALE)
       .play(calebAnimation)
       .setInteractive({ useHandCursor: true })
-      .on('pointerdown', () => {
+      .on(Phaser.Input.Events.POINTER_DOWN, () => {
         this.selectPlayer(Players.Caleb);
         this.startGame();
       });
@@ -133,7 +134,7 @@ export class TitleScene extends BaseScene {
       .setScale(PLAYER_SPRITE_SCALE)
       .play(sophiaAnimation)
       .setInteractive({ useHandCursor: true })
-      .on('pointerdown', () => {
+      .on(Phaser.Input.Events.POINTER_DOWN, () => {
         this.selectPlayer(Players.Sophia);
         this.startGame();
       });
@@ -141,7 +142,7 @@ export class TitleScene extends BaseScene {
     // Toggle and select player
     this.selectPlayer(Players.Caleb);
     if (!this.isMobile()) {
-      this.input.keyboard.on('keydown', (event: Phaser.Input.Keyboard.Key) => {
+      this.input.keyboard.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, (event: Phaser.Input.Keyboard.Key) => {
         switch (event.keyCode) {
           case Phaser.Input.Keyboard.KeyCodes.RIGHT:
           case Phaser.Input.Keyboard.KeyCodes.LEFT:
@@ -196,6 +197,20 @@ export class TitleScene extends BaseScene {
     }
   }
 
+  protected onGamepadPressed(gamepadButton: GamepadButtons) {
+    switch (gamepadButton) {
+      case GamepadButtons.Right:
+      case GamepadButtons.Left:
+        this.togglePlayer();
+        break;
+      case GamepadButtons.Select:
+      case GamepadButtons.Start:
+      case GamepadButtons.A:
+        this.startGame();
+        break;
+    }
+  }
+
   // Methods for the exit button
 
   private initExit() {
@@ -206,6 +221,6 @@ export class TitleScene extends BaseScene {
       .play(TitleAnimations.Exit)
       .setAlpha(EXIT_ALPHA)
       .setInteractive({ useHandCursor: true })
-      .on('pointerdown', () => (<any>window).signOut());
+      .on(Phaser.Input.Events.POINTER_DOWN, () => (<any>window).signOut());
   }
 }

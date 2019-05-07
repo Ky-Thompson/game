@@ -81,7 +81,7 @@ export class Player extends Phaser.GameObjects.Sprite {
       }
     };
 
-    this.on('animationcomplete', onAnimationComplete, this);
+    this.on(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, onAnimationComplete, this);
   }
 
   init() {
@@ -350,11 +350,13 @@ export class Player extends Phaser.GameObjects.Sprite {
   }
 
   private small() {
+    this.clearTint();
     this.body.setSize(DEFAULT_BODY.width, DEFAULT_BODY.height);
     this.body.offset.set(DEFAULT_BODY.x, DEFAULT_BODY.y);
   }
 
   private large() {
+    this.clearTint();
     this.y += SUPER_BODY.y - DEFAULT_BODY.y; // Adjust sprite new position
     this.body.setSize(SUPER_BODY.width, SUPER_BODY.height);
     this.body.offset.set(SUPER_BODY.x, SUPER_BODY.y);
@@ -415,6 +417,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.body.setEnable(false);
     this.setDepth(Depths.EnterPipe);
     this.scene.stopFollowingPlayer();
+    this.clearTint();
 
     let pipeX: number = 0;
     let pipeY: number = 0;

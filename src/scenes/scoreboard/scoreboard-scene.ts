@@ -3,7 +3,7 @@ import { FONT, MS_TO_S, TILE_SIZE } from '@game/config';
 import { FirebaseScore, FirebaseUser, getUser, listScores, MAX_DISPLAY_NAME, saveScore } from '@game/firebase';
 import { Colors, GameOptions, PlayerActions, Players, PlayerStates } from '@game/models';
 
-import { BaseScene } from '../base';
+import { BaseScene, GamepadButtons } from '../base';
 import { GameScene } from '../game';
 import { TitleScene } from '../title';
 
@@ -58,13 +58,13 @@ export class ScoreboardScene extends BaseScene {
   }
 
   private enterNameInitalized: boolean = false;
-  private enterNameEvent: Phaser.Events.EventEmitter;
   private enterNameSprite: Phaser.GameObjects.BitmapText;
   private nameSprites: Phaser.GameObjects.BitmapText[] = [];
   private nameCursorSprite: Phaser.GameObjects.BitmapText;
   private name: string = '';
   private nameBlinkTimer: number = BLINK_TIME;
 
+  private scoreInitalized: boolean = false;
   private scoreSprite: Phaser.GameObjects.BitmapText;
   private scoreBlinkTimer: number = BLINK_TIME * 2;
 
@@ -106,30 +106,27 @@ export class ScoreboardScene extends BaseScene {
     this.scene.launch(GameScene.SceneKey);
     this.add.rectangle(width / 2, height / 2, width, height, Colors.Gray, SCOREBOARD_BACKGROUND_ALPHA);
     this.scene.bringToTop();
+
+    this.enterNameInitalized = false;
+    this.scoreInitalized = false;
   }
 
   // Methods for the name input
 
   private initName() {
+    this.enterNameInitalized = true;
     this.initNameTitle();
     this.initNameInput();
-    this.enterNameInitalized = true;
   }
 
-  private destroyName() {
+  private hideName() {
     if (!this.enterNameInitalized) {
       return;
     }
 
-    this.enterNameSprite.destroy();
-    this.nameCursorSprite.destroy();
-    this.nameSprites.forEach((sprite: Phaser.GameObjects.BitmapText) => sprite.destroy());
-
-    this.enterNameSprite = undefined;
-    this.nameCursorSprite = undefined;
-    this.nameSprites = undefined;
-
-    this.enterNameEvent.shutdown();
+    this.enterNameSprite.setAlpha(0).setActive(false);
+    this.nameCursorSprite.setAlpha(0).setActive(false);
+    this.nameSprites.forEach((sprite: Phaser.GameObjects.BitmapText) => sprite.setAlpha(0).setActive(false));
   }
 
   private initNameTitle() {
@@ -147,7 +144,11 @@ export class ScoreboardScene extends BaseScene {
 
     this.nameCursorSprite = this.add.bitmapText(x, y + NAME_Y * 2, FONT, NAME_CURSOR, SCOREBOARD_TEXT_SIZE);
 
-    this.enterNameEvent = this.input.keyboard.on('keydown', async (event: KeyboardEvent) => {
+    this.input.keyboard.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, async (event: KeyboardEvent) => {
+      if (this.scoreInitalized) {
+        return;
+      }
+
       if ((isSpace(event) || isLetter(event) || isNumber(event)) && this.name.length < MAX_DISPLAY_NAME) {
         // Add letter
         const letter: string = event.key.toUpperCase();
@@ -178,7 +179,7 @@ export class ScoreboardScene extends BaseScene {
   }
 
   private blinkCursor(delta: number) {
-    if (!this.nameCursorSprite) {
+    if (!this.scoreInitalized) {
       return;
     }
 
@@ -198,13 +199,16 @@ export class ScoreboardScene extends BaseScene {
   // Methods for the score list
 
   private async initScoreboard() {
+    this.scoreInitalized = true;
+
     await ScoreboardScene.SaveLastScore(this.name);
     await ScoreboardScene.LoadScores();
-    this.destroyName();
+
+    this.hideName();
     this.initScoreboardTitle();
     this.initScores();
     this.initYourScore();
-    this.input.on('pointerdown', () => this.scene.start(TitleScene.SceneKey));
+    this.input.on(Phaser.Input.Events.POINTER_DOWN, () => this.scene.start(TitleScene.SceneKey));
   }
 
   private initScoreboardTitle() {
@@ -254,6 +258,16 @@ export class ScoreboardScene extends BaseScene {
     if (this.scoreBlinkTimer < 0) {
       this.scoreSprite.setAlpha(this.scoreSprite.alpha === 1 ? 0 : 1); // Toggle alpha
       this.scoreBlinkTimer = BLINK_TIME; // Restart timer
+    }
+  }
+
+  protected onGamepadPressed(gamepadButton: GamepadButtons) {
+    switch (gamepadButton) {
+      case GamepadButtons.Select:
+      case GamepadButtons.Start:
+      case GamepadButtons.A:
+        this.scene.start(TitleScene.SceneKey);
+        break;
     }
   }
 }

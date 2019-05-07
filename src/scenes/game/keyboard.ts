@@ -1,12 +1,12 @@
 import { ActionKeys, ActionState } from '@game/models';
 
 import { GameScene } from './game-scene';
-import { GamePad } from './pad';
+import { VirtualPad } from './pad';
 
 export class Keyboard {
   private readonly keys: ActionKeys;
 
-  constructor(private scene: GameScene, private gamePad: GamePad) {
+  constructor(private scene: GameScene, private virtualPad: VirtualPad) {
     this.keys = {
       jump: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP),
       jump2: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
@@ -18,14 +18,15 @@ export class Keyboard {
   }
 
   getActions(): Partial<ActionState> {
-    const gamePadKeys = this.gamePad.getActions();
+    const virtualPadKeys: Partial<ActionState> = this.virtualPad.getActions();
+    const gamepadKeys: Partial<ActionState> = this.scene.getGamepadActions();
 
     return {
-      left: this.keys.left.isDown || gamePadKeys.left,
-      right: this.keys.right.isDown || gamePadKeys.right,
-      down: this.keys.down.isDown || gamePadKeys.down,
-      jump: this.keys.jump.isDown || this.keys.jump2.isDown || gamePadKeys.jump,
-      throwBible: this.keys.throwBible.isDown || gamePadKeys.throwBible,
+      left: this.keys.left.isDown || virtualPadKeys.left || gamepadKeys.left,
+      right: this.keys.right.isDown || virtualPadKeys.right || gamepadKeys.right,
+      down: this.keys.down.isDown || virtualPadKeys.down || gamepadKeys.down,
+      jump: this.keys.jump.isDown || this.keys.jump2.isDown || virtualPadKeys.jump || gamepadKeys.jump,
+      throwBible: this.keys.throwBible.isDown || virtualPadKeys.throwBible || gamepadKeys.throwBible,
     };
   }
 }

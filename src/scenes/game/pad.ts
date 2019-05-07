@@ -17,7 +17,7 @@ const PAD_LEFT_DIRECTION = 180;
 const PAD_UP_DIRECTION = 90;
 const PAD_DOWN_DIRECTION = 270;
 
-export class GamePad {
+export class VirtualPad {
   private readonly actions: Partial<ActionState> = {};
   private pad: Phaser.GameObjects.Sprite;
   private throwBibleButton: Phaser.GameObjects.Sprite;
@@ -48,19 +48,19 @@ export class GamePad {
       .setDisplaySize(PAD_SIZE, PAD_SIZE)
       .setInteractive({ useHandCursor: true });
 
-    this.pad.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+    this.pad.on(Phaser.Input.Events.POINTER_DOWN, (pointer: Phaser.Input.Pointer) => {
       this.handlePointer(pointer);
       this.updatePad();
     });
-    this.pad.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+    this.pad.on(Phaser.Input.Events.POINTER_UP, (pointer: Phaser.Input.Pointer) => {
       this.handlePointer(pointer);
       this.updatePad();
     });
-    this.pad.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+    this.pad.on(Phaser.Input.Events.POINTER_MOVE, (pointer: Phaser.Input.Pointer) => {
       this.handlePointer(pointer);
       this.updatePad();
     });
-    this.pad.on('pointerout', (pointer: Phaser.Input.Pointer) => {
+    this.pad.on(Phaser.Input.Events.POINTER_OUT, (pointer: Phaser.Input.Pointer) => {
       this.handlePointer(pointer, true);
       this.updatePad();
     });
@@ -81,11 +81,11 @@ export class GamePad {
       .setDisplaySize(BUTTON_SIZE, BUTTON_SIZE)
       .setInteractive({ useHandCursor: true });
 
-    this.throwBibleButton.on('pointerdown', () => {
+    this.throwBibleButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
       this.actions.throwBible = true;
       this.throwBibleButton.setTint(Colors.Red);
     });
-    this.throwBibleButton.on('pointerup', () => {
+    this.throwBibleButton.on(Phaser.Input.Events.POINTER_UP, () => {
       this.actions.throwBible = false;
       this.throwBibleButton.clearTint();
     });
