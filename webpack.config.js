@@ -35,7 +35,7 @@ module.exports.webpackConfig = (mode) => {
         { test: /phaser\.js$/, loader: 'expose-loader?Phaser' },
         { test: [/\.vert$/, /\.frag$/], use: 'raw-loader' },
         {
-          test: /\.hbs$/,
+          test: /\.(hbs|html)$/, // So that we can import favicons generated html
           loader: 'handlebars-loader',
           options: {
             partialDirs: [join(__dirname, 'src/partials')],

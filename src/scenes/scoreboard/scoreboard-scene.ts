@@ -57,6 +57,7 @@ export class ScoreboardScene extends BaseScene {
     return !ScoreboardScene.User || ScoreboardScene.User.exhibit;
   }
 
+  private enterNameInitalized: boolean = false;
   private enterNameEvent: Phaser.Events.EventEmitter;
   private enterNameSprite: Phaser.GameObjects.BitmapText;
   private nameSprites: Phaser.GameObjects.BitmapText[] = [];
@@ -112,9 +113,14 @@ export class ScoreboardScene extends BaseScene {
   private initName() {
     this.initNameTitle();
     this.initNameInput();
+    this.enterNameInitalized = true;
   }
 
   private destroyName() {
+    if (!this.enterNameInitalized) {
+      return;
+    }
+
     this.enterNameSprite.destroy();
     this.nameCursorSprite.destroy();
     this.nameSprites.forEach((sprite: Phaser.GameObjects.BitmapText) => sprite.destroy());

@@ -6,19 +6,19 @@
   <title>Caleb & Sophia Game</title>
 
   {{#if htmlWebpackPlugin.options.isProduction}}
+  <!-- Google Tag Manager DNS preconnect -->
   <link href="https://www.googletagmanager.com" rel="preconnect" crossorigin />
   <link href="https://www.google-analytics.com" rel="preconnect" crossorigin />
   {{/if}}
 
-  <link rel="manifest" href="manifest.json">
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, minimum-scale = 1, maximum-scale = 1, user-scalable = no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
   {{#if htmlWebpackPlugin.options.isProduction}}
+  <!-- Generated favicons -->
+  {{>../dist/favicons.html}}
+
   <!-- Google Tag Manager -->
   <script>(function (w, d, s, l, i) {
       w[l] = w[l] || []; w[l].push({
