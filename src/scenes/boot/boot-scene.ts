@@ -9,7 +9,6 @@ import {
   makeTileAnimations,
   makeTitleAnimations,
 } from '@game/animations';
-import { resizeGame } from '@game/helpers';
 import { Colors, Players } from '@game/models';
 
 import { BaseScene } from '../base';
@@ -34,8 +33,6 @@ export class BootScene extends BaseScene {
   private initProgressBar() {
     const progress: Phaser.GameObjects.Graphics = this.add.graphics();
     const { height, width } = this.getGameDimensions();
-
-    resizeGame();
 
     this.cameras.main.setBackgroundColor(Colors.Gray);
 

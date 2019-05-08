@@ -32,6 +32,12 @@ export abstract class BaseScene extends Phaser.Scene {
     super(config);
   }
 
+  init() {
+    this.input.once(Phaser.Input.Events.POINTER_DOWN, () => {
+      (<any>this.sound).context.resume();
+    });
+  }
+
   // Game properties
 
   getGameDimensions(): Dimensions {

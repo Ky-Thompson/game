@@ -1,4 +1,3 @@
-import { resizeGame } from '@game/helpers';
 import { ActionState, TiledGameObject } from '@game/models';
 import { TitleScene } from '@game/scenes/title';
 import { BiblesGroup, BlockEmitter, BounceBrick, EnemyGroup, FinishLine, ModifierGroup, Player, PowerUpsGroup, World } from '@game/sprites';
@@ -40,8 +39,6 @@ export class GameScene extends BaseScene {
   }
 
   create() {
-    resizeGame();
-
     this.attractMode = new AttractMode(this);
     this.virtualPad = new VirtualPad(this);
     this.keyboard = new Keyboard(this, this.virtualPad);

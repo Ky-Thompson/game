@@ -1,8 +1,6 @@
-import { hide, show } from '@game/helpers';
-
 import { saveUser } from './database';
 
-const game: HTMLElement = document.getElementById('game-container');
+const game: HTMLElement = document.getElementById('game');
 const auth: HTMLElement = document.getElementById('auth');
 
 const loadingIndicator: HTMLDivElement = <any>document.getElementById('loading-indicator');
@@ -58,6 +56,16 @@ export enum AuthSteps {
   LoginGetLink,
   EmailVerification,
   DisplayName,
+}
+
+export function show(element: HTMLElement) {
+  element.style.display = '';
+  element.hidden = false;
+}
+
+export function hide(element: HTMLElement) {
+  element.style.display = 'none';
+  element.hidden = true;
 }
 
 export function showError() {

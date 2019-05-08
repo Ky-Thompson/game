@@ -53,10 +53,6 @@ export class ScoreboardScene extends BaseScene {
     await saveScore(ScoreboardScene.Score, ScoreboardScene.Player, displayName || ScoreboardScene.User.displayName);
   }
 
-  static get isExhibit() {
-    return !ScoreboardScene.User || ScoreboardScene.User.exhibit;
-  }
-
   private enterNameInitalized: boolean = false;
   private enterNameSprite: Phaser.GameObjects.BitmapText;
   private nameSprites: Phaser.GameObjects.BitmapText[] = [];
@@ -77,7 +73,7 @@ export class ScoreboardScene extends BaseScene {
   create() {
     this.initScene();
 
-    if (ScoreboardScene.isExhibit) {
+    if (this.isExhibit) {
       this.initName();
     } else {
       this.initScoreboard();
@@ -85,7 +81,7 @@ export class ScoreboardScene extends BaseScene {
   }
 
   update(time: number, delta: number) {
-    if (ScoreboardScene.isExhibit) {
+    if (this.isExhibit) {
       this.blinkCursor(delta);
     } else {
       this.blinkYourScore(delta);
@@ -95,6 +91,10 @@ export class ScoreboardScene extends BaseScene {
         this.scene.start(TitleScene.SceneKey);
       }
     }
+  }
+
+  isExhibit() {
+    return (!ScoreboardScene.User || ScoreboardScene.User.exhibit) && !this.isMobile();
   }
 
   // Methods for scoreboard mode

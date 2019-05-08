@@ -2,7 +2,6 @@
 import 'phaser';
 
 import { GAME_HEIGHT, GAME_WIDTH, GRAVITY, TILE_SIZE } from './config';
-import { resizeGame, setFullscreen } from './helpers';
 import { BootScene, GameScene, ScoreboardScene, TitleScene } from './scenes';
 
 const config: GameConfig = {
@@ -17,6 +16,12 @@ const config: GameConfig = {
       debug: false,
       tileBias: TILE_SIZE,
     },
+  },
+  scale: {
+    fullscreenTarget: document.documentElement,
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    autoRound: false,
   },
   render: {
     pixelArt: true,
@@ -36,26 +41,12 @@ export class Game extends Phaser.Game {
   constructor(config: GameConfig) {
     super(config);
 
-    // Allow gamepad
-
     // Allow multitouch
     this.input.addPointer();
     this.input.addPointer();
     this.input.addPointer();
     this.input.addPointer();
     this.input.addPointer();
-
-    // Sound and fullscreen
-    const setupSoundFullscreen = () => {
-      setFullscreen();
-      (<any>this.sound).context.resume();
-    };
-
-    this.input.addDownCallback(setupSoundFullscreen, true);
-
-    // Resize
-    resizeGame();
-    window.addEventListener('resize', resizeGame, false);
   }
 }
 
@@ -63,6 +54,7 @@ let game: Game;
 
 export function createGame() {
   if (!game) {
+    console.clear();
     game = new Game(config);
   }
 }

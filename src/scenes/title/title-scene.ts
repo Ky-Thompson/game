@@ -73,6 +73,7 @@ export class TitleScene extends BaseScene {
   }
 
   private startGame() {
+    this.scale.startFullscreen();
     this.scene.stop(GameScene.SceneKey);
     this.setRegistry(GameOptions.AttractMode, false);
     this.scene.start(GameScene.SceneKey);
@@ -221,6 +222,8 @@ export class TitleScene extends BaseScene {
       .play(TitleAnimations.Exit)
       .setAlpha(EXIT_ALPHA)
       .setInteractive({ useHandCursor: true })
-      .on(Phaser.Input.Events.POINTER_DOWN, () => (<any>window).signOut());
+      .on(Phaser.Input.Events.POINTER_DOWN, () => {
+        (<any>window).signOut();
+      });
   }
 }
