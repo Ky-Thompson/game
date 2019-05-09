@@ -118,7 +118,7 @@ export class World {
 
   // Methods for tileset
 
-  private size(): RoomSize {
+  size(): RoomSize {
     const firstRoom: Room = this.rooms[0];
 
     return {

@@ -21,4 +21,10 @@ export class BiblesGroup {
       bible.update();
     });
   }
+
+  terminateAll() {
+    Array.from(this.group.children.entries).forEach((bible: Bible) => {
+      bible.terminate();
+    });
+  }
 }

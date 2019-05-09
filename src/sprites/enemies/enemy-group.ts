@@ -14,6 +14,10 @@ export class EnemyGroup {
     this.tileset = this.scene.world.getTileset();
     this.group = this.scene.add.group();
 
+    if (this.scene.isScoreboardActive()) {
+      return;
+    }
+
     this.mapLayer.objects.forEach((enemy: TiledGameObject) => {
       const tileProperties = this.scene.getTilesetProperties(enemy, this.tileset);
 

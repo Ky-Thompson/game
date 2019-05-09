@@ -13,7 +13,7 @@ const NAME_TEXT = 'ENTER YOUR NAME';
 const NAME_CURSOR = '_';
 const NAME_Y = TILE_SIZE * 1.5;
 
-const SCOREBOARD_TIMEOUT = 100 * MS_TO_S;
+const SCOREBOARD_TIMEOUT = 40 * MS_TO_S;
 const SCOREBOARD_Y = TILE_SIZE;
 const SCOREBOARD_BACKGROUND_ALPHA = 0.8;
 const SCOREBOARD_TEXT = 'SCOREBOARD';
@@ -30,6 +30,11 @@ const SCORE_TEXT_PADDING = 5;
 const PLAYER_Y = 12;
 
 const SCORE_TEXT = 'YOUR SCORE';
+
+enum ScoreboardPhases {
+  EnterName,
+  ShowScores,
+}
 
 export class ScoreboardScene extends BaseScene {
   static readonly SceneKey = 'ScoreboardScene';
@@ -53,14 +58,16 @@ export class ScoreboardScene extends BaseScene {
     await saveScore(ScoreboardScene.Score, ScoreboardScene.Player, displayName || ScoreboardScene.User.displayName);
   }
 
-  private enterNameInitalized: boolean = false;
+  private phase: ScoreboardPhases;
+
   private enterNameSprite: Phaser.GameObjects.BitmapText;
   private nameSprites: Phaser.GameObjects.BitmapText[] = [];
   private nameCursorSprite: Phaser.GameObjects.BitmapText;
+  private nameCursorLetters: string = makeCursorLetters();
   private name: string = '';
   private nameBlinkTimer: number = BLINK_TIME;
+  private ignoreGamepadButton: boolean = false;
 
-  private scoreInitalized: boolean = false;
   private scoreSprite: Phaser.GameObjects.BitmapText;
   private scoreBlinkTimer: number = BLINK_TIME * 2;
 
@@ -73,7 +80,7 @@ export class ScoreboardScene extends BaseScene {
   create() {
     this.initScene();
 
-    if (this.isExhibit) {
+    if (this.isExhibit() || true) {
       this.initName();
     } else {
       this.initScoreboard();
@@ -81,9 +88,11 @@ export class ScoreboardScene extends BaseScene {
   }
 
   update(time: number, delta: number) {
-    if (this.isExhibit) {
+    this.updateGamepad();
+
+    if (this.phase === ScoreboardPhases.EnterName) {
       this.blinkCursor(delta);
-    } else {
+    } else if (this.phase === ScoreboardPhases.ShowScores) {
       this.blinkYourScore(delta);
 
       this.timeout += delta;
@@ -93,8 +102,19 @@ export class ScoreboardScene extends BaseScene {
     }
   }
 
-  isExhibit() {
+  isExhibit(): boolean {
     return (!ScoreboardScene.User || ScoreboardScene.User.exhibit) && !this.isMobile();
+  }
+
+  protected onGamepadPressed(gamepadButton: GamepadButtons) {
+    switch (this.phase) {
+      case ScoreboardPhases.EnterName:
+        this.handleGamepadEnterName(gamepadButton);
+        break;
+      case ScoreboardPhases.ShowScores:
+        this.handleGamepadYourScore(gamepadButton);
+        break;
+    }
   }
 
   // Methods for scoreboard mode
@@ -106,21 +126,18 @@ export class ScoreboardScene extends BaseScene {
     this.scene.launch(GameScene.SceneKey);
     this.add.rectangle(width / 2, height / 2, width, height, Colors.Gray, SCOREBOARD_BACKGROUND_ALPHA);
     this.scene.bringToTop();
-
-    this.enterNameInitalized = false;
-    this.scoreInitalized = false;
   }
 
   // Methods for the name input
 
   private initName() {
-    this.enterNameInitalized = true;
+    this.phase = ScoreboardPhases.EnterName;
     this.initNameTitle();
     this.initNameInput();
   }
 
   private hideName() {
-    if (!this.enterNameInitalized) {
+    if (!this.enterNameSprite) {
       return;
     }
 
@@ -144,42 +161,70 @@ export class ScoreboardScene extends BaseScene {
 
     this.nameCursorSprite = this.add.bitmapText(x, y + NAME_Y * 2, FONT, NAME_CURSOR, SCOREBOARD_TEXT_SIZE);
 
-    this.input.keyboard.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, async (event: KeyboardEvent) => {
-      if (this.scoreInitalized) {
+    this.input.keyboard.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, (event: KeyboardEvent) => {
+      if (this.phase !== ScoreboardPhases.EnterName) {
         return;
       }
 
-      if ((isSpace(event) || isLetter(event) || isNumber(event)) && this.name.length < MAX_DISPLAY_NAME) {
-        // Add letter
-        const letter: string = event.key.toUpperCase();
-        const newLetter = this.add.bitmapText(this.nameCursorSprite.x, this.nameCursorSprite.y, FONT, letter, SCOREBOARD_TEXT_SIZE);
-        this.nameSprites.push(newLetter);
-        this.name += letter;
-      } else if (isBackspace(event) && this.name.length > 0) {
-        const lastLetter = this.nameSprites.pop();
-        lastLetter.destroy();
-        this.name = this.name.substring(0, this.name.length - 1);
-      }
-
-      // Update position
-      const showCursor = this.name.length < MAX_DISPLAY_NAME;
-      let letterX: number = width / 2 - ((this.nameSprites.length + (showCursor ? 1 : 0)) * SCOREBOARD_TEXT_SIZE) / 2;
-      this.nameSprites.forEach((sprite: Phaser.GameObjects.BitmapText) => {
-        sprite.setX(letterX);
-        letterX += SCOREBOARD_TEXT_SIZE;
-      });
-      this.nameCursorSprite.setX(letterX);
-
-      // Handle submit
-      const name: string = this.name.trim().toUpperCase();
-      if (name.length && name.length <= MAX_DISPLAY_NAME && isEnter(event)) {
-        await this.initScoreboard();
+      if (isSpace(event) || isLetter(event) || isNumber(event)) {
+        this.addNameLetter(event.key);
+      } else if (isBackspace(event)) {
+        this.removeNameLetter();
+      } else if (isEnter(event)) {
+        this.submitName();
       }
     });
   }
 
+  private addNameLetter(letter: string) {
+    letter = letter === NAME_CURSOR ? ' ' : letter; // Consider cursor character as a space
+
+    if (this.name.length < MAX_DISPLAY_NAME && !(this.name.length === 0 && letter === ' ')) {
+      letter = letter.toUpperCase();
+
+      const newLetter = this.add.bitmapText(this.nameCursorSprite.x, this.nameCursorSprite.y, FONT, letter, SCOREBOARD_TEXT_SIZE);
+      this.nameSprites.push(newLetter);
+      this.name += letter;
+
+      this.updateNameLetters();
+    }
+  }
+
+  private removeNameLetter() {
+    if (this.name.length > 0) {
+      const lastLetter = this.nameSprites.pop();
+      lastLetter.destroy();
+      this.name = this.name.substring(0, this.name.length - 1);
+
+      this.updateNameLetters();
+    }
+  }
+
+  private updateNameLetters() {
+    const { width } = this.getGameDimensions();
+
+    const showCursor = this.name.length < MAX_DISPLAY_NAME;
+    let letterX: number = width / 2 - ((this.nameSprites.length + (showCursor ? 1 : 0)) * SCOREBOARD_TEXT_SIZE) / 2;
+    this.nameSprites.forEach((sprite: Phaser.GameObjects.BitmapText) => {
+      sprite.setX(letterX);
+      letterX += SCOREBOARD_TEXT_SIZE;
+    });
+
+    this.nameCursorSprite.setText(NAME_CURSOR).setX(letterX);
+  }
+
+  private async submitName() {
+    this.addNameLetter(this.nameCursorSprite.text);
+
+    const name: string = this.name.trim().toUpperCase();
+
+    if (name.length && name.length <= MAX_DISPLAY_NAME) {
+      await this.initScoreboard();
+    }
+  }
+
   private blinkCursor(delta: number) {
-    if (!this.scoreInitalized) {
+    if (this.phase !== ScoreboardPhases.EnterName) {
       return;
     }
 
@@ -196,10 +241,45 @@ export class ScoreboardScene extends BaseScene {
     }
   }
 
+  private handleGamepadEnterName(gamepadButton: GamepadButtons) {
+    if (this.ignoreGamepadButton) {
+      // When pressing A it is detected as up too, so we ignore next callback
+      this.ignoreGamepadButton = false;
+      return;
+    }
+
+    const currentLetter: number = this.nameCursorLetters.indexOf(this.nameCursorSprite.text);
+
+    switch (gamepadButton) {
+      case GamepadButtons.Up:
+        const newLetterUp: number = (currentLetter + 1) % this.nameCursorLetters.length;
+        this.nameCursorSprite.setText(this.nameCursorLetters[newLetterUp]);
+        break;
+      case GamepadButtons.Down:
+        const newLetterDown: number = (currentLetter - 1 + this.nameCursorLetters.length) % this.nameCursorLetters.length;
+        this.nameCursorSprite.setText(this.nameCursorLetters[newLetterDown]);
+        break;
+      case GamepadButtons.A:
+        this.ignoreGamepadButton = true;
+        this.addNameLetter(this.nameCursorSprite.text);
+        break;
+      case GamepadButtons.B:
+        this.removeNameLetter();
+        break;
+      case GamepadButtons.Select:
+      case GamepadButtons.Start:
+        this.submitName();
+        break;
+    }
+
+    this.nameCursorSprite.setAlpha(1);
+    this.nameBlinkTimer = BLINK_TIME; // Restart timer
+  }
+
   // Methods for the score list
 
   private async initScoreboard() {
-    this.scoreInitalized = true;
+    this.phase = ScoreboardPhases.ShowScores;
 
     await ScoreboardScene.SaveLastScore(this.name);
     await ScoreboardScene.LoadScores();
@@ -261,7 +341,7 @@ export class ScoreboardScene extends BaseScene {
     }
   }
 
-  protected onGamepadPressed(gamepadButton: GamepadButtons) {
+  private handleGamepadYourScore(gamepadButton: GamepadButtons) {
     switch (gamepadButton) {
       case GamepadButtons.Select:
       case GamepadButtons.Start:
@@ -293,4 +373,18 @@ function isNumber(event: KeyboardEvent): boolean {
 
 function isBackspace(event: KeyboardEvent): boolean {
   return event.keyCode === Phaser.Input.Keyboard.KeyCodes.BACKSPACE;
+}
+
+function makeCursorLetters(): string {
+  let letters: string = NAME_CURSOR;
+
+  for (let i = Phaser.Input.Keyboard.KeyCodes.A; i <= Phaser.Input.Keyboard.KeyCodes.Z; i++) {
+    letters += String.fromCharCode(i).toUpperCase();
+  }
+
+  for (let i = 0; i <= 9; i++) {
+    letters += String(i);
+  }
+
+  return letters;
 }

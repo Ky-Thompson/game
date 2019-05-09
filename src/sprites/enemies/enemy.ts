@@ -105,6 +105,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
     this.alive = false;
 
     if (drop) {
+      this.body.setAllowGravity(true); // In case it was not activated yet
       this.body.setVelocityY(KILLED_VELOCITY_Y); // Make it fall
       this.flipY = true;
       this.dropped = true;

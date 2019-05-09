@@ -36,8 +36,11 @@ const emailVerificationSignOutButton: HTMLButtonElement = <any>document.getEleme
 
 const displayNameSection: HTMLElement = document.getElementById('display-name');
 const displayNameForm: HTMLFormElement = <any>document.getElementById('display-name-form');
+const displayNameInput: HTMLInputElement = <any>document.getElementById('display-name-input');
 const displayNameButton: HTMLButtonElement = <any>document.getElementById('display-name-button');
 const displayNameSignOutButton: HTMLButtonElement = <any>document.getElementById('display-name-sign-out-button');
+
+const ENTER_KEY_CODE = 13;
 
 export enum AuthButtons {
   LoginGoogle,
@@ -155,6 +158,20 @@ export function registerAuthButton(button: AuthButtons, callback: (event: Event)
       break;
 
     case AuthButtons.DisplayName:
+      // Only allow letters and numbers in display name
+      displayNameInput.addEventListener('keypress', (event: KeyboardEvent) => {
+        const regex: RegExp = new RegExp('^[ 0-9a-zA-Z]+$');
+        const code: number = event.which || event.keyCode;
+        const key: string = String.fromCharCode(code);
+
+        const isAlphaNumeric: boolean = regex.test(key);
+        const isEnter: boolean = code === ENTER_KEY_CODE;
+
+        if (!isAlphaNumeric && !isEnter) {
+          event.preventDefault();
+          return false;
+        }
+      });
       addSubmitEvent(displayNameForm, displayNameButton, callback);
       break;
 

@@ -49,7 +49,7 @@ export class Car extends Enemy {
   }
 
   slideKill(victim: Enemy) {
-    if (victim.kill && victim.isAlive() && victim.isActivated()) {
+    if (victim.kill && victim.isAlive()) {
       victim.kill(true);
     }
   }

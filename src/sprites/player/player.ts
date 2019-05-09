@@ -284,14 +284,14 @@ export class Player extends Phaser.GameObjects.Sprite {
       this.jumpTimer -= delta;
     }
 
+    if (this.body.blocked.down || Math.abs(this.body.velocity.y) < MIN_VELOCITY_Y) {
+      this.jumping = false;
+    }
+
     if (jump && (!this.jumping || this.jumpTimer > 0)) {
       this.jump();
     } else if (!jump) {
       this.jumpTimer = 0; // Don't resume jump if button is released, prevents mini double-jumps
-
-      if (this.body.blocked.down || Math.abs(this.body.velocity.y) < MIN_VELOCITY_Y) {
-        this.jumping = false;
-      }
     }
   }
 
@@ -399,6 +399,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   }
 
   die() {
+    this.clearTint();
     this.scene.soundEffects.pauseMusic();
     this.animate(PlayerActions.Death);
     this.scene.soundEffects.playEffect(Sounds.Die);

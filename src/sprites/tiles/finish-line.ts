@@ -33,7 +33,6 @@ export class FinishLine {
   update() {
     if (this.succeeded() && !this.started) {
       this.climbDownFlag();
-      this.scene.physics.world.pause();
     } else if (this.ended()) {
       this.disappear();
     }
@@ -49,6 +48,8 @@ export class FinishLine {
 
   private climbDownFlag() {
     this.started = true;
+
+    this.scene.bibles.terminateAll();
 
     this.scene.soundEffects.pauseMusic();
     this.scene.soundEffects.playEffect(Sounds.FlagPole);
@@ -70,6 +71,8 @@ export class FinishLine {
       y: this.finishLineTile.y + this.finishLineTile.height - this.scene.player.body.height,
       duration: PLAYER_ANIMATION_DURATION,
     });
+
+    this.scene.physics.world.pause();
   }
 
   private playerWalk() {

@@ -1,3 +1,4 @@
+import { MS_TO_S } from '@game/config';
 import { ActionState, TiledGameObject } from '@game/models';
 import { TitleScene } from '@game/scenes/title';
 import { BiblesGroup, BlockEmitter, BounceBrick, EnemyGroup, FinishLine, ModifierGroup, Player, PowerUpsGroup, World } from '@game/sprites';
@@ -9,6 +10,8 @@ import { HUD } from './hud';
 import { Keyboard } from './keyboard';
 import { SoundEffects } from './music';
 import { VirtualPad } from './pad';
+
+const SCOREBOARD_TIMEOUT = 30 * MS_TO_S;
 
 export class GameScene extends BaseScene {
   static readonly SceneKey = 'GameScene';
@@ -62,7 +65,11 @@ export class GameScene extends BaseScene {
     this.world.setRoomBounds();
 
     // The camera should follow the player
-    this.followPlayer();
+    if (this.isScoreboardActive()) {
+      this.panOverWorld();
+    } else {
+      this.followPlayer();
+    }
 
     // Init background images
     this.world.init();
@@ -114,6 +121,10 @@ export class GameScene extends BaseScene {
 
   stopFollowingPlayer() {
     this.cameras.main.stopFollow();
+  }
+
+  panOverWorld() {
+    this.cameras.main.pan(this.world.size().width - this.getGameDimensions().width / 2, 0, SCOREBOARD_TIMEOUT);
   }
 
   playerDied() {
