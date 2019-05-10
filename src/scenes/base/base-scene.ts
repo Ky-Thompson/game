@@ -82,6 +82,10 @@ export abstract class BaseScene extends Phaser.Scene {
 
   // Helpers for gamepad
 
+  hasGamepad(): boolean {
+    return !!this.gamepad;
+  }
+
   updateGamepad() {
     (<any>this.input).update(); // https://github.com/photonstorm/phaser/issues/4414
 

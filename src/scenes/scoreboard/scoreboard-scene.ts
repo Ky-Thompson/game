@@ -80,7 +80,7 @@ export class ScoreboardScene extends BaseScene {
   create() {
     this.initScene();
 
-    if (this.isExhibit() || true) {
+    if (this.isExhibit()) {
       this.initName();
     } else {
       this.initScoreboard();

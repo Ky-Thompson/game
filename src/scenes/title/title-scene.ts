@@ -1,4 +1,4 @@
-import { getPlayerAnimationKey, SPRITES_KEY, TitleAnimations } from '@game/animations';
+import { BibleAnimations, getPlayerAnimationKey, PadAnimations, SPRITES_KEY, TitleAnimations } from '@game/animations';
 import { FONT, TILE_SIZE } from '@game/config';
 import { Colors, GameOptions, PlayerActions, Players, PlayerStates } from '@game/models';
 
@@ -29,12 +29,15 @@ const EXIT_ALPHA = 0.7;
 export class TitleScene extends BaseScene {
   static readonly SceneKey = 'TitleScene';
 
+  private backdrop: Phaser.GameObjects.Rectangle;
+  private titleSprite: Phaser.GameObjects.Sprite;
   private startSprite: Phaser.GameObjects.BitmapText;
   private blinkTimer: number = TITLE_BLINK_TIME * 2;
   private playerSprite: Phaser.GameObjects.Sprite;
   private calebSprite: Phaser.GameObjects.Sprite;
   private sophiaSprite: Phaser.GameObjects.Sprite;
   private selectedPlayer: Players = Players.Caleb;
+  private showingGamepadExplanation: boolean = false;
 
   constructor() {
     super({ key: TitleScene.SceneKey });
@@ -84,12 +87,16 @@ export class TitleScene extends BaseScene {
   private initTitle() {
     const { width } = this.getGameDimensions();
 
-    this.add.rectangle(width / 2, TITLE_BACKGROUND_Y, width, TITLE_BACKGROUND_HEIGHT, Colors.White, TITLE_BACKGROUND_ALPHA);
-
-    const title: Phaser.GameObjects.Sprite = this.add.sprite(width / 2, TITLE_Y, SPRITES_KEY);
-    title.play(TitleAnimations.Title);
-
+    this.backdrop = this.add
+      .rectangle(width / 2, TITLE_BACKGROUND_Y, width, TITLE_BACKGROUND_HEIGHT, Colors.White, TITLE_BACKGROUND_ALPHA)
+      .setScrollFactor(0, 0);
+    this.titleSprite = this.add.sprite(width / 2, TITLE_Y, SPRITES_KEY).play(TitleAnimations.Title);
     this.startSprite = this.add.bitmapText(START_X, START_Y, FONT, START_TEXT, START_SIZE);
+  }
+
+  private hideTitle() {
+    this.startSprite.setActive(false).setAlpha(0);
+    this.titleSprite.setActive(false).setAlpha(0);
   }
 
   private initPlayerSelection() {
@@ -124,7 +131,7 @@ export class TitleScene extends BaseScene {
       .setInteractive({ useHandCursor: true })
       .on(Phaser.Input.Events.POINTER_DOWN, () => {
         this.selectPlayer(Players.Caleb);
-        this.startGame();
+        this.showGamepadExplanation();
       });
 
     // Create Sophia sprite
@@ -137,7 +144,7 @@ export class TitleScene extends BaseScene {
       .setInteractive({ useHandCursor: true })
       .on(Phaser.Input.Events.POINTER_DOWN, () => {
         this.selectPlayer(Players.Sophia);
-        this.startGame();
+        this.showGamepadExplanation();
       });
 
     // Toggle and select player
@@ -150,14 +157,24 @@ export class TitleScene extends BaseScene {
             this.togglePlayer();
             break;
           case Phaser.Input.Keyboard.KeyCodes.ENTER:
-            this.startGame();
+            this.showGamepadExplanation();
             break;
         }
       });
     }
   }
 
+  private hidePlayerSelection() {
+    this.playerSprite.setActive(false).setAlpha(0);
+    this.calebSprite.setActive(false).setAlpha(0);
+    this.sophiaSprite.setActive(false).setAlpha(0);
+  }
+
   private blinkTitle(delta: number) {
+    if (this.titleSprite.alpha === 0) {
+      return;
+    }
+
     this.blinkTimer -= delta;
 
     if (this.blinkTimer < 0) {
@@ -207,7 +224,11 @@ export class TitleScene extends BaseScene {
       case GamepadButtons.Select:
       case GamepadButtons.Start:
       case GamepadButtons.A:
-        this.startGame();
+        if (!this.showingGamepadExplanation) {
+          this.showGamepadExplanation();
+        } else {
+          this.startGame();
+        }
         break;
     }
   }
@@ -225,5 +246,159 @@ export class TitleScene extends BaseScene {
       .on(Phaser.Input.Events.POINTER_DOWN, () => {
         (<any>window).signOut();
       });
+  }
+
+  // Methods for the gamepad explanation
+
+  private showGamepadExplanation() {
+    if (this.hasGamepad()) {
+      this.hidePlayerSelection();
+      this.hideTitle();
+
+      this.initGamepadExplanation();
+    } else {
+      this.startGame();
+    }
+  }
+
+  private initGamepadExplanation() {
+    this.showingGamepadExplanation = true;
+
+    const { width, height } = this.getGameDimensions();
+
+    this.backdrop.destroy();
+    this.backdrop = this.add.rectangle(width / 2, height / 2, width, height, Colors.White, 0.6).setScrollFactor(0, 0);
+
+    // Gamepad
+    this.add
+      .sprite(width / 2, height / 2, SPRITES_KEY)
+      .play(PadAnimations.Gamepad)
+      .setScrollFactor(0, 0);
+
+    // Player tips
+
+    const calebJump = getPlayerAnimationKey(Players.Caleb, PlayerActions.Jump, PlayerStates.Big);
+    const calebStand = getPlayerAnimationKey(Players.Caleb, PlayerActions.Stand, PlayerStates.Big);
+    const calebBend = getPlayerAnimationKey(Players.Caleb, PlayerActions.Bend, PlayerStates.Big);
+    const calebStandSuper = getPlayerAnimationKey(Players.Caleb, PlayerActions.Stand, PlayerStates.Super);
+    const sophiaStandSuper = getPlayerAnimationKey(Players.Sophia, PlayerActions.Stand, PlayerStates.Super);
+    const sophiaWalk = getPlayerAnimationKey(Players.Sophia, PlayerActions.Walk, PlayerStates.Big);
+
+    const calebJumpSprite = this.add
+      .sprite(TILE_SIZE * 21, TILE_SIZE * 7, SPRITES_KEY)
+      .play(calebJump)
+      .setScale(2)
+      .setScrollFactor(0, 0);
+
+    this.tweens.add({
+      targets: calebJumpSprite,
+      loop: -1,
+      yoyo: true,
+      y: TILE_SIZE * 6,
+      duration: 200,
+      loopDelay: 500,
+      ease: 'Quad.easeOut',
+      onLoop: () => {
+        calebJumpSprite.play(calebStand);
+        setTimeout(() => {
+          if (calebJumpSprite) {
+            calebJumpSprite.play(calebJump);
+          }
+        }, 500);
+      },
+    });
+
+    this.add
+      .sprite(TILE_SIZE * 15, TILE_SIZE * 2.2, SPRITES_KEY)
+      .play(calebStandSuper)
+      .setScale(2)
+      .setScrollFactor(0, 0);
+
+    this.add
+      .sprite(TILE_SIZE * 15, TILE_SIZE * 12.5, SPRITES_KEY)
+      .play(sophiaStandSuper)
+      .setScale(2)
+      .setScrollFactor(0, 0);
+
+    this.add
+      .sprite(TILE_SIZE * 4, TILE_SIZE * 7, SPRITES_KEY)
+      .play(sophiaWalk)
+      .setScale(2)
+      .setScrollFactor(0, 0);
+
+    const calebBendSprite = this.add
+      .sprite(TILE_SIZE * 9, TILE_SIZE * 12.5, SPRITES_KEY)
+      .play(calebBend)
+      .setScale(2)
+      .setScrollFactor(0, 0);
+
+    this.tweens.add({
+      targets: calebBendSprite,
+      loop: -1,
+      yoyo: true,
+      y: TILE_SIZE * 12.5,
+      duration: 200,
+      loopDelay: 500,
+      onLoop: () => {
+        calebBendSprite.play(calebStand);
+        setTimeout(() => {
+          if (calebBendSprite) {
+            calebBendSprite.play(calebBend);
+          }
+        }, 500);
+      },
+    });
+
+    const bibleCaleb = this.add
+      .sprite(TILE_SIZE * 15, TILE_SIZE * 2.2, SPRITES_KEY)
+      .play(BibleAnimations.Fly)
+      .setScale(2)
+      .setScrollFactor(0, 0);
+    this.physics.world.enable(bibleCaleb);
+    (<Phaser.Physics.Arcade.Body>bibleCaleb.body).setAllowGravity(false);
+    (<Phaser.Physics.Arcade.Body>bibleCaleb.body).angularVelocity = 500;
+
+    this.tweens.add({
+      targets: bibleCaleb,
+      loop: -1,
+      x: TILE_SIZE * 23,
+      y: TILE_SIZE * 3,
+      duration: 800,
+      loopDelay: 500,
+      onLoop: () => {
+        bibleCaleb.setAlpha(0);
+        setTimeout(() => {
+          if (bibleCaleb) {
+            bibleCaleb.setAlpha(1);
+          }
+        }, 550);
+      },
+    });
+
+    const bibleSophia = this.add
+      .sprite(TILE_SIZE * 15, TILE_SIZE * 12.5, SPRITES_KEY)
+      .play(BibleAnimations.Fly)
+      .setScale(2)
+      .setScrollFactor(0, 0);
+    this.physics.world.enable(bibleSophia);
+    (<Phaser.Physics.Arcade.Body>bibleSophia.body).setAllowGravity(false);
+    (<Phaser.Physics.Arcade.Body>bibleSophia.body).angularVelocity = 500;
+
+    this.tweens.add({
+      targets: bibleSophia,
+      loop: -1,
+      x: TILE_SIZE * 23,
+      y: TILE_SIZE * 13.5,
+      duration: 800,
+      loopDelay: 500,
+      onLoop: () => {
+        bibleSophia.setAlpha(0);
+        setTimeout(() => {
+          if (bibleSophia) {
+            bibleSophia.setAlpha(1);
+          }
+        }, 550);
+      },
+    });
   }
 }
