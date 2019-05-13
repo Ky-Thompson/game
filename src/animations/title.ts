@@ -4,6 +4,7 @@ export enum TitleAnimations {
   Title = 'title',
   Player = 'player',
   Exit = 'exit',
+  Profile = 'profile',
 }
 
 export const makeTitleAnimations = (scene: Phaser.Scene) => {
@@ -20,5 +21,10 @@ export const makeTitleAnimations = (scene: Phaser.Scene) => {
   scene.anims.create({
     key: TitleAnimations.Exit,
     frames: [{ frame: TitleAnimations.Exit, key: SPRITES_KEY }],
+  });
+
+  scene.anims.create({
+    key: TitleAnimations.Profile,
+    frames: [{ frame: TitleAnimations.Profile, key: SPRITES_KEY }],
   });
 };

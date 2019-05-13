@@ -4,6 +4,7 @@ import { GtmEventTypes, GtmLoginTypes, pushEvent } from '@game/analytics';
 import { createGame, destroyGame } from '@game/game';
 
 import { firebaseApp } from './app';
+import { getUser, saveUser } from './database';
 import { AuthButtons, AuthSteps, registerAuthButton, showAuth, showError, showGame } from './ui';
 
 export enum LoginTypes {
@@ -71,7 +72,7 @@ export async function handleForm(event: Event, callback: (formData: AuthFormData
   }
 }
 
-export function handleUser(user: firebase.User) {
+export async function handleUser(user: firebase.User) {
   if (!user) {
     showAuth(AuthSteps.Login);
   } else if (user && user.email && !user.emailVerified) {
@@ -79,6 +80,7 @@ export function handleUser(user: firebase.User) {
   } else if (!user.displayName || !user.displayName.trim().length || user.displayName.trim().length > MAX_DISPLAY_NAME) {
     showAuth(AuthSteps.DisplayName);
   } else if (user) {
+    await getUser();
     showGame();
     createGame();
   } else {
@@ -112,8 +114,6 @@ export async function signOut(): Promise<void> {
     // Sign out errors are not logged
   }
 }
-
-(<any>window).signOut = signOut;
 
 export async function signUp(email: string, password: string): Promise<firebase.User> {
   try {
@@ -207,6 +207,7 @@ export async function updateProfile(displayName: string): Promise<void> {
 
   try {
     await user.updateProfile({ displayName });
+    await saveUser();
   } catch (e) {
     console.error(e);
     showError();

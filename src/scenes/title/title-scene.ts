@@ -1,5 +1,6 @@
 import { BibleAnimations, getPlayerAnimationKey, PadAnimations, SPRITES_KEY, TitleAnimations } from '@game/animations';
 import { FONT, TILE_SIZE } from '@game/config';
+import { AuthSteps, FirebaseUser, getUser, showAuth, signOut } from '@game/firebase';
 import { Colors, GameOptions, PlayerActions, Players, PlayerStates } from '@game/models';
 
 import { BaseScene, GamepadButtons } from '../base';
@@ -23,8 +24,8 @@ const PLAYER_SELECT_EASE = 'Quad.easeIn';
 const PLAYER_SELECT_DURATION = 200;
 const PLAYER_SPRITE_SCALE = 2;
 
-const EXIT_PADDING = TILE_SIZE / 2;
-const EXIT_ALPHA = 0.7;
+const TITLE_BUTTONS_PADDING = TILE_SIZE / 2;
+const TITLE_BUTTONS_ALPHA = 0.7;
 
 export class TitleScene extends BaseScene {
   static readonly SceneKey = 'TitleScene';
@@ -37,6 +38,8 @@ export class TitleScene extends BaseScene {
   private calebSprite: Phaser.GameObjects.Sprite;
   private sophiaSprite: Phaser.GameObjects.Sprite;
   private selectedPlayer: Players = Players.Caleb;
+  private exitSprite: Phaser.GameObjects.Sprite;
+  private profileSprite: Phaser.GameObjects.Sprite;
   private showingGamepadExplanation: boolean = false;
 
   constructor() {
@@ -48,6 +51,7 @@ export class TitleScene extends BaseScene {
     this.initAttractMode();
     this.initPlayerSelection();
     this.initExit();
+    this.initProfile();
   }
 
   update(time: number, delta: number) {
@@ -238,14 +242,31 @@ export class TitleScene extends BaseScene {
   private initExit() {
     const { width } = this.getGameDimensions();
 
-    this.add
-      .sprite(width - EXIT_PADDING, EXIT_PADDING, SPRITES_KEY)
+    this.exitSprite = this.add
+      .sprite(width - TITLE_BUTTONS_PADDING, TITLE_BUTTONS_PADDING, SPRITES_KEY)
       .play(TitleAnimations.Exit)
-      .setAlpha(EXIT_ALPHA)
-      .setInteractive({ useHandCursor: true })
-      .on(Phaser.Input.Events.POINTER_DOWN, () => {
-        (<any>window).signOut();
-      });
+      .setAlpha(TITLE_BUTTONS_ALPHA)
+      .setInteractive({ useHandCursor: true });
+
+    this.exitSprite.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      signOut();
+    });
+  }
+
+  private async initProfile() {
+    const { width } = this.getGameDimensions();
+
+    const user: FirebaseUser = await getUser();
+
+    this.profileSprite = this.add
+      .sprite(width - TITLE_BUTTONS_PADDING - TILE_SIZE, TITLE_BUTTONS_PADDING, SPRITES_KEY)
+      .play(TitleAnimations.Profile)
+      .setAlpha(user.exhibit ? 0 : TITLE_BUTTONS_ALPHA) // If exhibit no need to show profile button
+      .setInteractive({ useHandCursor: true });
+
+    this.profileSprite.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      showAuth(AuthSteps.DisplayName);
+    });
   }
 
   // Methods for the gamepad explanation

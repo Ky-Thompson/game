@@ -21,11 +21,17 @@ export interface FirebaseUser {
   exhibit?: boolean;
 }
 
+let cachedFirebaseUser: FirebaseUser;
+
 export async function getUser(): Promise<FirebaseUser> {
   const user: firebase.User = firebase.auth().currentUser;
 
   if (!user || !user.uid) {
     return;
+  }
+
+  if (cachedFirebaseUser) {
+    return cachedFirebaseUser;
   }
 
   const authUser: FirebaseUser = {
@@ -39,10 +45,14 @@ export async function getUser(): Promise<FirebaseUser> {
       .ref(`/users/${user.uid}`)
       .once('value')).val();
 
-    return {
-      ...firebaseUser,
-      ...authUser,
-    };
+    if (firebaseUser) {
+      cachedFirebaseUser = {
+        ...firebaseUser,
+        ...authUser,
+      };
+    }
+
+    return cachedFirebaseUser;
   } catch (e) {
     console.error(e);
     return authUser;
@@ -61,11 +71,30 @@ export async function saveUser(): Promise<void> {
     email: user.email,
   };
 
+  // First read in case the update is not needed
+  try {
+    const currentFirebaseUser: FirebaseUser = await getUser();
+
+    if (
+      currentFirebaseUser &&
+      currentFirebaseUser.displayName === firebaseUser.displayName &&
+      currentFirebaseUser.email === firebaseUser.email
+    ) {
+      // No need to write
+      return;
+    }
+  } catch (e) {}
+
   try {
     await firebase
       .database()
       .ref(`/users/${user.uid}`)
       .update(firebaseUser);
+
+    cachedFirebaseUser = {
+      ...cachedFirebaseUser,
+      ...firebaseUser,
+    };
   } catch (e) {
     console.error(e);
   }
@@ -111,4 +140,26 @@ export async function listScores(): Promise<FirebaseScore[]> {
   }
 
   return scores.sort((scoreA, scoreB) => scoreB.score - scoreA.score);
+}
+
+export async function listUsersWithoutAccess(): Promise<void> {
+  console.log(cachedFirebaseUser);
+
+  if (!cachedFirebaseUser.admin) {
+    return;
+  }
+
+  try {
+    const usersRef = firebase
+      .database()
+      .ref('/users')
+      .orderByChild('access')
+      .equalTo(null)
+      .limitToFirst(20);
+
+    usersRef.on('child_added', (user) => console.log('child_added', user.key));
+    usersRef.on('child_removed', (user) => console.log('child_removed', user.key));
+  } catch (e) {
+    console.error(e);
+  }
 }

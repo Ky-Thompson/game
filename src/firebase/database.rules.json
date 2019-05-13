@@ -1,20 +1,37 @@
 {
   "rules": {
     "users": {
-      ".indexOn": ["access", "admin"],
+      ".indexOn": ["access", "admin", "exhibit"],
+      ".read": "auth !== null && auth.uid !== null && root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true",
       "$user_id": {
-        ".read": "auth !== null && ((auth.uid === $user_id) || (root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true))",
-        ".write": "auth !== null && ((auth.uid === $user_id) || (root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true))",
+        ".read": "auth !== null && auth.uid !== null && (auth.uid === $user_id || (root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true))",
+        "displayName": {
+          ".write": "auth !== null && auth.uid === $user_id",
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 8"
+        },
+        "email": {
+          ".write": "auth !== null && auth.uid === $user_id",
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
         "access": {
-          ".validate": "newData.isBoolean() && root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true"
+          ".write": "auth !== null && auth.uid !== null && root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true",
+          ".validate": "newData.isBoolean()"
         },
         "admin": {
-          ".validate": "newData.isBoolean() && root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true"
+          ".write": "auth !== null && auth.uid !== null && root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true",
+          ".validate": "newData.isBoolean()"
+        },
+        "exhibit": {
+          ".write": "auth !== null && auth.uid !== null && root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true",
+          ".validate": "newData.isBoolean()"
+        },
+        "$other": {
+          ".write": false
         }
       }
     },
     "scores": {
-      ".read": "auth !== null && query.orderByChild === 'score' && query.limitToLast <= 20",
+      ".read": "auth !== null && auth.uid !== null && query.orderByChild === 'score' && query.limitToLast <= 20",
       ".indexOn": ["score", "user"],
       "$score_id": {
         ".write": "auth !== null",
@@ -29,7 +46,10 @@
           ".validate": "newData.isString() && newData.val() === auth.uid && newData.val() === auth.uid && root.child('users/'+auth.uid).exists()"
         },
         "displayName": {
-          ".validate": "newData.isString()"
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 8"
+        },
+        "$other": {
+          ".write": false
         }
       }
     }

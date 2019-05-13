@@ -9,6 +9,8 @@
     "hdg.live-html-previewer",
     "msjsdiag.debugger-for-chrome",
     "mike-co.import-sorter",
-    "gruntfuggly.todo-tree"
+    "gruntfuggly.todo-tree",
+    "jsayol.firebase-explorer",
+    "hasanakg.firebase-snippets"
   ]
 }
