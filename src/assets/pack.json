@@ -17,6 +17,11 @@
         "url": "assets/images/bull.png"
       },
       {
+        "type": "image",
+        "key": "wanda",
+        "url": "assets/images/wanda.png"
+      },
+      {
         "type": "spritesheet",
         "key": "tiles",
         "url": "assets/images/game-sprites.png",

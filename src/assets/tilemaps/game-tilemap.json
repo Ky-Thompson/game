@@ -3911,7 +3911,7 @@
           "type": "",
           "visible": true,
           "width": 32,
-          "x": 6528,
+          "x": 6720,
           "y": 384
         },
         {
@@ -3936,6 +3936,29 @@
           "width": 64,
           "x": 2912,
           "y": 96
+        },
+        {
+          "height": 256,
+          "id": 248,
+          "name": "",
+          "properties": [
+            {
+              "name": "image",
+              "type": "string",
+              "value": "wanda"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "value": "image"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 384,
+          "x": 6400,
+          "y": 160
         }
       ],
       "opacity": 1,
@@ -4594,7 +4617,7 @@
     }
   ],
   "nextlayerid": 6,
-  "nextobjectid": 248,
+  "nextobjectid": 249,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.2.1",
