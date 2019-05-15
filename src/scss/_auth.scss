@@ -14,10 +14,10 @@
 }
 
 @include media-breakpoint-up(sm) {
-  @media (min-height: 38rem) {
+  @media (min-height: 42rem) {
     #auth {
       max-width: 25rem;
-      max-height: 35rem;
+      max-height: 40rem;
       border-radius: 0.5rem;
     }
     #logo-img {

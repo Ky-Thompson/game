@@ -62,5 +62,6 @@ export function createGame() {
 export function destroyGame() {
   if (game) {
     game.destroy(true);
+    game = undefined;
   }
 }

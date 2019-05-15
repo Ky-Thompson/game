@@ -1,3 +1,5 @@
+import { destroyGame } from '@game/game';
+
 import { saveUser } from './database';
 
 const game: HTMLElement = document.getElementById('game');
@@ -39,8 +41,6 @@ const displayNameForm: HTMLFormElement = <any>document.getElementById('display-n
 const displayNameInput: HTMLInputElement = <any>document.getElementById('display-name-input');
 const displayNameButton: HTMLButtonElement = <any>document.getElementById('display-name-button');
 const displayNameSignOutButton: HTMLButtonElement = <any>document.getElementById('display-name-sign-out-button');
-
-const ENTER_KEY_CODE = 13;
 
 export enum AuthButtons {
   LoginGoogle,
@@ -87,6 +87,7 @@ export function showGame() {
 }
 
 export function showAuth(step: AuthSteps) {
+  destroyGame();
   hide(game);
   hide(errorMsg);
   hide(loginSection);
@@ -159,18 +160,12 @@ export function registerAuthButton(button: AuthButtons, callback: (event: Event)
 
     case AuthButtons.DisplayName:
       // Only allow letters and numbers in display name
-      displayNameInput.addEventListener('keypress', (event: KeyboardEvent) => {
-        const regex: RegExp = new RegExp('^[ 0-9a-zA-Z]+$');
-        const code: number = event.which || event.keyCode;
-        const key: string = String.fromCharCode(code);
-
-        const isAlphaNumeric: boolean = regex.test(key);
-        const isEnter: boolean = code === ENTER_KEY_CODE;
-
-        if (!isAlphaNumeric && !isEnter) {
+      displayNameInput.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (!isEnter(event) && !isSpace(event) && !isLetter(event) && !isNumber(event) && !isBackspace(event)) {
           event.preventDefault();
           return false;
         }
+        return true;
       });
       addSubmitEvent(displayNameForm, displayNameButton, callback);
       break;
@@ -213,4 +208,27 @@ export function addSubmitEvent(
     }
     return false;
   });
+}
+
+export function isEnter(event: KeyboardEvent): boolean {
+  return event.keyCode === Phaser.Input.Keyboard.KeyCodes.ENTER;
+}
+
+export function isSpace(event: KeyboardEvent): boolean {
+  return event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE;
+}
+
+export function isLetter(event: KeyboardEvent): boolean {
+  return event.keyCode >= Phaser.Input.Keyboard.KeyCodes.A && event.keyCode <= Phaser.Input.Keyboard.KeyCodes.Z;
+}
+
+export function isNumber(event: KeyboardEvent): boolean {
+  return (
+    (event.keyCode >= Phaser.Input.Keyboard.KeyCodes.ZERO && event.keyCode <= Phaser.Input.Keyboard.KeyCodes.NINE) ||
+    (event.keyCode >= Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO && event.keyCode <= Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE)
+  );
+}
+
+export function isBackspace(event: KeyboardEvent): boolean {
+  return event.keyCode === Phaser.Input.Keyboard.KeyCodes.BACKSPACE;
 }

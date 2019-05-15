@@ -15,6 +15,7 @@ export enum LoginTypes {
 
 export enum AuthErrors {
   EmailAlreadyInUse = 'auth/email-already-in-use',
+  UserNotFound = 'auth/user-not-found',
 }
 
 export interface AuthFormData {
@@ -168,6 +169,10 @@ export async function loginEmailPassword(email: string, password: string): Promi
     pushEvent({ event: GtmEventTypes.Login, login: GtmLoginTypes.Email });
     return credential.user;
   } catch (e) {
+    if (e.code === AuthErrors.UserNotFound) {
+      return await signUp(email, password);
+    }
+
     console.error(e);
     await signOut();
     showError();

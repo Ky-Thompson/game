@@ -1,6 +1,18 @@
 import { getPlayerAnimationKey, SPRITES_KEY } from '@game/animations';
 import { FONT, MS_TO_S, TILE_SIZE } from '@game/config';
-import { FirebaseScore, FirebaseUser, getUser, listScores, MAX_DISPLAY_NAME, saveScore } from '@game/firebase';
+import {
+  FirebaseScore,
+  FirebaseUser,
+  getUser,
+  isBackspace,
+  isEnter,
+  isLetter,
+  isNumber,
+  isSpace,
+  listScores,
+  MAX_DISPLAY_NAME,
+  saveScore,
+} from '@game/firebase';
 import { Colors, GameOptions, PlayerActions, Players, PlayerStates } from '@game/models';
 
 import { BaseScene, GamepadButtons } from '../base';
@@ -350,29 +362,6 @@ export class ScoreboardScene extends BaseScene {
         break;
     }
   }
-}
-
-function isEnter(event: KeyboardEvent): boolean {
-  return event.keyCode === Phaser.Input.Keyboard.KeyCodes.ENTER;
-}
-
-function isSpace(event: KeyboardEvent): boolean {
-  return event.keyCode === Phaser.Input.Keyboard.KeyCodes.SPACE;
-}
-
-function isLetter(event: KeyboardEvent): boolean {
-  return event.keyCode >= Phaser.Input.Keyboard.KeyCodes.A && event.keyCode <= Phaser.Input.Keyboard.KeyCodes.Z;
-}
-
-function isNumber(event: KeyboardEvent): boolean {
-  return (
-    (event.keyCode >= Phaser.Input.Keyboard.KeyCodes.ZERO && event.keyCode <= Phaser.Input.Keyboard.KeyCodes.NINE) ||
-    (event.keyCode >= Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO && event.keyCode <= Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE)
-  );
-}
-
-function isBackspace(event: KeyboardEvent): boolean {
-  return event.keyCode === Phaser.Input.Keyboard.KeyCodes.BACKSPACE;
 }
 
 function makeCursorLetters(): string {

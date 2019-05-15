@@ -7,4 +7,5 @@ export enum Colors {
   SkyBlue = 0x33a5ff,
   SkyYellow = 0xfffc00,
   Orange = 0xf06c00,
+  DarkBlue = 0x2a3747,
 }
