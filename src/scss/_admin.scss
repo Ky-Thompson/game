@@ -1,0 +1,22 @@
+#admin {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow-y: auto;
+  border-radius: 0;
+}
+
+#admin-table-container {
+  max-width: 50rem;
+
+  tbody tr td {
+    vertical-align: middle;
+  }
+}
+
+#logo-img-admin {
+  max-width: 10rem;
+}

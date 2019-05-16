@@ -1,11 +1,10 @@
 import * as firebase from 'firebase/app';
 
 import { GtmEventTypes, GtmLoginTypes, pushEvent } from '@game/analytics';
-import { createGame, destroyGame } from '@game/game';
 
 import { firebaseApp } from './app';
-import { getUser, saveUser } from './database';
-import { AuthButtons, AuthSteps, registerAuthButton, showAuth, showError, showGame } from './ui';
+import { getUser, hasUserAccess, saveUser } from './database';
+import { AuthButtons, AuthSteps, registerAuthButton, showAdmin, showAuth, showError, showGame } from './ui';
 
 export enum LoginTypes {
   Google,
@@ -54,6 +53,7 @@ export async function initApp() {
     try {
       await firebase.auth().signInWithEmailLink(email, window.location.href);
       pushEvent({ event: GtmEventTypes.Login, login: GtmLoginTypes.Email });
+      removeEmail();
     } catch (e) {
       console.error(e);
       await signOut();
@@ -81,12 +81,20 @@ export async function handleUser(user: firebase.User) {
   } else if (!user.displayName || !user.displayName.trim().length || user.displayName.trim().length > MAX_DISPLAY_NAME) {
     showAuth(AuthSteps.DisplayName);
   } else if (user) {
-    await getUser();
-    showGame();
-    createGame();
+    const { admin, access } = await getUser();
+
+    if (admin) {
+      showAdmin();
+    } else if (access === true) {
+      showGame();
+    } else if (access === false) {
+      showAuth(AuthSteps.Forbidden);
+    } else {
+      showAuth(AuthSteps.WaitAccess);
+      hasUserAccess(() => showGame(), () => showAuth(AuthSteps.Forbidden));
+    }
   } else {
     showAuth(AuthSteps.Login);
-    destroyGame();
   }
 }
 
@@ -231,3 +239,9 @@ export function persistEmail(email: string) {
 export function getEmail(): string {
   return window.localStorage.getItem('emailForSignIn') || undefined;
 }
+
+export function removeEmail() {
+  window.localStorage.removeItem('emailForSignIn');
+}
+
+export function waitAccess() {}

@@ -1,9 +1,11 @@
-import { destroyGame } from '@game/game';
+import { createGame, destroyGame } from '@game/game';
 
+import { createAdmin } from './admin';
 import { saveUser } from './database';
 
 const game: HTMLElement = document.getElementById('game');
 const auth: HTMLElement = document.getElementById('auth');
+const admin: HTMLElement = document.getElementById('admin');
 
 const loadingIndicator: HTMLDivElement = <any>document.getElementById('loading-indicator');
 const errorMsg: HTMLDivElement = <any>document.getElementById('error-msg');
@@ -42,6 +44,10 @@ const displayNameInput: HTMLInputElement = <any>document.getElementById('display
 const displayNameButton: HTMLButtonElement = <any>document.getElementById('display-name-button');
 const displayNameSignOutButton: HTMLButtonElement = <any>document.getElementById('display-name-sign-out-button');
 
+const waitAccessSection: HTMLElement = document.getElementById('wait-access');
+
+const forbiddenSection: HTMLElement = document.getElementById('forbidden');
+
 export enum AuthButtons {
   LoginGoogle,
   GetLink,
@@ -59,6 +65,8 @@ export enum AuthSteps {
   LoginGetLink,
   EmailVerification,
   DisplayName,
+  WaitAccess,
+  Forbidden,
 }
 
 export function show(element: HTMLElement) {
@@ -81,7 +89,9 @@ export function hideError() {
 
 export function showGame() {
   hide(auth);
+  hide(admin);
   hide(loadingIndicator);
+  createGame();
   show(game);
   saveUser();
 }
@@ -89,6 +99,8 @@ export function showGame() {
 export function showAuth(step: AuthSteps) {
   destroyGame();
   hide(game);
+  hide(admin);
+  hide(loadingIndicator);
   hide(errorMsg);
   hide(loginSection);
   hide(loginTOCSection);
@@ -97,6 +109,8 @@ export function showAuth(step: AuthSteps) {
   hide(loginSignUpSection);
   hide(emailVerificationSection);
   hide(displayNameSection);
+  hide(waitAccessSection);
+  hide(forbiddenSection);
 
   switch (step) {
     case AuthSteps.Login:
@@ -122,9 +136,24 @@ export function showAuth(step: AuthSteps) {
     case AuthSteps.DisplayName:
       show(displayNameSection);
       break;
+    case AuthSteps.WaitAccess:
+      show(waitAccessSection);
+      break;
+    case AuthSteps.Forbidden:
+      show(forbiddenSection);
+      break;
   }
 
   show(auth);
+}
+
+export function showAdmin() {
+  destroyGame();
+  hide(game);
+  hide(auth);
+  hide(loadingIndicator);
+  createAdmin();
+  show(admin);
 }
 
 export function registerAuthButton(button: AuthButtons, callback: (event: Event) => Promise<any>) {

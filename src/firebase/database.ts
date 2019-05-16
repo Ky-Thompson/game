@@ -19,6 +19,7 @@ export interface FirebaseUser {
   admin?: boolean;
   access?: boolean;
   exhibit?: boolean;
+  uid?: string;
 }
 
 let cachedFirebaseUser: FirebaseUser;
@@ -142,24 +143,112 @@ export async function listScores(): Promise<FirebaseScore[]> {
   return scores.sort((scoreA, scoreB) => scoreB.score - scoreA.score);
 }
 
-export async function listUsersWithoutAccess(): Promise<void> {
-  console.log(cachedFirebaseUser);
-
+export async function listUsersWithoutAccess(
+  onAdded: (user: FirebaseUser) => void,
+  onRemoved: (user: FirebaseUser) => void
+): Promise<() => void> {
   if (!cachedFirebaseUser.admin) {
     return;
   }
 
+  let usersRef: firebase.database.Query;
+  let unsubscribe: () => void;
+
   try {
-    const usersRef = firebase
+    usersRef = firebase
       .database()
       .ref('/users')
       .orderByChild('access')
       .equalTo(null)
       .limitToFirst(20);
 
-    usersRef.on('child_added', (user) => console.log('child_added', user.key));
-    usersRef.on('child_removed', (user) => console.log('child_removed', user.key));
+    const onUserAdded = (user: firebase.database.DataSnapshot) => {
+      onAdded({ ...user.val(), uid: user.key });
+    };
+
+    const onUserRemoved = (user: firebase.database.DataSnapshot) => {
+      onRemoved({ ...user.val(), uid: user.key });
+    };
+
+    usersRef.on('child_added', onUserAdded);
+    usersRef.on('child_removed', onUserRemoved);
+
+    unsubscribe = () => {
+      usersRef.off('child_added');
+      usersRef.off('child_removed');
+    };
+
+    return unsubscribe;
   } catch (e) {
     console.error(e);
+
+    if (unsubscribe) {
+      unsubscribe();
+      unsubscribe = undefined;
+    }
+  }
+}
+
+export async function allowUserAccess(user: FirebaseUser): Promise<void> {
+  try {
+    await firebase
+      .database()
+      .ref(`/users/${user.uid}`)
+      .update({ access: true });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function disallowUserAccess(user: FirebaseUser): Promise<void> {
+  try {
+    await firebase
+      .database()
+      .ref(`/users/${user.uid}`)
+      .update({ access: false });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function hasUserAccess(onSuccess: () => void, onForbidden: () => void): Promise<void> {
+  const user: firebase.User = firebase.auth().currentUser;
+
+  const authUser: FirebaseUser = {
+    displayName: user.displayName,
+    email: user.email,
+  };
+
+  let userRef: firebase.database.Query;
+  let unsubscribe: () => void;
+
+  try {
+    userRef = await firebase.database().ref(`/users/${user.uid}`);
+
+    unsubscribe = () => userRef.off('value');
+
+    userRef.on('value', (userChange: firebase.database.DataSnapshot) => {
+      const firebaseUser: FirebaseUser = userChange.val();
+
+      cachedFirebaseUser = {
+        ...authUser,
+        ...firebaseUser,
+      };
+
+      if (firebaseUser.access === true) {
+        unsubscribe();
+        onSuccess();
+      } else if (firebaseUser.access === false) {
+        unsubscribe();
+        onForbidden();
+      }
+    });
+  } catch (e) {
+    console.error(e);
+
+    if (unsubscribe) {
+      unsubscribe();
+      unsubscribe = undefined;
+    }
   }
 }
