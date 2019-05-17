@@ -25,6 +25,19 @@ export interface FirebaseUser {
 let cachedFirebaseUser: FirebaseUser;
 
 export async function getUser(): Promise<FirebaseUser> {
+  if (!navigator.onLine) {
+    const persistedUser = getUserLocalStorage();
+    if (persistedUser) {
+      return persistedUser;
+    } else {
+      return {
+        displayName: 'EXHIBIT',
+        access: true,
+        exhibit: true,
+      };
+    }
+  }
+
   const user: firebase.User = firebase.auth().currentUser;
 
   if (!user || !user.uid) {
@@ -51,6 +64,8 @@ export async function getUser(): Promise<FirebaseUser> {
         ...firebaseUser,
         ...authUser,
       };
+
+      persistUserLocalStorage(cachedFirebaseUser);
     }
 
     return cachedFirebaseUser;
@@ -250,5 +265,17 @@ export async function hasUserAccess(onSuccess: () => void, onForbidden: () => vo
       unsubscribe();
       unsubscribe = undefined;
     }
+  }
+}
+
+export function persistUserLocalStorage(user: FirebaseUser) {
+  window.localStorage.setItem('gameUser', JSON.stringify(user));
+}
+
+export function getUserLocalStorage(): FirebaseUser {
+  try {
+    return JSON.parse(window.localStorage.getItem('gameUser'));
+  } catch (e) {
+    return undefined;
   }
 }

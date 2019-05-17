@@ -45,7 +45,7 @@ export async function initApp() {
 
   // Check sign-in with email
   if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-    let email = getEmail();
+    let email = getEmailLocalStorage();
     if (!email) {
       email = window.prompt('Please provide your email for confirmation');
     }
@@ -53,7 +53,7 @@ export async function initApp() {
     try {
       await firebase.auth().signInWithEmailLink(email, window.location.href);
       pushEvent({ event: GtmEventTypes.Login, login: GtmLoginTypes.Email });
-      removeEmail();
+      removeEmailLocalStorage();
     } catch (e) {
       console.error(e);
       await signOut();
@@ -189,7 +189,7 @@ export async function loginLink(email: string): Promise<void> {
   };
   try {
     await firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings);
-    persistEmail(email);
+    persistEmailLocalStorage(email);
   } catch (e) {
     console.error(e);
     await signOut();
@@ -224,19 +224,17 @@ export async function updateProfile(displayName: string): Promise<void> {
   handleUser(firebase.auth().currentUser);
 }
 
-export function persistEmail(email: string) {
+export function persistEmailLocalStorage(email: string) {
   // The link was successfully sent. Inform the user.
   // Save the email locally so you don't need to ask the user for it again
   // if they open the link on the same device.
   window.localStorage.setItem('emailForSignIn', email);
 }
 
-export function getEmail(): string {
+export function getEmailLocalStorage(): string {
   return window.localStorage.getItem('emailForSignIn') || undefined;
 }
 
-export function removeEmail() {
+export function removeEmailLocalStorage() {
   window.localStorage.removeItem('emailForSignIn');
 }
-
-export function waitAccess() {}

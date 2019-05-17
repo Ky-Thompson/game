@@ -94,6 +94,10 @@ export class FinishLine {
         const player: Players = this.scene.player.getPlayerType();
         pushEvent({ event: GtmEventTypes.GameCompleted, score });
 
+        if (!navigator.onLine) {
+          return this.scene.restart();
+        }
+
         try {
           await ScoreboardScene.SetLastScore(score, player);
           setTimeout(() => this.scene.goScoreboard(), SCOREBOARD_TIME);
