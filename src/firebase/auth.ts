@@ -143,11 +143,6 @@ export async function signUp(email: string, password: string): Promise<firebase.
 
 export async function loginGoogle(): Promise<firebase.User> {
   const googleProvider = new firebase.auth.GoogleAuthProvider();
-  const email = getEmail();
-
-  if (email) {
-    googleProvider.setCustomParameters({ login_hint: email });
-  }
 
   try {
     const result: firebase.auth.UserCredential = await firebase.auth(firebaseApp).getRedirectResult();
