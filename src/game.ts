@@ -54,7 +54,6 @@ let game: Game;
 
 export function createGame() {
   if (!game) {
-    console.clear();
     game = new Game(config);
   }
 }

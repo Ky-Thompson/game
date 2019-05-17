@@ -13,5 +13,7 @@ module.exports.serve = () => {
     reloadOnRestart: true,
     notify: true,
     localOnly: true,
+    port: 8080,
+    ui: false,
   });
 };

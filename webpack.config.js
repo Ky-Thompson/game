@@ -63,7 +63,6 @@ module.exports.webpackConfig = (mode) => {
       }),
       new HtmlWebpackPlugin({
         isProduction: isProduction,
-        hash: true,
         template: join(__dirname, 'src/index.hbs'),
         filename: join(__dirname, 'dist/index.html'),
       }),

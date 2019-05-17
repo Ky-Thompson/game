@@ -6,6 +6,7 @@ const { assetTypes, buildAsset, buildPack, watchAsset, watchPack } = require('./
 const { buildFavicons } = require('./tasks/favicons');
 const { buildScripts, watchScripts, DEVELOPMENT_MODE, PRODUCTION_MODE } = require('./tasks/scripts');
 const { buildSprites, watchSprites } = require('./tasks/sprites');
+const { buildWorkbox } = require('./tasks/workbox');
 
 // Common tasks
 gulp.task('clean', clean);
@@ -16,6 +17,7 @@ gulp.task('build:scripts', buildScripts(PRODUCTION_MODE));
 gulp.task('build:sprites', buildSprites);
 gulp.task('build:pack', buildPack);
 gulp.task('build:favicons', buildFavicons);
+gulp.task('build:workbox', buildWorkbox);
 assetTypes.forEach((type) => gulp.task('build:' + type, buildAsset(type)));
 
 gulp.task(
@@ -23,7 +25,8 @@ gulp.task(
   gulp.series(
     'clean',
     'build:favicons',
-    gulp.parallel('build:scripts', 'build:sprites', 'build:pack', ...assetTypes.map((type) => 'build:' + type))
+    gulp.parallel('build:scripts', 'build:sprites', 'build:pack', ...assetTypes.map((type) => 'build:' + type)),
+    'build:workbox'
   )
 );
 
