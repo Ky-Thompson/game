@@ -10,7 +10,8 @@ const { buildWorkbox } = require('./tasks/workbox');
 
 // Common tasks
 gulp.task('clean', clean);
-gulp.task('serve', serve);
+gulp.task('serve:dev', serve(DEVELOPMENT_MODE));
+gulp.task('serve:prod', serve(PRODUCTION_MODE));
 
 // Build
 gulp.task('build:scripts', buildScripts(PRODUCTION_MODE));
@@ -43,6 +44,6 @@ gulp.task(
     'clean',
     'build:favicons',
     'watch:scripts:initial',
-    gulp.parallel('serve', 'watch:scripts', 'watch:sprites', 'watch:pack', ...assetTypes.map((type) => 'watch:' + type))
+    gulp.parallel('serve:dev', 'watch:scripts', 'watch:sprites', 'watch:pack', ...assetTypes.map((type) => 'watch:' + type))
   )
 );

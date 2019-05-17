@@ -1,6 +1,7 @@
 var browserSync = require('browser-sync').create();
+const { PRODUCTION_MODE } = require('./scripts');
 
-module.exports.serve = () => {
+module.exports.serve = (mode) => () => {
   browserSync.init({
     server: {
       baseDir: './dist',
@@ -13,7 +14,7 @@ module.exports.serve = () => {
     reloadOnRestart: true,
     notify: true,
     localOnly: true,
-    port: 8080,
+    port: mode === PRODUCTION_MODE ? 8080 : 3000,
     ui: false,
   });
 };

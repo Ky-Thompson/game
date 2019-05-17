@@ -248,7 +248,7 @@ export class World {
           this.scene.soundEffects.playEffect(Sounds.Bump);
           break;
       }
-    } else {
+    } else if (sprite instanceof Player) {
       this.scene.soundEffects.playEffect(Sounds.Bump);
     }
   }
