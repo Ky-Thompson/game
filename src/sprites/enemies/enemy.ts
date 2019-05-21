@@ -45,6 +45,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
     if (!this.alive) {
       if (this.y > height * 2) {
         this.remove();
+        return;
       }
     }
 

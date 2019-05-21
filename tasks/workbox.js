@@ -8,7 +8,7 @@ module.exports.buildWorkbox = () => {
       swSrc: 'src/service-worker.js',
       swDest: 'dist/service-worker.js',
       globDirectory: 'dist',
-      globPatterns: ['**/*.{js,css,html}', 'assets/**/*.{json,png,ogg}'],
+      globPatterns: ['index.html', '*.{js,css}', 'assets/**/*.{json,png,ogg}'],
     })
     .then(({ count, size, warnings }) => {
       warnings.forEach(console.warn);

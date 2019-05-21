@@ -34,7 +34,7 @@ export interface GtmGameCompletedEvent {
 
 export type GtmEvent = GtmSignUpEvent | GtmLoginEvent | GtmGameCompletedEvent;
 
-export type DataLayer = Readonly<GtmEvent[]>;
+export type DataLayer = GtmEvent[];
 
 function dataLayer(): DataLayer {
   if (!(<any>window).dataLayer) {
