@@ -1,5 +1,4 @@
 import { AUDIO_SPRITE_KEY, Sounds } from '@game/models';
-
 import { GameScene } from './game-scene';
 
 export enum MusicPlaylist {
@@ -32,7 +31,7 @@ export class SoundEffects {
           sound.destroy();
         });
 
-      this.music = this.scene.sound.add(this.scene.attractMode.isActive() ? MusicPlaylist.Bethel : MusicPlaylist.Song89, { loop: true });
+      this.music = this.scene.sound.add(this.scene.demo.isActive() ? MusicPlaylist.Bethel : MusicPlaylist.Song89, { loop: true });
       this.music.play('');
     } catch (e) {}
   }

@@ -44,6 +44,7 @@ export class TitleScene extends BaseScene {
   private profileSprite: Phaser.GameObjects.Sprite;
   private userNameSprite: Phaser.GameObjects.BitmapText;
   private showingGamepadExplanation: boolean = false;
+  private destroyed: boolean = false;
 
   constructor() {
     super({ key: TitleScene.SceneKey });
@@ -51,7 +52,7 @@ export class TitleScene extends BaseScene {
 
   create() {
     this.initTitle();
-    this.initAttractMode();
+    this.initDemo();
     this.initPlayerSelection();
     this.initExit();
     this.initProfile();
@@ -59,21 +60,21 @@ export class TitleScene extends BaseScene {
 
   update(time: number, delta: number) {
     this.updateGamepad();
-    this.checkRestartAttractMode();
+    this.checkRestartDemo();
     this.blinkTitle(delta);
   }
 
-  // Methods for attract mode
+  // Methods for demo mode
 
-  private initAttractMode() {
-    this.setRegistry(GameOptions.AttractMode, true);
+  private initDemo() {
+    this.setRegistry(GameOptions.Demo, true);
     this.setRegistry(GameOptions.RestartScene, false);
     this.setRegistry(GameOptions.Scoreboard, false);
     this.scene.launch(GameScene.SceneKey);
     this.scene.bringToTop();
   }
 
-  private checkRestartAttractMode() {
+  private checkRestartDemo() {
     if (this.getRegistry(GameOptions.RestartScene)) {
       this.scene.stop(GameScene.SceneKey);
       this.scene.launch(GameScene.SceneKey);
@@ -83,9 +84,10 @@ export class TitleScene extends BaseScene {
   }
 
   private startGame() {
+    this.destroyed = true;
     this.scale.startFullscreen();
     this.scene.stop(GameScene.SceneKey);
-    this.setRegistry(GameOptions.AttractMode, false);
+    this.setRegistry(GameOptions.Demo, false);
     this.scene.start(GameScene.SceneKey);
   }
 
@@ -340,7 +342,7 @@ export class TitleScene extends BaseScene {
       onLoop: () => {
         calebJumpSprite.play(calebStandSuper);
         setTimeout(() => {
-          if (calebJumpSprite) {
+          if (!this.destroyed && calebJumpSprite && calebJumpSprite.anims) {
             calebJumpSprite.play(calebJumpSuper);
           }
         }, 500);
@@ -375,7 +377,7 @@ export class TitleScene extends BaseScene {
       onLoop: () => {
         calebBendSprite.play(calebStand);
         setTimeout(() => {
-          if (calebBendSprite) {
+          if (!this.destroyed && calebBendSprite && calebBendSprite.anims) {
             calebBendSprite.play(calebBend);
           }
         }, 500);
@@ -401,7 +403,7 @@ export class TitleScene extends BaseScene {
       onLoop: () => {
         bibleSophia.setAlpha(0);
         setTimeout(() => {
-          if (bibleSophia) {
+          if (!this.destroyed && bibleSophia && bibleSophia.anims) {
             bibleSophia.setAlpha(1);
           }
         }, 550);

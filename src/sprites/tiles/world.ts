@@ -77,7 +77,7 @@ export class World {
     this.clouds = this.scene.add.image(0, 0, Tilemap.SkyKey).setDepth(Depths.Clouds);
     this.setBackgroundSprite(this.clouds);
 
-    if (this.scene.attractMode.isActive()) {
+    if (this.scene.demo.isActive()) {
       this.clouds.setAlpha(0);
     } else {
       this.scene.tweens.add({ targets: this.sunset, alpha: 0.7, delay: SUNSET_DURATION, duration: SUNSET_DURATION });

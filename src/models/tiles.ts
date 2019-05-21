@@ -1,3 +1,4 @@
+import { Actions } from './actions';
 import { EnemyTypes } from './enemies';
 import { Modifiers } from './modifers';
 import { PipeDirection } from './pipes';
@@ -35,6 +36,8 @@ export type TileProperties = {
   y?: number;
   width?: number;
   height?: number;
+  action?: Actions;
+  time?: number;
 };
 
 export enum Tilemap {
@@ -55,6 +58,7 @@ export enum WorldLayers {
   Enemies = 'enemies',
   PowerUps = 'power-ups',
   Modifiers = 'modifiers',
+  Demo = 'demo',
 }
 
 export const SKY_HEIGHT = 1000;

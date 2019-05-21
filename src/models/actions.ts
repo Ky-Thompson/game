@@ -5,6 +5,7 @@ export enum Actions {
   Left = 'left',
   Right = 'right',
   Down = 'down',
+  Stop = 'stop',
 }
 
 export type ActionKeys = { [key in Actions]: Phaser.Input.Keyboard.Key };

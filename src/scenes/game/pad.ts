@@ -1,7 +1,6 @@
 import { PadAnimations, SPRITES_KEY } from '@game/animations';
 import { TILE_SIZE } from '@game/config';
 import { ActionState, Colors, Depths, PlayerStates } from '@game/models';
-
 import { GameScene } from './game-scene';
 
 const GAME_PAD_ALPHA = 0.8;
@@ -92,7 +91,7 @@ export class VirtualPad {
   }
 
   private show() {
-    return !this.scene.attractMode.isActive() && !this.scene.isScoreboardActive() && this.scene.isMobile();
+    return !this.scene.demo.isActive() && !this.scene.isScoreboardActive() && this.scene.isMobile();
   }
 
   getActions(): Partial<ActionState> {

@@ -12,7 +12,7 @@ module.exports.buildFavicons = () =>
         appShortName: 'Caleb & Sophia Game',
         appDescription: 'Caleb & Sophia Game',
         url: 'https://caleb-sophia-madrid.github.io/game/',
-        start_url: '/',
+        start_url: '.',
         background: '#343A40',
         theme_color: '#343A40',
         appleStatusBarStyle: 'black-translucent',

@@ -5,7 +5,7 @@ import { BiblesGroup, BlockEmitter, BounceBrick, EnemyGroup, FinishLine, Modifie
 
 import { BaseScene } from '../base';
 import { ScoreboardScene } from '../scoreboard';
-import { AttractMode } from './attract-mode';
+import { Demo } from './demo';
 import { HUD } from './hud';
 import { Keyboard } from './keyboard';
 import { SoundEffects } from './music';
@@ -17,7 +17,7 @@ export class GameScene extends BaseScene {
   static readonly SceneKey = 'GameScene';
 
   // Game
-  attractMode: AttractMode;
+  demo: Demo;
   private virtualPad: VirtualPad;
   private keyboard: Keyboard;
   world: World;
@@ -42,10 +42,10 @@ export class GameScene extends BaseScene {
   }
 
   create() {
-    this.attractMode = new AttractMode(this);
+    this.world = new World(this);
+    this.demo = new Demo(this);
     this.virtualPad = new VirtualPad(this);
     this.keyboard = new Keyboard(this, this.virtualPad);
-    this.world = new World(this);
     this.soundEffects = new SoundEffects(this);
 
     this.enemies = new EnemyGroup(this);
@@ -80,7 +80,7 @@ export class GameScene extends BaseScene {
   update(time: number, delta: number) {
     this.updateGamepad();
 
-    this.attractMode.update(delta);
+    this.demo.update(delta);
     this.bibles.update();
 
     if (this.physics.world.isPaused) {
@@ -92,12 +92,12 @@ export class GameScene extends BaseScene {
     this.enemies.update(delta);
     this.powerUps.update();
 
-    let actions: Partial<ActionState>;
+    let actions: Partial<ActionState> = {};
 
     if (this.finishLine.succeeded()) {
       actions = { right: true };
-    } else if (this.attractMode.isActive()) {
-      actions = this.attractMode.getCurrentFrame().actions;
+    } else if (this.demo.isActive()) {
+      actions = this.demo.getActions();
     } else {
       actions = this.keyboard.getActions();
     }

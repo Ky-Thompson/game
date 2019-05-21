@@ -49,11 +49,6 @@
         "url": "assets/tilemaps/game-tilemap.json"
       },
       {
-        "type": "json",
-        "key": "attractMode",
-        "url": "assets/json/attractMode.json"
-      },
-      {
         "type": "audio",
         "key": "overworld",
         "url": ["assets/music/overworld.ogg", "assets/music/overworld.mp3"]

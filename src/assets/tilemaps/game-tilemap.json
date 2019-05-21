@@ -4614,10 +4614,262 @@
       "visible": true,
       "x": 0,
       "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 6,
+      "name": "demo",
+      "objects": [
+        {
+          "height": 0,
+          "id": 249,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "action",
+              "type": "string",
+              "value": "jump"
+            },
+            {
+              "name": "time",
+              "type": "int",
+              "value": 200
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 608,
+          "y": 416
+        },
+        {
+          "height": 0,
+          "id": 252,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "action",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "time",
+              "type": "int",
+              "value": 800
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 672,
+          "y": 416
+        },
+        {
+          "height": 0,
+          "id": 253,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "action",
+              "type": "string",
+              "value": "jump"
+            },
+            {
+              "name": "time",
+              "type": "int",
+              "value": 200
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 864,
+          "y": 416
+        },
+        {
+          "height": 0,
+          "id": 254,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "action",
+              "type": "string",
+              "value": "jump"
+            },
+            {
+              "name": "time",
+              "type": "int",
+              "value": 300
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 1056,
+          "y": 416
+        },
+        {
+          "height": 0,
+          "id": 255,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "action",
+              "type": "string",
+              "value": "jump"
+            },
+            {
+              "name": "time",
+              "type": "int",
+              "value": 100
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 2080,
+          "y": 416
+        },
+        {
+          "height": 0,
+          "id": 256,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "action",
+              "type": "string",
+              "value": "jump"
+            },
+            {
+              "name": "time",
+              "type": "int",
+              "value": 300
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 2464,
+          "y": 416
+        },
+        {
+          "height": 0,
+          "id": 257,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "action",
+              "type": "string",
+              "value": "left"
+            },
+            {
+              "name": "time",
+              "type": "int",
+              "value": 1000
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 2528,
+          "y": 416
+        },
+        {
+          "height": 0,
+          "id": 258,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "action",
+              "type": "string",
+              "value": "jump"
+            },
+            {
+              "name": "time",
+              "type": "int",
+              "value": 300
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 2720,
+          "y": 416
+        },
+        {
+          "height": 0,
+          "id": 259,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "action",
+              "type": "string",
+              "value": "stop"
+            },
+            {
+              "name": "time",
+              "type": "int",
+              "value": 200
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 928,
+          "y": 352
+        },
+        {
+          "height": 0,
+          "id": 260,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "action",
+              "type": "string",
+              "value": "jump"
+            },
+            {
+              "name": "time",
+              "type": "int",
+              "value": 300
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 1440,
+          "y": 416
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
     }
   ],
-  "nextlayerid": 6,
-  "nextobjectid": 249,
+  "nextlayerid": 7,
+  "nextobjectid": 261,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.2.1",

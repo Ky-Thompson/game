@@ -40,7 +40,7 @@ export class HUD {
 
     this.scoreboardActive = this.scene.isScoreboardActive();
 
-    if (this.scene.attractMode.isActive() || this.scoreboardActive) {
+    if (this.scene.demo.isActive() || this.scoreboardActive) {
       this.playerText.setAlpha(0);
       this.scoreText.setAlpha(0);
       this.timeText.setAlpha(0);
@@ -111,7 +111,7 @@ export class HUD {
       this.timerText.setText(String(this.displayedTime).padStart(TIME_TEXT_PADDING, '0'));
 
       // Hurry up if there is little time left
-      if (this.displayedTime < HURRY_TIME && !this.hurry && !this.scene.attractMode.isActive()) {
+      if (this.displayedTime < HURRY_TIME && !this.hurry && !this.scene.demo.isActive()) {
         this.hurry = true;
         this.scene.soundEffects.pauseMusic();
         this.scene.soundEffects.playEffect(Sounds.Warning, () => {
