@@ -4,7 +4,7 @@ import { GameScene } from './game-scene';
 import { VirtualPad } from './pad';
 
 export class Keyboard {
-  private readonly keys: ActionKeys;
+  private readonly keys: Partial<ActionKeys>;
 
   constructor(private scene: GameScene, private virtualPad: VirtualPad) {
     this.keys = {

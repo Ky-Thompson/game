@@ -10,7 +10,10 @@ module.exports.buildScripts = (mode) => () =>
     webpack(webpackConfig(mode), (error, stats) => {
       if (error) {
         console.log(chalk.red(error));
-        reject();
+        reject(new Error(error));
+      } else if (stats.hasErrors()) {
+        console.log(stats.toString({ colors: true }));
+        reject(new Error('Webpack build failed.'));
       } else {
         console.log(stats.toString({ colors: true }));
         resolve();
