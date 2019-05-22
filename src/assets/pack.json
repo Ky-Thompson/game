@@ -3,6 +3,16 @@
     "files": [
       {
         "type": "image",
+        "key": "title",
+        "url": "assets/images/title.png"
+      },
+      {
+        "type": "image",
+        "key": "gamepad",
+        "url": "assets/images/gamepad.png"
+      },
+      {
+        "type": "image",
         "key": "background-clouds",
         "url": "assets/images/clouds.png"
       },

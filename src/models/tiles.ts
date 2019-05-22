@@ -38,6 +38,7 @@ export type TileProperties = {
   height?: number;
   action?: Actions;
   time?: number;
+  attract?: boolean;
 };
 
 export enum Tilemap {

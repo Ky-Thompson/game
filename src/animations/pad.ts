@@ -11,7 +11,6 @@ export enum PadAnimations {
   LeftUp = 'pad/left-up',
   LeftDown = 'pad/left-down',
   A = 'pad/a',
-  Gamepad = 'pad/gamepad',
 }
 
 export const makePadAnimations = (scene: Phaser.Scene) => {

@@ -81,6 +81,14 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
     }
   }
 
+  protected collidePlayer() {
+    this.scene.physics.world.overlap(this, this.scene.player, () => {
+      if (this.active && !this.dropped) {
+        this.playerHit();
+      }
+    });
+  }
+
   protected hurtPlayer() {
     if (this.alive && this.scene.player.isAlive()) {
       this.scene.player.hurtBy(this);
@@ -88,6 +96,8 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
   }
 
   abstract update(delta: number): void;
+
+  abstract playerHit(): void;
 
   isAlive(): boolean {
     return this.alive;

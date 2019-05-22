@@ -1,4 +1,4 @@
-import { BibleAnimations, getPlayerAnimationKey, PadAnimations, SPRITES_KEY, TitleAnimations } from '@game/animations';
+import { BibleAnimations, getPlayerAnimationKey, SPRITES_KEY, TitleAnimations } from '@game/animations';
 import { FONT, TILE_SIZE } from '@game/config';
 import { AuthSteps, FirebaseUser, getUser, showAuth, signOut } from '@game/firebase';
 import { Colors, GameOptions, PlayerActions, Players, PlayerStates } from '@game/models';
@@ -11,6 +11,8 @@ const TITLE_BACKGROUND_Y = 5 * TILE_SIZE;
 const TITLE_BACKGROUND_ALPHA = 0.4;
 const TITLE_BLINK_TIME = 500;
 const TITLE_Y = TILE_SIZE * 5;
+const TITLE_IMAGE = 'title';
+const GAMEPAD_IMAGE = 'gamepad';
 
 const START_TEXT = 'SELECT PLAYER TO START';
 const START_X = 7 * TILE_SIZE;
@@ -33,7 +35,7 @@ export class TitleScene extends BaseScene {
   static readonly SceneKey = 'TitleScene';
 
   private backdrop: Phaser.GameObjects.Rectangle;
-  private titleSprite: Phaser.GameObjects.Sprite;
+  private titleSprite: Phaser.GameObjects.Image;
   private startSprite: Phaser.GameObjects.BitmapText;
   private blinkTimer: number = TITLE_BLINK_TIME * 2;
   private playerSprite: Phaser.GameObjects.Sprite;
@@ -44,7 +46,10 @@ export class TitleScene extends BaseScene {
   private profileSprite: Phaser.GameObjects.Sprite;
   private userNameSprite: Phaser.GameObjects.BitmapText;
   private showingGamepadExplanation: boolean = false;
-  private destroyed: boolean = false;
+
+  private calebJumpTimeout: NodeJS.Timeout;
+  private calebBendTimeout: NodeJS.Timeout;
+  private sophiaBibleTimeout: NodeJS.Timeout;
 
   constructor() {
     super({ key: TitleScene.SceneKey });
@@ -84,7 +89,21 @@ export class TitleScene extends BaseScene {
   }
 
   private startGame() {
-    this.destroyed = true;
+    if (this.calebBendTimeout) {
+      clearTimeout(this.calebBendTimeout);
+      this.calebBendTimeout = undefined;
+    }
+
+    if (this.calebJumpTimeout) {
+      clearTimeout(this.calebJumpTimeout);
+      this.calebJumpTimeout = undefined;
+    }
+
+    if (this.sophiaBibleTimeout) {
+      clearTimeout(this.sophiaBibleTimeout);
+      this.sophiaBibleTimeout = undefined;
+    }
+
     this.scale.startFullscreen();
     this.scene.stop(GameScene.SceneKey);
     this.setRegistry(GameOptions.Demo, false);
@@ -99,8 +118,8 @@ export class TitleScene extends BaseScene {
     this.backdrop = this.add
       .rectangle(width / 2, TITLE_BACKGROUND_Y, width, TITLE_BACKGROUND_HEIGHT, Colors.White, TITLE_BACKGROUND_ALPHA)
       .setScrollFactor(0, 0);
-    this.titleSprite = this.add.sprite(width / 2, TITLE_Y, SPRITES_KEY).play(TitleAnimations.Title);
-    this.startSprite = this.add.bitmapText(START_X, START_Y, FONT, START_TEXT, FONT_SIZE);
+    this.titleSprite = this.add.image(width / 2, TITLE_Y, TITLE_IMAGE).setScrollFactor(0, 0);
+    this.startSprite = this.add.bitmapText(START_X, START_Y, FONT, START_TEXT, FONT_SIZE).setScrollFactor(0, 0);
   }
 
   private hideTitle() {
@@ -311,13 +330,9 @@ export class TitleScene extends BaseScene {
     this.backdrop = this.add.rectangle(width / 2, height / 2, width, height, Colors.White, 0.6).setScrollFactor(0, 0);
 
     // Gamepad
-    this.add
-      .sprite(width / 2, height / 2 - TILE_SIZE * 3, SPRITES_KEY)
-      .play(PadAnimations.Gamepad)
-      .setScrollFactor(0, 0);
+    this.add.image(width / 2, height / 2 - TILE_SIZE * 3, GAMEPAD_IMAGE).setScrollFactor(0, 0);
 
     // Player tips
-
     const calebJumpSuper = getPlayerAnimationKey(Players.Caleb, PlayerActions.Jump, PlayerStates.Super);
     const calebStandSuper = getPlayerAnimationKey(Players.Caleb, PlayerActions.Stand, PlayerStates.Super);
     const calebStand = getPlayerAnimationKey(Players.Caleb, PlayerActions.Stand, PlayerStates.Big);
@@ -341,10 +356,8 @@ export class TitleScene extends BaseScene {
       ease: 'Quad.easeOut',
       onLoop: () => {
         calebJumpSprite.play(calebStandSuper);
-        setTimeout(() => {
-          if (!this.destroyed && calebJumpSprite && calebJumpSprite.anims) {
-            calebJumpSprite.play(calebJumpSuper);
-          }
+        this.calebJumpTimeout = setTimeout(() => {
+          calebJumpSprite.play(calebJumpSuper);
         }, 500);
       },
     });
@@ -376,10 +389,8 @@ export class TitleScene extends BaseScene {
       loopDelay: 500,
       onLoop: () => {
         calebBendSprite.play(calebStand);
-        setTimeout(() => {
-          if (!this.destroyed && calebBendSprite && calebBendSprite.anims) {
-            calebBendSprite.play(calebBend);
-          }
+        this.calebBendTimeout = setTimeout(() => {
+          calebBendSprite.play(calebBend);
         }, 500);
       },
     });
@@ -402,10 +413,8 @@ export class TitleScene extends BaseScene {
       loopDelay: 500,
       onLoop: () => {
         bibleSophia.setAlpha(0);
-        setTimeout(() => {
-          if (!this.destroyed && bibleSophia && bibleSophia.anims) {
-            bibleSophia.setAlpha(1);
-          }
+        this.sophiaBibleTimeout = setTimeout(() => {
+          bibleSophia.setAlpha(1);
         }, 550);
       },
     });

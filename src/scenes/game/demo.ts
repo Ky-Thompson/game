@@ -1,14 +1,18 @@
+import { MS_TO_S } from '@game/config';
 import { Actions, ActionState, GameOptions, TiledGameObject, WorldLayers } from '@game/models';
 
 import { GameScene } from './game-scene';
 
-const MAX_DEMO_MODE_TIME = 14000;
-const PLAYER_BLOCKED_TIME = 100;
+const MAX_DEMO_MODE_TIME = 17 * MS_TO_S;
+const PLAYER_JUMP_TIME = 300;
+const PLAYER_BLOCKED_TIME = PLAYER_JUMP_TIME + 100;
 const PLAYER_MIN_VELOCITY_X = 40;
 
 interface DemoAction {
   x: number;
-  action: Actions;
+  y: number;
+  action?: Actions;
+  attract?: boolean;
   time: number;
   added?: boolean;
   timeout?: number;
@@ -31,12 +35,14 @@ export class Demo {
           this.scene.consolidateProperties(demoAction);
           return {
             x: demoAction.x,
+            y: demoAction.y,
             action: demoAction.properties.action,
             time: demoAction.properties.time,
+            attract: demoAction.properties.attract,
           };
         }
       )
-      .filter(({ x, action, time }) => x > 0 && action && time > 0)
+      .filter(({ x, action, time, attract }) => x > 0 && ((action && time > 0) || attract))
       .sort((actionA, actionB) => (actionA.x > actionB.x ? 1 : -1));
 
     if (this.scene.getRegistry(GameOptions.Demo)) {
@@ -53,7 +59,7 @@ export class Demo {
   }
 
   update(delta: number) {
-    if (!this.active || !this.scene.player) {
+    if (!this.active || this.scene.physics.world.isPaused || !this.scene.player) {
       return;
     }
 
@@ -73,7 +79,12 @@ export class Demo {
 
     // Add new actions
     this.demoActions
-      .filter((demoAction) => !demoAction.added && demoAction.x <= this.scene.player.x)
+      .filter(
+        (demoAction) =>
+          !demoAction.added &&
+          ((demoAction.action && demoAction.x <= this.scene.player.x) ||
+            (demoAction.attract && demoAction.x <= this.scene.player.x - this.scene.player.width / 2))
+      )
       .forEach((demoAction) => this.addAction(demoAction));
     this.demoActions = this.demoActions.filter((demoAction) => !demoAction.added);
 
@@ -82,7 +93,7 @@ export class Demo {
       this.blockedTime += delta;
 
       if (this.blockedTime > PLAYER_BLOCKED_TIME) {
-        this.addAction({ action: Actions.Jump, time: 400, x: 0 });
+        this.addAction({ action: Actions.Jump, time: PLAYER_JUMP_TIME, x: 0, y: 0 });
         this.blockedTime = 0;
       }
     } else {
@@ -92,8 +103,13 @@ export class Demo {
 
   private addAction(demoAction: DemoAction) {
     demoAction.added = true;
-    demoAction.timeout = this.time + demoAction.time;
-    this.currentActions.push(demoAction);
+
+    if (demoAction.action) {
+      demoAction.timeout = this.time + demoAction.time;
+      this.currentActions.push(demoAction);
+    } else if (demoAction.attract) {
+      this.scene.player.setPosition(demoAction.x + this.scene.player.width / 2, demoAction.y + this.scene.player.height / 2);
+    }
   }
 
   getActions(): Partial<ActionState> {

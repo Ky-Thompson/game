@@ -41,7 +41,7 @@ export class Liar extends Enemy {
     }
 
     // Collide with Player
-    this.scene.physics.world.overlap(this, this.scene.player, () => this.playerHit());
+    this.collidePlayer();
 
     // The enemy stopped, better try to walk in the other direction.
     if (this.body.velocity.x === 0) {

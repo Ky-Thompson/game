@@ -154,6 +154,10 @@ export class HUD {
 
     y -= TILE_SIZE; // Start above element
 
+    if (this.scene.demo.isActive()) {
+      return;
+    }
+
     // Show score
     const scoreText: Phaser.GameObjects.BitmapText = this.scene.add
       .bitmapText(x, y, FONT, String(score), SCORE_POP_TEXT_SIZE)
