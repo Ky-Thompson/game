@@ -59,19 +59,17 @@ export class Car extends Enemy {
       this.updatePoints();
 
       // Set the car crushed and start to slide
-      if (!this.sliding || (this.sliding && this.body.velocity.x === 0)) {
+      if (this.sliding && this.body.velocity.x === 0) {
         this.scene.soundEffects.playEffect(Sounds.Kick);
 
         this.direction = SLIDE_VELOCITY * (this.scene.player.x < this.x ? 1 : -1);
-        this.body.setVelocityX(this.direction);
       } else {
         this.scene.soundEffects.playEffect(Sounds.Stomp);
-
         this.direction = 0;
-        this.body.setVelocityX(0);
       }
 
       this.sliding = true;
+      this.body.setVelocityX(0);
       this.animate(CarAnimations.Crushed);
       this.scene.player.enemyBounce(this);
     } else {
@@ -79,7 +77,7 @@ export class Car extends Enemy {
       if (this.sliding && this.body.velocity.x === 0) {
         this.scene.soundEffects.playEffect(Sounds.Kick);
 
-        this.direction = SLIDE_VELOCITY;
+        this.direction = SLIDE_VELOCITY * (this.scene.player.x < this.x ? 1 : -1);
         this.body.setVelocityX(SLIDE_VELOCITY);
       }
       this.hurtPlayer();

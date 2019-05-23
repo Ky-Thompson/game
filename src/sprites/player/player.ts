@@ -378,7 +378,7 @@ export class Player extends Phaser.GameObjects.Sprite {
       return;
     }
 
-    if (this.superActive) {
+    if (this.superActive || this.scene.demo.isActive()) {
       // Player has super-powers, enemy dies
       enemy.kill(true);
       enemy.updatePoints();

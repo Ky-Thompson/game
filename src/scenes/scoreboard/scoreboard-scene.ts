@@ -225,13 +225,13 @@ export class ScoreboardScene extends BaseScene {
     this.nameCursorSprite.setText(NAME_CURSOR).setX(letterX);
   }
 
-  private async submitName() {
+  private submitName() {
     this.addNameLetter(this.nameCursorSprite.text);
 
     const name: string = this.name.trim().toUpperCase();
 
     if (name.length && name.length <= MAX_DISPLAY_NAME) {
-      await this.initScoreboard();
+      this.initScoreboard();
     }
   }
 
@@ -293,14 +293,19 @@ export class ScoreboardScene extends BaseScene {
   private async initScoreboard() {
     this.phase = ScoreboardPhases.ShowScores;
 
-    await ScoreboardScene.SaveLastScore(this.name);
-    await ScoreboardScene.LoadScores();
+    try {
+      await ScoreboardScene.SaveLastScore(this.name);
+      await ScoreboardScene.LoadScores();
 
-    this.hideName();
-    this.initScoreboardTitle();
-    this.initScores();
-    this.initYourScore();
-    this.input.on(Phaser.Input.Events.POINTER_DOWN, () => this.scene.start(TitleScene.SceneKey));
+      this.hideName();
+      this.initScoreboardTitle();
+      this.initScores();
+      this.initYourScore();
+      this.input.on(Phaser.Input.Events.POINTER_DOWN, () => this.scene.start(TitleScene.SceneKey));
+    } catch (e) {
+      console.error(e);
+      this.scene.start(TitleScene.SceneKey);
+    }
   }
 
   private initScoreboardTitle() {

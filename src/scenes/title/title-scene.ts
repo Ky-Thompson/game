@@ -47,9 +47,9 @@ export class TitleScene extends BaseScene {
   private userNameSprite: Phaser.GameObjects.BitmapText;
   private showingGamepadExplanation: boolean = false;
 
-  private calebJumpTimeout: NodeJS.Timeout;
-  private calebBendTimeout: NodeJS.Timeout;
-  private sophiaBibleTimeout: NodeJS.Timeout;
+  private calebJumpTimeout: number;
+  private calebBendTimeout: number;
+  private sophiaBibleTimeout: number;
 
   constructor() {
     super({ key: TitleScene.SceneKey });
@@ -356,7 +356,7 @@ export class TitleScene extends BaseScene {
       ease: 'Quad.easeOut',
       onLoop: () => {
         calebJumpSprite.play(calebStandSuper);
-        this.calebJumpTimeout = setTimeout(() => {
+        this.calebJumpTimeout = window.setTimeout(() => {
           calebJumpSprite.play(calebJumpSuper);
         }, 500);
       },
@@ -389,7 +389,7 @@ export class TitleScene extends BaseScene {
       loopDelay: 500,
       onLoop: () => {
         calebBendSprite.play(calebStand);
-        this.calebBendTimeout = setTimeout(() => {
+        this.calebBendTimeout = window.setTimeout(() => {
           calebBendSprite.play(calebBend);
         }, 500);
       },
@@ -413,7 +413,7 @@ export class TitleScene extends BaseScene {
       loopDelay: 500,
       onLoop: () => {
         bibleSophia.setAlpha(0);
-        this.sophiaBibleTimeout = setTimeout(() => {
+        this.sophiaBibleTimeout = window.setTimeout(() => {
           bibleSophia.setAlpha(1);
         }, 550);
       },

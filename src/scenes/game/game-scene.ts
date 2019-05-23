@@ -135,7 +135,7 @@ export class GameScene extends BaseScene {
       this.world.setRoomBounds();
       this.player.init();
       this.player.startGraceTime();
-      setTimeout(() => this.soundEffects.resumeMusic(), 800);
+      window.setTimeout(() => this.soundEffects.resumeMusic(), 800);
     } else {
       // Run out of lifes
       this.restart();

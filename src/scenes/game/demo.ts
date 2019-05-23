@@ -3,7 +3,7 @@ import { Actions, ActionState, GameOptions, TiledGameObject, WorldLayers } from 
 
 import { GameScene } from './game-scene';
 
-const MAX_DEMO_MODE_TIME = 17 * MS_TO_S;
+const MAX_DEMO_MODE_TIME = 16 * MS_TO_S;
 const PLAYER_JUMP_TIME = 300;
 const PLAYER_BLOCKED_TIME = PLAYER_JUMP_TIME + 100;
 const PLAYER_MIN_VELOCITY_X = 40;

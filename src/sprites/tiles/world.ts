@@ -77,11 +77,12 @@ export class World {
     this.clouds = this.scene.add.image(0, 0, Tilemap.SkyKey).setDepth(Depths.Clouds);
     this.setBackgroundSprite(this.clouds);
 
+    // Create the sunset
+    this.scene.tweens.add({ targets: this.sunset, alpha: 0.7, delay: SUNSET_DURATION, duration: SUNSET_DURATION });
+    this.scene.tweens.add({ targets: this.twilight, alpha: 1, delay: SUNSET_DURATION * 2, duration: SUNSET_DURATION });
+
     if (this.scene.demo.isActive()) {
       this.clouds.setAlpha(0);
-    } else {
-      this.scene.tweens.add({ targets: this.sunset, alpha: 0.7, delay: SUNSET_DURATION, duration: SUNSET_DURATION });
-      this.scene.tweens.add({ targets: this.twilight, alpha: 1, delay: SUNSET_DURATION * 2, duration: SUNSET_DURATION });
     }
   }
 
@@ -89,7 +90,7 @@ export class World {
     this.city = this.scene.add
       .image(0, 0, Tilemap.CityKey)
       .setDepth(Depths.City)
-      .setAlpha(0.7);
+      .setAlpha(0.3);
     this.setBackgroundSprite(this.city);
   }
 

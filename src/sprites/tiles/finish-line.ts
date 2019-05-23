@@ -100,7 +100,7 @@ export class FinishLine {
 
         try {
           await ScoreboardScene.SetLastScore(score, player);
-          setTimeout(() => this.scene.goScoreboard(), SCOREBOARD_TIME);
+          window.setTimeout(() => this.scene.goScoreboard(), SCOREBOARD_TIME);
         } catch (e) {
           console.error(e);
           this.scene.restart();
