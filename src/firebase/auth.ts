@@ -81,6 +81,7 @@ export async function handleUser(user: firebase.User) {
   } else if (!user.displayName || !user.displayName.trim().length || user.displayName.trim().length > MAX_DISPLAY_NAME) {
     showAuth(AuthSteps.DisplayName);
   } else if (user) {
+    await saveUser();
     const { admin, access } = await getUser();
 
     if (admin) {

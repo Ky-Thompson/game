@@ -250,6 +250,10 @@ export async function hasUserAccess(onSuccess: () => void, onForbidden: () => vo
         ...firebaseUser,
       };
 
+      if (!firebaseUser) {
+        return;
+      }
+
       if (firebaseUser.access === true) {
         unsubscribe();
         onSuccess();
