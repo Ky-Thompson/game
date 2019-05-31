@@ -29,6 +29,7 @@ export class World {
   private twilight: Phaser.GameObjects.Graphics;
   private clouds: Phaser.GameObjects.Image;
   private city: Phaser.GameObjects.Image;
+  private cityLights: Phaser.GameObjects.Image;
   private rooms: Room[] = [];
   private checkpoints: Checkpoint[] = [];
 
@@ -92,6 +93,14 @@ export class World {
       .setDepth(Depths.City)
       .setAlpha(0.3);
     this.setBackgroundSprite(this.city);
+
+    this.cityLights = this.scene.add
+      .image(0, 0, Tilemap.CityLightsKey)
+      .setDepth(Depths.CityLights)
+      .setAlpha(0);
+    this.setBackgroundSprite(this.cityLights);
+
+    this.scene.tweens.add({ targets: this.cityLights, alpha: 0.8, delay: SUNSET_DURATION * 2, duration: 2000 });
   }
 
   private setBackgroundSprite(sprite: Phaser.GameObjects.Image) {
@@ -181,7 +190,7 @@ export class World {
   tileCollision(sprite: Phaser.GameObjects.Sprite, tile: TiledGameObject) {
     if (sprite instanceof Car) {
       // Cars ignore the ground
-      if (tile.y > Math.round(sprite.y / TILE_SIZE)) {
+      if (tile.y >= Math.round((sprite.y + sprite.height / 2) / TILE_SIZE)) {
         return;
       }
     } else if (sprite instanceof Player) {

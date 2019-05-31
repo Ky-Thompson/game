@@ -1,0 +1,13 @@
+<script>
+  var isIE = /Edge\/|Trident\/|MSIE/.test(window.navigator.userAgent);
+
+  if (isIE) {
+    window.addEventListener('load', function () {
+      var loadingIndicator = document.getElementById('loading-indicator');
+      var errorIE = document.getElementById('error-ie');
+
+      loadingIndicator.style.display = 'none';
+      errorIE.style.display = '';
+    });
+  }
+</script>

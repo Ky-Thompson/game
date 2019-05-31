@@ -123,6 +123,15 @@ export async function saveScore(score: number, player: Players, displayName: str
     return;
   }
 
+  // Check if score is high enough to be saved
+  const scores = await listScores();
+  const lastScore = scores[scores.length - 1];
+
+  if (lastScore && score < lastScore.score) {
+    return;
+  }
+
+  // Save score
   const firebaseScore: FirebaseScore = {
     score,
     player,
@@ -137,6 +146,8 @@ export async function saveScore(score: number, player: Players, displayName: str
     .push(firebaseScore);
 }
 
+export const MAX_SCORES = 20;
+
 export async function listScores(): Promise<FirebaseScore[]> {
   const scores: FirebaseScore[] = [];
 
@@ -145,7 +156,7 @@ export async function listScores(): Promise<FirebaseScore[]> {
       .database()
       .ref('/scores')
       .orderByChild('score')
-      .limitToLast(20)
+      .limitToLast(MAX_SCORES)
       .once('value');
 
     firebaseScores.forEach((score) => {
@@ -156,6 +167,28 @@ export async function listScores(): Promise<FirebaseScore[]> {
   }
 
   return scores.sort((scoreA, scoreB) => scoreB.score - scoreA.score);
+}
+
+export async function cleanUpScores(): Promise<void> {
+  try {
+    const firebaseScores: firebase.database.DataSnapshot = await firebase
+      .database()
+      .ref('/scores')
+      .orderByChild('score')
+      .once('value');
+
+    const numScores = firebaseScores.numChildren();
+    let deletedScores = 0;
+
+    firebaseScores.forEach((score: firebase.database.DataSnapshot) => {
+      if (numScores - deletedScores > MAX_SCORES) {
+        score.ref.remove();
+      }
+      deletedScores++;
+    });
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 export async function listUsersWithoutAccess(

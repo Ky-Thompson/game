@@ -1,4 +1,4 @@
-import { allowUserAccess, disallowUserAccess, FirebaseUser, listUsersWithoutAccess } from './database';
+import { allowUserAccess, cleanUpScores, disallowUserAccess, FirebaseUser, listUsersWithoutAccess } from './database';
 
 const adminTable: HTMLElement = document.getElementById('admin-users');
 
@@ -9,6 +9,7 @@ export async function createAdmin() {
   const onAdded = (user: FirebaseUser) => addUser(user);
   const onRemoved = (user: FirebaseUser) => removeUser(user);
   unsubscribe = await listUsersWithoutAccess(onAdded, onRemoved);
+  cleanUpScores();
 }
 
 export function destroyAdmin() {

@@ -23,6 +23,11 @@
       },
       {
         "type": "image",
+        "key": "city-lights",
+        "url": "assets/images/city-lights.png"
+      },
+      {
+        "type": "image",
         "key": "bull",
         "url": "assets/images/bull.png"
       },
@@ -30,6 +35,11 @@
         "type": "image",
         "key": "wanda",
         "url": "assets/images/wanda.png"
+      },
+      {
+        "type": "image",
+        "key": "metro",
+        "url": "assets/images/metro.png"
       },
       {
         "type": "spritesheet",

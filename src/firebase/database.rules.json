@@ -31,7 +31,7 @@
       }
     },
     "scores": {
-      ".read": "auth !== null && auth.uid !== null && query.orderByChild === 'score' && query.limitToLast <= 20",
+      ".read": "auth !== null && auth.uid !== null && ((query.orderByChild === 'score' && query.limitToLast <= 20) || (root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true))",
       ".indexOn": ["score", "user"],
       "$score_id": {
         ".write": "auth !== null",
