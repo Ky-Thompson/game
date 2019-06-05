@@ -284,6 +284,12 @@ export class Player extends Phaser.GameObjects.Sprite {
       this.jumpTimer -= delta;
     }
 
+    if (this.body.y < 0) {
+      this.body.y = 0;
+      this.body.setVelocityY(MIN_VELOCITY_Y);
+      this.jumpTimer = 0;
+    }
+
     if (this.body.blocked.down || Math.abs(this.body.velocity.y) < MIN_VELOCITY_Y) {
       this.jumping = false;
     }

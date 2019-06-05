@@ -51,7 +51,10 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
 
     // Check if it's being seen now and if so, activate it
     if (!this.hasBeenSeen) {
-      if (this.x < this.scene.cameras.main.scrollX + this.scene.sys.game.canvas.width + INITIAL_POSITION_X) {
+      const isPlayerSameRoom: boolean = this.scene.world.getRoom(this) === this.scene.world.getRoom(this.scene.player);
+      const isVisible: boolean = this.x < this.scene.cameras.main.scrollX + this.scene.sys.game.canvas.width + INITIAL_POSITION_X;
+
+      if (isPlayerSameRoom && isVisible) {
         this.hasBeenSeen = true;
         this.body.setVelocityX(this.direction);
         this.body.setAllowGravity(true);

@@ -32,6 +32,7 @@ export class World {
   private cityLights: Phaser.GameObjects.Image;
   private rooms: Room[] = [];
   private checkpoints: Checkpoint[] = [];
+  private currentRoom: number = 0;
 
   constructor(private scene: GameScene) {
     this.initWorld();
@@ -121,7 +122,8 @@ export class World {
 
     const nextCheckpoint: Checkpoint = this.checkpoints[1];
 
-    if (this.scene.player.body.x > nextCheckpoint.x) {
+    // Checkpoints are only present in main room
+    if (this.currentRoom === 0 && this.scene.player.x > nextCheckpoint.x) {
       this.checkpoints.shift(); // Remove checkpoint since a new one has been completed
     }
   }
@@ -161,15 +163,32 @@ export class World {
   }
 
   setRoomBounds() {
-    this.rooms.forEach((room) => {
-      if (this.scene.player.x >= room.x && this.scene.player.x <= room.x + room.width) {
+    this.rooms.forEach((room: Room, index: number) => {
+      if (this.isRoomActive(room, this.scene.player)) {
         const camera: Phaser.Cameras.Scene2D.Camera = this.scene.cameras.main;
         const { height, scaleX, scaleY } = this.groundLayer;
         camera.setBounds(room.x, 0, room.width * scaleX, height * scaleY);
-        this.scene.finishLine.setActive(room.x === 0);
+        this.currentRoom = index;
+        this.scene.finishLine.setActive(index === 0);
         this.scene.cameras.main.setBackgroundColor(room.backgroundColor);
       }
     });
+  }
+
+  getRoom(sprite: Phaser.GameObjects.Sprite): number {
+    let roomIndex: number = -1;
+
+    this.rooms.forEach((room: Room, index: number) => {
+      if (this.isRoomActive(room, sprite)) {
+        roomIndex = index;
+      }
+    });
+
+    return roomIndex;
+  }
+
+  private isRoomActive(room: Room, sprite: Phaser.GameObjects.Sprite): boolean {
+    return sprite.x >= room.x && sprite.x <= room.x + room.width;
   }
 
   addCheckpoint(checkpoint: Checkpoint) {
