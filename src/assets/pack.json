@@ -42,6 +42,11 @@
         "url": "assets/images/metro.png"
       },
       {
+        "type": "image",
+        "key": "alcala-gate",
+        "url": "assets/images/alcala-gate.png"
+      },
+      {
         "type": "spritesheet",
         "key": "tiles",
         "url": "assets/images/game-sprites.png",
