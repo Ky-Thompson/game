@@ -116,6 +116,8 @@ export async function saveUser(): Promise<void> {
   }
 }
 
+export const MAX_SCORES = 20;
+
 export async function saveScore(score: number, player: Players, displayName: string): Promise<void> {
   const user: firebase.User = firebase.auth().currentUser;
 
@@ -127,7 +129,7 @@ export async function saveScore(score: number, player: Players, displayName: str
   const scores = await listScores();
   const lastScore = scores[scores.length - 1];
 
-  if (lastScore && score < lastScore.score) {
+  if (scores.length >= MAX_SCORES && score < lastScore.score) {
     return;
   }
 
@@ -140,13 +142,15 @@ export async function saveScore(score: number, player: Players, displayName: str
     timestamp: firebase.database.ServerValue.TIMESTAMP,
   };
 
-  await firebase
-    .database()
-    .ref('/scores')
-    .push(firebaseScore);
+  try {
+    await firebase
+      .database()
+      .ref('/scores')
+      .push(firebaseScore);
+  } catch (e) {
+    console.error(e);
+  }
 }
-
-export const MAX_SCORES = 20;
 
 export async function listScores(): Promise<FirebaseScore[]> {
   const scores: FirebaseScore[] = [];

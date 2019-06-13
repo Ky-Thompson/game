@@ -1,4 +1,5 @@
 {
+  "backgroundcolor": "#33a5ff",
   "height": 15,
   "infinite": false,
   "layers": [
@@ -5802,7 +5803,7 @@
       ],
       "opacity": 1,
       "type": "objectgroup",
-      "visible": true,
+      "visible": false,
       "x": 0,
       "y": 0
     }

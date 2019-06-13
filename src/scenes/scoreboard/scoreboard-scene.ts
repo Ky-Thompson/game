@@ -73,17 +73,17 @@ export class ScoreboardScene extends BaseScene {
   private phase: ScoreboardPhases;
 
   private enterNameSprite: Phaser.GameObjects.BitmapText;
-  private nameSprites: Phaser.GameObjects.BitmapText[] = [];
+  private nameSprites: Phaser.GameObjects.BitmapText[];
   private nameCursorSprite: Phaser.GameObjects.BitmapText;
-  private nameCursorLetters: string = makeCursorLetters();
-  private name: string = '';
-  private nameBlinkTimer: number = BLINK_TIME;
-  private ignoreGamepadButton: boolean = false;
+  private nameCursorLetters: string;
+  private name: string;
+  private nameBlinkTimer: number;
+  private ignoreGamepadButton: boolean;
 
   private scoreSprite: Phaser.GameObjects.BitmapText;
-  private scoreBlinkTimer: number = BLINK_TIME * 2;
+  private scoreBlinkTimer: number;
 
-  private timeout: number = 0;
+  private timeout: number;
 
   constructor() {
     super({ key: ScoreboardScene.SceneKey });
@@ -134,6 +134,8 @@ export class ScoreboardScene extends BaseScene {
   private initScene() {
     const { width, height } = this.getGameDimensions();
 
+    this.timeout = 0;
+
     this.setRegistry(GameOptions.Scoreboard, true);
     this.scene.launch(GameScene.SceneKey);
     this.add.rectangle(width / 2, height / 2, width, height, Colors.Gray, SCOREBOARD_BACKGROUND_ALPHA);
@@ -144,6 +146,9 @@ export class ScoreboardScene extends BaseScene {
 
   private initName() {
     this.phase = ScoreboardPhases.EnterName;
+    this.name = '';
+    this.nameBlinkTimer = BLINK_TIME;
+
     this.initNameTitle();
     this.initNameInput();
   }
@@ -171,6 +176,9 @@ export class ScoreboardScene extends BaseScene {
     const x: number = width / 2 - (NAME_CURSOR.length * SCOREBOARD_TEXT_SIZE) / 2;
     const y: number = height / 2 - NAME_Y;
 
+    this.ignoreGamepadButton = false;
+    this.nameSprites = [];
+    this.nameCursorLetters = makeCursorLetters();
     this.nameCursorSprite = this.add.bitmapText(x, y + NAME_Y * 2, FONT, NAME_CURSOR, SCOREBOARD_TEXT_SIZE);
 
     this.input.keyboard.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, (event: KeyboardEvent) => {
@@ -226,7 +234,9 @@ export class ScoreboardScene extends BaseScene {
   }
 
   private submitName() {
-    this.addNameLetter(this.nameCursorSprite.text);
+    if (this.nameCursorSprite.text !== NAME_CURSOR) {
+      this.addNameLetter(this.nameCursorSprite.text);
+    }
 
     const name: string = this.name.trim().toUpperCase();
 
@@ -292,6 +302,7 @@ export class ScoreboardScene extends BaseScene {
 
   private async initScoreboard() {
     this.phase = ScoreboardPhases.ShowScores;
+    this.scoreBlinkTimer = BLINK_TIME * 2;
 
     try {
       await ScoreboardScene.SaveLastScore(this.name);
