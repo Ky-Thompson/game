@@ -39,6 +39,6 @@ export class Flower extends PowerUp {
     super.collect();
 
     this.scene.soundEffects.playEffect(Sounds.Life);
-    this.scene.hud.updateLifes(1);
+    this.scene.hud.updateLives(1);
   }
 }

@@ -17,9 +17,7 @@ export class SoundEffects {
   private static lastMusic: MusicPlaylist;
 
   constructor(private scene: GameScene) {
-    if (!this.scene.isScoreboardActive()) {
-      this.playMusic();
-    }
+    this.playMusic();
   }
 
   private playMusic() {
@@ -29,7 +27,16 @@ export class SoundEffects {
         this.music.destroy();
       }
 
-      const musicKey: MusicPlaylist = this.scene.demo.isActive() ? MusicPlaylist.Bethel : MusicPlaylist.Song89;
+      let musicKey: MusicPlaylist;
+
+      if (this.scene.isScoreboardActive()) {
+        musicKey = MusicPlaylist.Bethel;
+      } else if (this.scene.demo.isActive()) {
+        musicKey = MusicPlaylist.Bethel;
+      } else {
+        musicKey = MusicPlaylist.Song89;
+      }
+
       const currentMusic: Phaser.Sound.BaseSound = (<any>this.scene.sound).sounds.filter((sound) => PLAYLIST.indexOf(sound.key) !== -1)[0];
       const isPlaying: boolean = musicKey === SoundEffects.lastMusic && currentMusic && musicKey === currentMusic.key;
 

@@ -37,15 +37,16 @@ export class TitleScene extends BaseScene {
   private backdrop: Phaser.GameObjects.Rectangle;
   private titleSprite: Phaser.GameObjects.Image;
   private startSprite: Phaser.GameObjects.BitmapText;
-  private blinkTimer: number = TITLE_BLINK_TIME * 2;
-  private playerSprite: Phaser.GameObjects.Sprite;
+  private blinkTimer: number;
+  private calebPlayerSprite: Phaser.GameObjects.Sprite;
   private calebSprite: Phaser.GameObjects.Sprite;
   private sophiaSprite: Phaser.GameObjects.Sprite;
-  private selectedPlayer: Players = Players.Caleb;
+  private sophiaPlayerSprite: Phaser.GameObjects.Sprite;
+  private selectedPlayer: Players;
   private exitSprite: Phaser.GameObjects.Sprite;
   private profileSprite: Phaser.GameObjects.Sprite;
   private userNameSprite: Phaser.GameObjects.BitmapText;
-  private showingGamepadExplanation: boolean = false;
+  private showingGamepadExplanation: boolean;
 
   private calebJumpTimeout: number;
   private calebBendTimeout: number;
@@ -56,6 +57,11 @@ export class TitleScene extends BaseScene {
   }
 
   create() {
+    this.blinkTimer = TITLE_BLINK_TIME * 2;
+    this.selectedPlayer = Players.Caleb;
+    this.setRegistry(GameOptions.Player, Players.Caleb);
+    this.showingGamepadExplanation = false;
+
     this.initTitle();
     this.initDemo();
     this.initPlayerSelection();
@@ -131,11 +137,11 @@ export class TitleScene extends BaseScene {
     const { width } = this.getGameDimensions();
 
     // Create player selection
-    this.playerSprite = this.add.sprite(width / 2 - PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
-    this.playerSprite.play(TitleAnimations.Player);
+    this.calebPlayerSprite = this.add.sprite(width / 2 - PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
+    this.calebPlayerSprite.play(TitleAnimations.Player);
 
     this.tweens.add({
-      targets: this.playerSprite,
+      targets: this.calebPlayerSprite,
       scaleX: PLAYER_SELECT_SCALE,
       scaleY: PLAYER_SELECT_SCALE,
       yoyo: true,
@@ -145,8 +151,23 @@ export class TitleScene extends BaseScene {
       duration: PLAYER_SELECT_DURATION,
     });
 
-    if (this.isMobile()) {
-      this.playerSprite.setAlpha(0);
+    this.sophiaPlayerSprite = this.add.sprite(width / 2 + PLAYER_SELECT_X, TITLE_Y, SPRITES_KEY);
+    this.sophiaPlayerSprite.play(TitleAnimations.Player);
+
+    this.tweens.add({
+      targets: this.sophiaPlayerSprite,
+      scaleX: PLAYER_SELECT_SCALE,
+      scaleY: PLAYER_SELECT_SCALE,
+      yoyo: true,
+      loop: -1,
+      loopDelay: PLAYER_SELECT_DELAY,
+      ease: PLAYER_SELECT_EASE,
+      duration: PLAYER_SELECT_DURATION,
+    });
+
+    if (!this.isMobile()) {
+      this.calebPlayerSprite.setAlpha(0);
+      this.sophiaPlayerSprite.setAlpha(0);
     }
 
     // Create Caleb sprite
@@ -193,7 +214,7 @@ export class TitleScene extends BaseScene {
   }
 
   private hidePlayerSelection() {
-    this.playerSprite.setActive(false).setAlpha(0);
+    this.calebPlayerSprite.setActive(false).setAlpha(0);
     this.calebSprite.setActive(false).setAlpha(0);
     this.sophiaSprite.setActive(false).setAlpha(0);
   }
@@ -217,19 +238,19 @@ export class TitleScene extends BaseScene {
     this.selectedPlayer = player;
     this.setRegistry(GameOptions.Player, player);
 
-    const { width } = this.getGameDimensions();
-    const position: number = player === Players.Caleb ? -1 : 1;
-    this.playerSprite.setPosition(width / 2 + PLAYER_SELECT_X * position, TITLE_Y);
-
     if (!this.isMobile()) {
       switch (player) {
         case Players.Caleb:
           this.calebSprite.play(getPlayerAnimationKey(Players.Caleb, PlayerActions.Walk, PlayerStates.Big));
           this.sophiaSprite.play(getPlayerAnimationKey(Players.Sophia, PlayerActions.Stand, PlayerStates.Big));
+          this.calebPlayerSprite.setAlpha(1);
+          this.sophiaPlayerSprite.setAlpha(0);
           break;
         case Players.Sophia:
           this.calebSprite.play(getPlayerAnimationKey(Players.Caleb, PlayerActions.Stand, PlayerStates.Big));
           this.sophiaSprite.play(getPlayerAnimationKey(Players.Sophia, PlayerActions.Walk, PlayerStates.Big));
+          this.calebPlayerSprite.setAlpha(0);
+          this.sophiaPlayerSprite.setAlpha(1);
           break;
       }
     }

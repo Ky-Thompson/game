@@ -1,29 +1,35 @@
 /* Full screen in safari */
 /* https://dev.to/marvindanig/fullscreen-web-apps-on-ipad-safari--3p9b */
 
-:-webkit-full-screen {
+@mixin fullscreen {
+  position: fixed;
   width: 100vw !important;
   height: 100vh !important;
+}
+
+body,
+html {
+  @include fullscreen();
+}
+
+:-webkit-full-screen {
+  @include fullscreen();
 }
 
 :-moz-full-screen {
-  width: 100vw !important;
-  height: 100vh !important;
+  @include fullscreen();
 }
 
 :-ms-fullscreen {
-  width: 100vw !important;
-  height: 100vh !important;
+  @include fullscreen();
 }
 
 :full-screen {
-  width: 100vw !important;
-  height: 100vh !important;
+  @include fullscreen();
 }
 
 :fullscreen {
-  width: 100vw !important;
-  height: 100vh !important;
+  @include fullscreen();
 }
 
 ::-webkit-scrollbar {
@@ -35,4 +41,5 @@
 ::backdrop,
 ::-ms-backdrop {
   /* Custom styles */
+  background-color: #343a40;
 }

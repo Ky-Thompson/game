@@ -3,7 +3,7 @@ const favicons = require('favicons').stream;
 
 module.exports.buildFavicons = () =>
   gulp
-    .src('./src/assets/images/convention-logo-small.png')
+    .src('./src/assets/images/favicon.png')
     .pipe(
       favicons({
         path: './',
@@ -13,13 +13,14 @@ module.exports.buildFavicons = () =>
         appDescription: 'Caleb & Sophia Game',
         url: 'https://caleb-sophia-madrid.github.io/game/',
         start_url: '.',
-        background: '#343A40',
+        background: '#33A5FF',
         theme_color: '#343A40',
         appleStatusBarStyle: 'black-translucent',
         display: 'standalone',
         orientation: 'landscape',
         version: 1.0,
         logging: false,
+        pixel_art: true,
         pipeHTML: true,
         replace: true,
         icons: {

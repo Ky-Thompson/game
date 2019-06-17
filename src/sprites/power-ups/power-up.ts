@@ -82,7 +82,7 @@ export abstract class PowerUp extends Phaser.GameObjects.Sprite {
         break;
       case PlayerStates.Super:
         this.scene.soundEffects.playEffect(Sounds.Life);
-        this.scene.hud.updateLifes(1); // get life
+        this.scene.hud.updateLives(1); // get life
         break;
     }
   }

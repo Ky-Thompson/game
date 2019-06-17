@@ -14,9 +14,9 @@ const SCORE_POP_ALPHA = 0.8;
 const SCORE_POP_EASE = 'Quad.easeOut';
 const TIME_TEXT_PADDING = 3;
 const TIME_TEXT = 'TIME';
-const LIFES_Y = (TILE_SIZE * 3) / 4;
-const MAX_LIFES = 5;
-const START_LIFES = 3;
+const LIVES_Y = (TILE_SIZE * 3) / 4;
+const MAX_LIVES = 5;
+const START_LIVES = 3;
 
 export class HUD {
   private playerText: Phaser.GameObjects.BitmapText;
@@ -30,13 +30,13 @@ export class HUD {
   private hurry: boolean = false;
 
   private readonly lifeSprites: Phaser.GameObjects.Sprite[] = [];
-  private lifes: number = START_LIFES;
+  private lives: number = START_LIVES;
   private scoreboardActive: boolean = false;
 
   constructor(private scene: GameScene) {
     this.initPlayerScore();
     this.initTimer();
-    this.initLifes();
+    this.initLives();
 
     this.scoreboardActive = this.scene.isScoreboardActive();
 
@@ -75,12 +75,12 @@ export class HUD {
     this.displayedTime = GAME_TIMEOUT;
   }
 
-  private initLifes() {
-    const lifesX = HUD_PADDING + this.scene.player.getPlayerType().toUpperCase().length * FONT_SIZE + TILE_SIZE / 2;
+  private initLives() {
+    const livesX = HUD_PADDING + this.scene.player.getPlayerType().toUpperCase().length * FONT_SIZE + TILE_SIZE / 2;
 
-    for (let i = 0; i < MAX_LIFES; i++) {
+    for (let i = 0; i < MAX_LIVES; i++) {
       const sprite = this.scene.add
-        .sprite(lifesX + (TILE_SIZE * i) / 2, LIFES_Y, SPRITES_KEY)
+        .sprite(livesX + (TILE_SIZE * i) / 2, LIVES_Y, SPRITES_KEY)
         .play(HUDAnimations.Life)
         .setActive(false)
         .setScrollFactor(0, 0);
@@ -88,15 +88,15 @@ export class HUD {
       this.lifeSprites.push(sprite);
     }
 
-    this.updateLifes(0);
+    this.updateLives(0);
   }
 
-  updateLifes(inc: number): boolean {
-    this.lifes += inc;
-    this.lifes = Math.max(Math.min(this.lifes, MAX_LIFES), 0);
-    this.lifeSprites.forEach((life, index) => life.setAlpha(index < this.lifes ? 1 : 0));
+  updateLives(inc: number): boolean {
+    this.lives += inc;
+    this.lives = Math.max(Math.min(this.lives, MAX_LIVES), 0);
+    this.lifeSprites.forEach((life, index) => life.setAlpha(index < this.lives ? 1 : 0));
 
-    return this.lifes > 0;
+    return this.lives > 0;
   }
 
   update(delta: number) {

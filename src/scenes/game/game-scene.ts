@@ -128,7 +128,7 @@ export class GameScene extends BaseScene {
   }
 
   playerDied() {
-    if (this.hud.updateLifes(-1) && !this.hud.hasTimedOut()) {
+    if (this.hud.updateLives(-1) && !this.hud.hasTimedOut()) {
       // Still alive, go back to last checkpoint or start!
       const checkpoint = this.world.getCurrentCheckpoint();
       this.player.setPosition(checkpoint.x, checkpoint.y);
@@ -137,7 +137,7 @@ export class GameScene extends BaseScene {
       this.player.startGraceTime();
       window.setTimeout(() => this.soundEffects.resumeMusic(), 800);
     } else {
-      // Run out of lifes
+      // Run out of lives
       this.restart();
     }
   }
