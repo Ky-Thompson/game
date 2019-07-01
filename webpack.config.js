@@ -69,8 +69,12 @@ module.exports.webpackConfig = (mode) => {
       new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
     ],
     performance: {
-      maxEntrypointSize: 1500000, // 1.5MB
-      maxAssetSize: 1500000, // 1.5MB
+      maxEntrypointSize: 2000000, // 2MB
+      maxAssetSize: 2000000, // 2MB
+    },
+    devtool: isProduction ? 'source-map' : 'eval',
+    optimization: {
+      minimize: false,
     },
   };
 };
