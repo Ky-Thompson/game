@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="158cm"
+   height="106cm"
+   viewBox="0 0 1580 1060"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="main-caleb.svg"
+   inkscape:export-filename=".\main-caleb-exported.png"
+   inkscape:export-xdpi="299.98999"
+   inkscape:export-ydpi="299.98999">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.175"
+     inkscape:cx="2971.2186"
+     inkscape:cy="2238.3817"
+     inkscape:document-units="cm"
+     inkscape:current-layer="layer3"
+     showgrid="false"
+     units="cm"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="-8"
+     inkscape:window-y="263"
+     inkscape:window-maximized="1"
+     showguides="false"
+     inkscape:object-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:snap-bbox="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       position="0,940.00001"
+       orientation="0,1"
+       id="guide842"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="0,29.999999"
+       orientation="0,1"
+       id="guide822"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="29.999999,0"
+       orientation="1,0"
+       id="guide824"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="430,0"
+       orientation="1,0"
+       id="guide826"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="460,0"
+       orientation="1,0"
+       id="guide827"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="490,0"
+       orientation="1,0"
+       id="guide829"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="1090,0"
+       orientation="1,0"
+       id="guide831"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="1120,0"
+       orientation="1,0"
+       id="guide833"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="1150,0"
+       orientation="1,0"
+       id="guide837"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="1550,0"
+       orientation="1,0"
+       id="guide839"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="0,1030"
+       orientation="0,1"
+       id="guide841"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Background"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,762.99998)"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <image
+       sodipodi:absref="D:\src\personal\game\art\main\main-3.png"
+       xlink:href="main-3.png"
+       style="display:inline;stroke-width:1.00000691"
+       width="460"
+       height="970"
+       preserveAspectRatio="none"
+       id="image857"
+       x="-3.5527137e-15"
+       y="-673" />
+    <image
+       sodipodi:absref="D:\src\personal\game\art\main\main-4.png"
+       xlink:href="main-4.png"
+       style="display:inline;stroke-width:1.00000691"
+       width="460"
+       height="970"
+       preserveAspectRatio="none"
+       id="image868"
+       x="1120"
+       y="-673" />
+    <image
+       sodipodi:absref="D:\src\personal\game\art\main\main-1.png"
+       xlink:href="main-1.png"
+       style="display:inline;stroke-width:0.99999487"
+       width="659.99994"
+       height="1060"
+       preserveAspectRatio="none"
+       id="image879"
+       x="460"
+       y="-763" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Piece"
+     transform="translate(0,410.00001)"
+     style="display:none"
+     sodipodi:insensitive="true">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 30,-289.99999 v 910 h 399.99998 v -910 z"
+       id="path843"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 489.99999,-379.99998 V 620.00001 H 1090 v -999.99999 z"
+       id="path845"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 1150,-289.99999 v 910 h 400 v -910 z"
+       id="path847"
+       inkscape:connector-curvature="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Bleed"
+     transform="translate(0,850.00001)"
+     sodipodi:insensitive="true">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 460,-850.00003 V 209.99995"
+       id="path905"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 1119.9999,-850.00003 1120,209.99995"
+       id="path907"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 0,-760.00003 H 460"
+       id="path909"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 1120,-760.00003 h 460"
+       id="path911"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
