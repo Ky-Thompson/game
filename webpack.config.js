@@ -4,15 +4,21 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const SentryWebpackPlugin = require('@sentry/webpack-plugin');
+
+const package = require('./package.json');
 
 const DEVELOPMENT_MODE = 'development';
 const PRODUCTION_MODE = 'production';
+const VERSION = 'caleb-sophia-madrid@' + package.version;
 
 const PHASER_DEVELOPMENT = 'node_modules/phaser/dist/phaser.js';
 const PHASER_PRODUCTION = 'node_modules/phaser/dist/phaser.min.js';
 
 module.exports.DEVELOPMENT_MODE = DEVELOPMENT_MODE;
 module.exports.PRODUCTION_MODE = PRODUCTION_MODE;
+
+module.exports.VERSION = VERSION;
 
 module.exports.webpackConfig = (mode) => {
   const isProduction = mode === PRODUCTION_MODE;
@@ -56,6 +62,7 @@ module.exports.webpackConfig = (mode) => {
         __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
         WEBGL_RENDERER: JSON.stringify(true),
         CANVAS_RENDERER: JSON.stringify(true),
+        VERSION: JSON.stringify(VERSION),
       }),
       new MiniCssExtractPlugin({
         filename: isProduction ? 'style.[hash].css' : 'style.css',
@@ -67,6 +74,12 @@ module.exports.webpackConfig = (mode) => {
         filename: join(__dirname, 'dist/index.html'),
       }),
       new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
+      new SentryWebpackPlugin({
+        release: VERSION,
+        include: './dist',
+        ignore: ['node_modules', 'webpack.config.js'],
+        dryRun: !isProduction,
+      }),
     ],
     performance: {
       maxEntrypointSize: 2000000, // 2MB

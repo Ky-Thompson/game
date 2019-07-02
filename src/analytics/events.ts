@@ -2,6 +2,7 @@ export enum GtmEventTypes {
   SignUp = 'SignUp',
   Login = 'Login',
   GameCompleted = 'GameCompleted',
+  HiddenRoom = 'HiddenRoom',
 }
 
 // Sign-up event
@@ -30,9 +31,15 @@ export interface GtmGameCompletedEvent {
   score: number;
 }
 
+// Hidden room
+
+export interface GtmEnterPipeEvent {
+  event: GtmEventTypes.HiddenRoom;
+}
+
 // Methods
 
-export type GtmEvent = GtmSignUpEvent | GtmLoginEvent | GtmGameCompletedEvent;
+export type GtmEvent = GtmSignUpEvent | GtmLoginEvent | GtmGameCompletedEvent | GtmEnterPipeEvent;
 
 export type DataLayer = GtmEvent[];
 

@@ -18,6 +18,8 @@ export enum GamepadButtons {
 export type GamepadState = Partial<{ [key in GamepadButtons]: boolean }>;
 
 export const GAMEPAD_AXIS_THRESHOLD = 0.3;
+export const IPAD_PRO_WIDTH = 1200;
+export const IPAD_PRO_HEIGHT = 900;
 
 export abstract class BaseScene extends Phaser.Scene {
   private gamepad: Phaser.Input.Gamepad.Gamepad;
@@ -47,7 +49,14 @@ export abstract class BaseScene extends Phaser.Scene {
   isMobile(): boolean {
     const isAndroid: boolean = !!navigator.userAgent.match(/Android/i);
     const isIOS: boolean = !!navigator.userAgent.match(/iPhone|iPad|iPod/i);
-    return isAndroid || isIOS;
+    const isIPadOS: boolean =
+      navigator.userAgent.match(/Safari/i) &&
+      !navigator.userAgent.match(/Chrome/i) &&
+      navigator.platform.match(/MacIntel/i) &&
+      window.innerWidth <= IPAD_PRO_WIDTH &&
+      window.innerHeight <= IPAD_PRO_HEIGHT;
+
+    return isAndroid || isIOS || isIPadOS;
   }
 
   // Registry for global settings
@@ -87,6 +96,8 @@ export abstract class BaseScene extends Phaser.Scene {
   }
 
   updateGamepad() {
+    (<any>this.input).update(); // https://github.com/photonstorm/phaser/issues/4414
+
     if (!this.gamepad && this.input.gamepad.getPad(0)) {
       // Gamepad just connected
       this.gamepad = this.input.gamepad.getPad(0);

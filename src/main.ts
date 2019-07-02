@@ -1,5 +1,7 @@
 import './style.scss';
 
 import { initApp } from './firebase';
+import { initLog } from './sentry';
 
-window.addEventListener('load', () => initApp());
+initLog(); // Sentry logging
+window.addEventListener('load', () => initApp()); // Firebase app

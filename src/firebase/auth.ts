@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app';
 
 import { GtmEventTypes, GtmLoginTypes, pushEvent } from '@game/analytics';
+import { remove } from 'diacritics';
 
 import { firebaseApp } from './app';
 import { getUser, hasUserAccess, saveUser } from './database';
@@ -213,6 +214,7 @@ export async function sendEmailVerification(user?: firebase.User): Promise<void>
 
 export async function updateProfile(displayName: string): Promise<void> {
   const user: firebase.User = firebase.auth().currentUser;
+  displayName = remove(displayName).toUpperCase();
 
   try {
     await user.updateProfile({ displayName });

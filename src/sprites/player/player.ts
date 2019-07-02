@@ -1,3 +1,4 @@
+import { GtmEventTypes, pushEvent } from '@game/analytics';
 import { getPlayerAnimationKey } from '@game/animations';
 import {
   ActionState,
@@ -40,6 +41,8 @@ const ENTER_PIPE_DURATION = 800;
 const EXIT_PIPE_DEPTH = 1;
 const ENTER_PIPE_TRANSLATION = 80;
 const ENTER_PIPE_START_Y = -200;
+
+const HIDDEN_ROOM = 1;
 
 export class Player extends Phaser.GameObjects.Sprite {
   private alive: boolean;
@@ -284,8 +287,8 @@ export class Player extends Phaser.GameObjects.Sprite {
       this.jumpTimer -= delta;
     }
 
-    if (this.body.y < 0) {
-      this.body.y = 0;
+    if (this.body.y + this.body.height / 2 < 0) {
+      this.body.y = -this.body.height / 2;
       this.body.setVelocityY(MIN_VELOCITY_Y);
       this.jumpTimer = 0;
     }
@@ -492,5 +495,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     }
 
     this.scene.world.setRoomBounds();
+
+    if (this.scene.world.getRoom(this.scene.player) === HIDDEN_ROOM) {
+      pushEvent({ event: GtmEventTypes.HiddenRoom });
+    }
   }
 }

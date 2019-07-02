@@ -13,6 +13,7 @@
 * Google Tag Manager: https://tagmanager.google.com/#/home
 * Firebase Users Console: https://console.firebase.google.com/project/caleb-sophia-madrid/authentication/users
 * Firebase Database Console: https://console.firebase.google.com/project/caleb-sophia-madrid/database/caleb-sophia-madrid/data
+* Sentry: https://sentry.io/organizations/caleb-sophia-madrid/issues/
 
 ## Pre-requisites
 
