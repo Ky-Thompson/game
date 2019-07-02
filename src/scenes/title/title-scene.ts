@@ -1,5 +1,5 @@
 import { BibleAnimations, getPlayerAnimationKey, SPRITES_KEY, TitleAnimations } from '@game/animations';
-import { FONT, TILE_SIZE } from '@game/config';
+import { FONT, IS_MOBILE, TILE_SIZE } from '@game/config';
 import { AuthSteps, FirebaseUser, getUser, showAuth, signOut } from '@game/firebase';
 import { Colors, GameOptions, PlayerActions, Players, PlayerStates } from '@game/models';
 
@@ -110,7 +110,10 @@ export class TitleScene extends BaseScene {
       this.sophiaBibleTimeout = undefined;
     }
 
-    this.scale.startFullscreen();
+    try {
+      this.scale.startFullscreen();
+    } catch (e) {}
+
     this.scene.stop(GameScene.SceneKey);
     this.setRegistry(GameOptions.Demo, false);
     this.scene.start(GameScene.SceneKey);
@@ -165,7 +168,7 @@ export class TitleScene extends BaseScene {
       duration: PLAYER_SELECT_DURATION,
     });
 
-    if (!this.isMobile()) {
+    if (!IS_MOBILE) {
       this.calebPlayerSprite.setAlpha(0);
       this.sophiaPlayerSprite.setAlpha(0);
     }
@@ -198,7 +201,7 @@ export class TitleScene extends BaseScene {
 
     // Toggle and select player
     this.selectPlayer(Players.Caleb);
-    if (!this.isMobile()) {
+    if (!IS_MOBILE) {
       this.input.keyboard.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, (event: Phaser.Input.Keyboard.Key) => {
         switch (event.keyCode) {
           case Phaser.Input.Keyboard.KeyCodes.RIGHT:
@@ -238,7 +241,7 @@ export class TitleScene extends BaseScene {
     this.selectedPlayer = player;
     this.setRegistry(GameOptions.Player, player);
 
-    if (!this.isMobile()) {
+    if (!IS_MOBILE) {
       switch (player) {
         case Players.Caleb:
           this.calebSprite.play(getPlayerAnimationKey(Players.Caleb, PlayerActions.Walk, PlayerStates.Big));

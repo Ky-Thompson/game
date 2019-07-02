@@ -1,0 +1,56 @@
+.pwa-install-ios {
+  display: block;
+  background: rgba(255, 255, 255, 0.8);
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  transition: all ease-out 300ms;
+
+  @media (max-width: 480px) {
+    padding: 0.25rem;
+  }
+
+  &[hidden] {
+    transform: translateY(250px);
+  }
+
+  .pwa-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 5px;
+    margin-right: 0.5rem;
+
+    @media (max-width: 480px) {
+      width: 32px;
+      height: 32px;
+      margin-right: 0.25rem;
+    }
+  }
+
+  .ios-button {
+    width: 48px;
+    height: 48px;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+
+    @media (max-width: 480px) {
+      width: 32px;
+      height: 32px;
+      margin-right: 0.25rem;
+      margin-left: 0.25rem;
+    }
+  }
+
+  p {
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0;
+
+    @media (max-width: 480px) {
+      font-size: 18px;
+      line-height: 42px;
+    }
+  }
+}

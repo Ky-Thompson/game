@@ -1,5 +1,5 @@
 import { getPlayerAnimationKey, SPRITES_KEY } from '@game/animations';
-import { FONT, MS_TO_S, TILE_SIZE } from '@game/config';
+import { FONT, IS_MOBILE, MS_TO_S, TILE_SIZE } from '@game/config';
 import {
   FirebaseScore,
   FirebaseUser,
@@ -115,7 +115,7 @@ export class ScoreboardScene extends BaseScene {
   }
 
   isExhibit(): boolean {
-    return (!ScoreboardScene.User || ScoreboardScene.User.exhibit) && !this.isMobile();
+    return (!ScoreboardScene.User || ScoreboardScene.User.exhibit) && !IS_MOBILE;
   }
 
   protected onGamepadPressed(gamepadButton: GamepadButtons) {

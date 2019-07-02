@@ -3,6 +3,7 @@ import { SPRITES_KEY } from './sprites';
 export enum PadAnimations {
   Default = 'pad/default',
   Up = 'pad/up',
+  UpButton = 'pad/up-button',
   Down = 'pad/down',
   Right = 'pad/right',
   RightUp = 'pad/right-up',

@@ -18,8 +18,6 @@ export enum GamepadButtons {
 export type GamepadState = Partial<{ [key in GamepadButtons]: boolean }>;
 
 export const GAMEPAD_AXIS_THRESHOLD = 0.3;
-export const IPAD_PRO_WIDTH = 1200;
-export const IPAD_PRO_HEIGHT = 900;
 
 export abstract class BaseScene extends Phaser.Scene {
   private gamepad: Phaser.Input.Gamepad.Gamepad;
@@ -44,19 +42,6 @@ export abstract class BaseScene extends Phaser.Scene {
 
   getGameDimensions(): Dimensions {
     return <any>this.sys.game.config;
-  }
-
-  isMobile(): boolean {
-    const isAndroid: boolean = !!navigator.userAgent.match(/Android/i);
-    const isIOS: boolean = !!navigator.userAgent.match(/iPhone|iPad|iPod/i);
-    const isIPadOS: boolean =
-      navigator.userAgent.match(/Safari/i) &&
-      !navigator.userAgent.match(/Chrome/i) &&
-      navigator.platform.match(/MacIntel/i) &&
-      window.innerWidth <= IPAD_PRO_WIDTH &&
-      window.innerHeight <= IPAD_PRO_HEIGHT;
-
-    return isAndroid || isIOS || isIPadOS;
   }
 
   // Registry for global settings

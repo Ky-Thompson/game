@@ -1,9 +1,10 @@
 import { PadAnimations, SPRITES_KEY } from '@game/animations';
-import { TILE_SIZE } from '@game/config';
+import { IS_MOBILE, TILE_SIZE } from '@game/config';
 import { ActionState, Colors, Depths, PlayerStates } from '@game/models';
+
 import { GameScene } from './game-scene';
 
-const GAME_PAD_ALPHA = 0.8;
+const GAME_PAD_ALPHA = 0.75;
 const PAD_SIZE = TILE_SIZE * 5;
 const BUTTON_SIZE = 3 * TILE_SIZE;
 const PADDING = TILE_SIZE / 2;
@@ -19,6 +20,7 @@ const PAD_DOWN_DIRECTION = 270;
 export class VirtualPad {
   private readonly actions: Partial<ActionState> = {};
   private pad: Phaser.GameObjects.Sprite;
+  private upButton: Phaser.GameObjects.Sprite;
   private throwBibleButton: Phaser.GameObjects.Sprite;
 
   private lastPadAnimation: PadAnimations;
@@ -29,6 +31,7 @@ export class VirtualPad {
     }
 
     this.initPad();
+    this.initUpButton();
     this.initThrowBibleButton();
   }
 
@@ -65,10 +68,35 @@ export class VirtualPad {
     });
   }
 
+  private initUpButton() {
+    const { width, height } = this.scene.getGameDimensions();
+
+    const UP_BUTTON_X = width - BUTTON_SIZE / 2 - PADDING;
+    const UP_BUTTON_Y = height - BUTTON_SIZE / 2 - PADDING;
+
+    this.upButton = this.scene.add
+      .sprite(UP_BUTTON_X, UP_BUTTON_Y, SPRITES_KEY)
+      .setScrollFactor(0, 0)
+      .setDepth(Depths.HUD)
+      .setAlpha(GAME_PAD_ALPHA)
+      .play(PadAnimations.UpButton)
+      .setDisplaySize(BUTTON_SIZE, BUTTON_SIZE)
+      .setInteractive({ useHandCursor: true });
+
+    this.upButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.actions.jump = true;
+      this.upButton.setTint(Colors.Red);
+    });
+    this.upButton.on(Phaser.Input.Events.POINTER_UP, () => {
+      this.actions.jump = false;
+      this.upButton.clearTint();
+    });
+  }
+
   private initThrowBibleButton() {
     const { width, height } = this.scene.getGameDimensions();
 
-    const THROW_BIBLE_BUTTON_X = width - BUTTON_SIZE / 2 - PADDING;
+    const THROW_BIBLE_BUTTON_X = width - BUTTON_SIZE / 2 - PADDING - BUTTON_SIZE - PADDING;
     const THROW_BIBLE_BUTTON_Y = height - BUTTON_SIZE / 2 - PADDING;
 
     this.throwBibleButton = this.scene.add
@@ -91,7 +119,7 @@ export class VirtualPad {
   }
 
   private show() {
-    return !this.scene.demo.isActive() && !this.scene.isScoreboardActive() && this.scene.isMobile();
+    return !this.scene.demo.isActive() && !this.scene.isScoreboardActive() && IS_MOBILE;
   }
 
   getActions(): Partial<ActionState> {
