@@ -82,8 +82,8 @@ module.exports.webpackConfig = (mode) => {
       }),
     ],
     performance: {
-      maxEntrypointSize: 2000000, // 2MB
-      maxAssetSize: 2000000, // 2MB
+      maxEntrypointSize: 2.5 * 1024 * 1024, // 2.5 Mb
+      maxAssetSize: 2.5 * 1024 * 1024, // 2.5 Mb
     },
     devtool: isProduction ? 'source-map' : 'eval',
     optimization: {

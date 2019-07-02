@@ -9,6 +9,7 @@ module.exports.buildWorkbox = async () => {
     globDirectory: 'dist',
     globPatterns: ['index.html', '*.{js,css}', 'assets/**/*.{json,png,ogg}'],
     dontCacheBustURLsMatching: /\.\w{20}\./,
+    maximumFileSizeToCacheInBytes: 4 * 1024 * 1024, // 4 Mb
   });
 
   if (warnings && warnings.length) {
