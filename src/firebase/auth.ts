@@ -1,11 +1,12 @@
 import * as firebase from 'firebase/app';
 
 import { GtmEventTypes, GtmLoginTypes, pushEvent } from '@game/analytics';
-import { remove } from 'diacritics';
+import { configUser } from '@game/sentry';
+import { remove as removeDiacritics } from 'diacritics';
 
 import { firebaseApp } from './app';
 import { getUser, hasUserAccess, saveUser } from './database';
-import { AuthButtons, AuthSteps, registerAuthButton, showAdmin, showAuth, showError, showGame } from './ui';
+import { AuthButtons, AuthSteps, registerAuthButton, showAdmin, showAuth, showError, showGame, showVersion } from './ui';
 
 export enum LoginTypes {
   Google,
@@ -75,6 +76,8 @@ export async function handleForm(event: Event, callback: (formData: AuthFormData
 }
 
 export async function handleUser(user: firebase.User) {
+  configUser(user);
+
   if (!user) {
     showAuth(AuthSteps.Login);
   } else if (user && user.email && !user.emailVerified) {
@@ -83,7 +86,7 @@ export async function handleUser(user: firebase.User) {
     showAuth(AuthSteps.DisplayName);
   } else if (user) {
     await saveUser();
-    const { admin, access } = await getUser();
+    const { admin, access, tester } = await getUser();
 
     if (admin) {
       showAdmin();
@@ -94,6 +97,10 @@ export async function handleUser(user: firebase.User) {
     } else {
       showAuth(AuthSteps.WaitAccess);
       hasUserAccess(() => showGame(), () => showAuth(AuthSteps.Forbidden));
+    }
+
+    if (tester) {
+      showVersion();
     }
   } else {
     showAuth(AuthSteps.Login);
@@ -214,7 +221,7 @@ export async function sendEmailVerification(user?: firebase.User): Promise<void>
 
 export async function updateProfile(displayName: string): Promise<void> {
   const user: firebase.User = firebase.auth().currentUser;
-  displayName = remove(displayName).toUpperCase();
+  displayName = removeDiacritics(displayName).toUpperCase();
 
   try {
     await user.updateProfile({ displayName });

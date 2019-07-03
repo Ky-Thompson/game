@@ -1,11 +1,12 @@
 .pwa-install-ios {
   display: block;
-  background: rgba(255, 255, 255, 0.8);
+  background: #eeeeee;
   position: absolute;
   width: 100%;
   bottom: 0;
   left: 0;
   padding: 1rem;
+  box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.75);
   transition: all ease-out 300ms;
 
   @media (max-width: 480px) {

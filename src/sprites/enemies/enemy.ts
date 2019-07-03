@@ -14,6 +14,7 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
   private activated: boolean = false;
   private alive: boolean = true;
   private hasBeenSeen: boolean = false;
+  private pointsCollected: boolean = false;
   dropped: boolean = false;
 
   body: Phaser.Physics.Arcade.Body;
@@ -107,8 +108,11 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
   }
 
   updatePoints() {
-    this.scene.hud.updateScore(Scores.Enemy, this.body.x, this.body.y);
-    this.scene.soundEffects.playEffect(Sounds.Stomp);
+    if (!this.pointsCollected) {
+      this.scene.hud.updateScore(Scores.Enemy, this.body.x, this.body.y);
+      this.scene.soundEffects.playEffect(Sounds.Stomp);
+      this.pointsCollected = true;
+    }
   }
 
   kill(drop: boolean = false) {

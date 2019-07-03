@@ -70,16 +70,17 @@ module.exports.webpackConfig = (mode) => {
       }),
       new HtmlWebpackPlugin({
         isProduction: isProduction,
+        version: VERSION,
         template: join(__dirname, 'src/index.hbs'),
         filename: join(__dirname, 'dist/index.html'),
       }),
-      new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
       new SentryWebpackPlugin({
         release: VERSION,
         include: './dist',
         ignore: ['node_modules', 'webpack.config.js'],
         dryRun: !isProduction,
       }),
+      new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
     ],
     performance: {
       maxEntrypointSize: 2.5 * 1024 * 1024, // 2.5 Mb

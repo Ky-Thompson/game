@@ -6,6 +6,7 @@ import { saveUser } from './database';
 const game: HTMLElement = document.getElementById('game');
 const auth: HTMLElement = document.getElementById('auth');
 const admin: HTMLElement = document.getElementById('admin');
+const version: HTMLElement = document.getElementById('version');
 
 const loadingIndicator: HTMLDivElement = <any>document.getElementById('loading-indicator');
 const errorMsg: HTMLDivElement = <any>document.getElementById('error-msg');
@@ -154,6 +155,10 @@ export function showAdmin() {
   hide(loadingIndicator);
   createAdmin();
   show(admin);
+}
+
+export function showVersion() {
+  show(version);
 }
 
 export function registerAuthButton(button: AuthButtons, callback: (event: Event) => Promise<any>) {

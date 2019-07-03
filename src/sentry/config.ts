@@ -1,4 +1,3 @@
-import { FirebaseUser } from '@game/firebase';
 import * as Sentry from '@sentry/browser';
 
 declare const VERSION: string;
@@ -16,18 +15,14 @@ export const IS_DEVELOPMENT = !!location.host.match(/localhost/);
 export const SENTRY_DSN = 'https://199cda71329c4e1b8b174785af5addf5@sentry.io/1494963';
 
 export const initLog = () => {
-  let environment: Environment = Environment.Development;
+  let environment: Environment;
 
-  switch (true) {
-    case IS_PRODUCTION: {
-      environment = Environment.Production;
-    }
-    case IS_STAGING: {
-      environment = Environment.Staging;
-    }
-    case IS_DEVELOPMENT: {
-      environment = Environment.Development;
-    }
+  if (IS_PRODUCTION) {
+    environment = Environment.Production;
+  } else if (IS_STAGING) {
+    environment = Environment.Staging;
+  } else {
+    environment = Environment.Development;
   }
 
   Sentry.init({
@@ -40,7 +35,7 @@ export const initLog = () => {
   });
 };
 
-export const config = (user: FirebaseUser) => {
+export const configUser = (user: firebase.User) => {
   Sentry.configureScope((scope: Sentry.Scope) => {
     if (user) {
       scope.setUser({

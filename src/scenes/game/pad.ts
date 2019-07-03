@@ -110,11 +110,11 @@ export class VirtualPad {
 
     this.throwBibleButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
       this.actions.throwBible = true;
-      this.throwBibleButton.setTint(Colors.Red);
+      this.updateButtons();
     });
     this.throwBibleButton.on(Phaser.Input.Events.POINTER_UP, () => {
       this.actions.throwBible = false;
-      this.throwBibleButton.clearTint();
+      this.updateButtons();
     });
   }
 
@@ -134,12 +134,19 @@ export class VirtualPad {
     this.throwBibleButton.setAlpha(this.scene.player.playerState === PlayerStates.Super ? GAME_PAD_ALPHA : 0);
 
     const anyPointersDown: boolean = this.scene.input.manager.pointers.reduce((prev, curr) => prev || curr.isDown, false);
-    if (!anyPointersDown && this.lastPadAnimation !== PadAnimations.Default) {
+
+    if (!anyPointersDown) {
       this.actions.left = false;
       this.actions.right = false;
       this.actions.jump = false;
       this.actions.down = false;
-      this.updatePad();
+      this.actions.throwBible = false;
+
+      this.updateButtons();
+
+      if (this.lastPadAnimation !== PadAnimations.Default) {
+        this.updatePad();
+      }
     }
   }
 
@@ -201,6 +208,20 @@ export class VirtualPad {
     if (padAnimation !== this.lastPadAnimation) {
       this.pad.play(padAnimation);
       this.lastPadAnimation = padAnimation;
+    }
+  }
+
+  private updateButtons() {
+    if (this.actions.jump) {
+      this.upButton.setTint(Colors.Red);
+    } else {
+      this.upButton.clearTint();
+    }
+
+    if (this.actions.throwBible) {
+      this.throwBibleButton.setTint(Colors.Red);
+    } else {
+      this.throwBibleButton.clearTint();
     }
   }
 }

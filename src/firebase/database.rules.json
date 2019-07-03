@@ -1,7 +1,7 @@
 {
   "rules": {
     "users": {
-      ".indexOn": ["access", "admin", "exhibit"],
+      ".indexOn": ["access", "admin", "exhibit", "tester"],
       ".read": "auth !== null && auth.uid !== null && root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true",
       "$user_id": {
         ".read": "auth !== null && auth.uid !== null && (auth.uid === $user_id || (root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true))",
@@ -22,6 +22,10 @@
           ".validate": "newData.isBoolean()"
         },
         "exhibit": {
+          ".write": "auth !== null && auth.uid !== null && root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true",
+          ".validate": "newData.isBoolean()"
+        },
+        "tester": {
           ".write": "auth !== null && auth.uid !== null && root.child('users/'+auth.uid).exists() && root.child('users/'+auth.uid).child('admin').exists() && root.child('users/'+auth.uid).child('admin').val() === true",
           ".validate": "newData.isBoolean()"
         },

@@ -4,6 +4,7 @@ import 'firebase/auth';
 import 'firebase/database';
 
 import { Players } from '@game/models';
+import { remove as removeDiacritics } from 'diacritics';
 
 export interface FirebaseScore {
   score: number;
@@ -19,6 +20,7 @@ export interface FirebaseUser {
   admin?: boolean;
   access?: boolean;
   exhibit?: boolean;
+  tester?: boolean;
   uid?: string;
 }
 
@@ -83,7 +85,7 @@ export async function saveUser(): Promise<void> {
   }
 
   const firebaseUser: FirebaseUser = {
-    displayName: user.displayName,
+    displayName: removeDiacritics(user.displayName).toUpperCase(),
     email: user.email,
   };
 
@@ -138,7 +140,7 @@ export async function saveScore(score: number, player: Players, displayName: str
     score,
     player,
     user: user.uid,
-    displayName: displayName || user.displayName,
+    displayName: removeDiacritics(displayName || user.displayName).toUpperCase(),
     timestamp: firebase.database.ServerValue.TIMESTAMP,
   };
 

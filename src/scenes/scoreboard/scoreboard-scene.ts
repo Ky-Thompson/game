@@ -334,7 +334,7 @@ export class ScoreboardScene extends BaseScene {
 
     scores.forEach((firebaseScore: FirebaseScore, index: number) => {
       const numberText: string = `${index + 1}.`.padEnd(NUMBER_TEXT_PADDING, ' ');
-      const displayName: string = firebaseScore.displayName.toLocaleUpperCase().padEnd(NAME_TEXT_PADDING, ' ');
+      const displayName: string = firebaseScore.displayName.padEnd(NAME_TEXT_PADDING, ' ');
       const score: string = String(firebaseScore.score).padStart(SCORE_TEXT_PADDING, '0');
       const scoreText: string = `${numberText} ${displayName} ${score}`;
       const scoreY: number = SCORES_BASE_Y + index * (SCORES_TEXT_SIZE + SCORES_PADDING);

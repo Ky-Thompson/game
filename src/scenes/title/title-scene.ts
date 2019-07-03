@@ -311,7 +311,7 @@ export class TitleScene extends BaseScene {
       .setInteractive({ useHandCursor: true });
 
     this.userNameSprite = this.add
-      .bitmapText(USER_NAME_X, USER_NAME_Y, FONT, user.displayName.toUpperCase(), FONT_SIZE)
+      .bitmapText(USER_NAME_X, USER_NAME_Y, FONT, user.displayName, FONT_SIZE)
       .setAlpha(user.exhibit ? 0 : TITLE_BUTTONS_ALPHA) // If exhibit no need to show profile button
       .setTint(Colors.DarkBlue)
       .setInteractive({ useHandCursor: true });
