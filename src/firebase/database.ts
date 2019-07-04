@@ -78,13 +78,13 @@ export async function getUser(): Promise<FirebaseUser> {
       .ref(`/users/${user.uid}`)
       .once('value')).val();
 
-    const sanitizedUser: FirebaseUser = sanitizeData(firebaseUser) as FirebaseUser;
-    userNeedsSanitization = firebaseUser.displayName !== sanitizedUser.displayName;
-
     if (firebaseUser) {
+      const sanitizedUser: FirebaseUser = sanitizeData(firebaseUser) as FirebaseUser;
+      userNeedsSanitization = firebaseUser.displayName !== sanitizedUser.displayName;
+
       cachedFirebaseUser = {
-        ...sanitizedUser,
         ...authUser,
+        ...sanitizedUser,
       };
 
       persistUserLocalStorage(cachedFirebaseUser);
@@ -126,7 +126,7 @@ export async function saveUser(): Promise<void> {
 
   try {
     firebaseUser = sanitizeData(firebaseUser);
-    debugger;
+
     await firebase
       .database()
       .ref(`/users/${user.uid}`)
