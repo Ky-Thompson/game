@@ -99,8 +99,12 @@ export class HUD {
     return this.lives > 0;
   }
 
+  noLives(): boolean {
+    return this.lives <= 0;
+  }
+
   update(delta: number) {
-    if (this.displayedTime <= 0 || this.scene.finishLine.succeeded() || this.scoreboardActive) {
+    if (this.displayedTime <= 0 || this.scoreboardActive || this.scene.finishLine.succeeded() || this.noLives()) {
       return;
     }
 
@@ -136,7 +140,6 @@ export class HUD {
         this.scene.player.die();
         this.hurry = false;
         this.timerText.clearTint();
-        this.scene.soundEffects.setMusicRate(1);
         this.time = 0;
         this.displayedTime = 0;
       }

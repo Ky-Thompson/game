@@ -6,6 +6,7 @@ import { BiblesGroup, BlockEmitter, BounceBrick, EnemyGroup, FinishLine, Modifie
 import { BaseScene } from '../base';
 import { ScoreboardScene } from '../scoreboard';
 import { Demo } from './demo';
+import { EndTitle } from './end-title';
 import { HUD } from './hud';
 import { Keyboard } from './keyboard';
 import { SoundEffects } from './music';
@@ -23,6 +24,7 @@ export class GameScene extends BaseScene {
   world: World;
   soundEffects: SoundEffects;
   hud: HUD;
+  endTitle: EndTitle;
 
   // Sprite groups
   enemies: EnemyGroup;
@@ -47,6 +49,7 @@ export class GameScene extends BaseScene {
     this.virtualPad = new VirtualPad(this);
     this.keyboard = new Keyboard(this, this.virtualPad);
     this.soundEffects = new SoundEffects(this);
+    this.endTitle = new EndTitle(this);
 
     this.enemies = new EnemyGroup(this);
     this.powerUps = new PowerUpsGroup(this);
@@ -80,6 +83,7 @@ export class GameScene extends BaseScene {
   update(time: number, delta: number) {
     this.updateGamepad();
 
+    this.endTitle.update(delta);
     this.demo.update(delta);
     this.bibles.update();
 
@@ -108,6 +112,7 @@ export class GameScene extends BaseScene {
   }
 
   restart() {
+    this.soundEffects.setMusicRate(1);
     this.scene.start(TitleScene.SceneKey);
   }
 
@@ -136,8 +141,11 @@ export class GameScene extends BaseScene {
       this.player.init();
       this.player.startGraceTime();
       window.setTimeout(() => this.soundEffects.resumeMusic(), 800);
+    } else if (this.hud.hasTimedOut()) {
+      this.endTitle.showTimeout();
+    } else if (this.hud.noLives()) {
+      this.endTitle.showGameOver();
     } else {
-      // Run out of lives
       this.restart();
     }
   }

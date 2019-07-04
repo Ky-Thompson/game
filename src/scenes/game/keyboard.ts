@@ -25,7 +25,7 @@ export class Keyboard {
       left: this.keys.left.isDown || virtualPadKeys.left || gamepadKeys.left,
       right: this.keys.right.isDown || virtualPadKeys.right || gamepadKeys.right,
       down: this.keys.down.isDown || virtualPadKeys.down || gamepadKeys.down,
-      jump: this.keys.jump.isDown || this.keys.jump2.isDown || virtualPadKeys.jump || gamepadKeys.jump,
+      jump: this.keys.jump.isDown || this.keys.jump2.isDown || virtualPadKeys.jump || virtualPadKeys.jump2 || gamepadKeys.jump,
       throwBible: this.keys.throwBible.isDown || virtualPadKeys.throwBible || gamepadKeys.throwBible,
     };
   }

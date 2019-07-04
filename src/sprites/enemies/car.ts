@@ -50,6 +50,7 @@ export class Car extends Enemy {
 
   slideKill(victim: Enemy) {
     if (victim.kill && victim.isAlive()) {
+      victim.updatePoints();
       victim.kill(true);
     }
   }

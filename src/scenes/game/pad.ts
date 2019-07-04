@@ -84,11 +84,11 @@ export class VirtualPad {
       .setInteractive({ useHandCursor: true });
 
     this.upButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.actions.jump = true;
+      this.actions.jump2 = true;
       this.upButton.setTint(Colors.Red);
     });
     this.upButton.on(Phaser.Input.Events.POINTER_UP, () => {
-      this.actions.jump = false;
+      this.actions.jump2 = false;
       this.upButton.clearTint();
     });
   }
@@ -139,6 +139,7 @@ export class VirtualPad {
       this.actions.left = false;
       this.actions.right = false;
       this.actions.jump = false;
+      this.actions.jump2 = false;
       this.actions.down = false;
       this.actions.throwBible = false;
 
@@ -212,7 +213,7 @@ export class VirtualPad {
   }
 
   private updateButtons() {
-    if (this.actions.jump) {
+    if (this.actions.jump2) {
       this.upButton.setTint(Colors.Red);
     } else {
       this.upButton.clearTint();

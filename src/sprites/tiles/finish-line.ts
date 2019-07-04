@@ -95,7 +95,8 @@ export class FinishLine {
         pushEvent({ event: GtmEventTypes.GameCompleted, score });
 
         if (!navigator.onLine) {
-          return this.scene.restart();
+          this.scene.restart();
+          return;
         }
 
         try {

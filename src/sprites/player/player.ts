@@ -165,7 +165,10 @@ export class Player extends Phaser.GameObjects.Sprite {
     const { height } = this.scene.getGameDimensions();
 
     if (this.y > height * 2) {
-      this.scene.playerDied();
+      if (this.body.enable) {
+        this.body.setEnable(false);
+        this.scene.playerDied();
+      }
     } else if (this.y > height && this.alive) {
       this.die();
     }

@@ -25,12 +25,29 @@ export interface FirebaseUser {
 }
 
 let cachedFirebaseUser: FirebaseUser;
+let userNeedsSanitization: boolean = false;
+
+export function sanitize(input: any): string {
+  return removeDiacritics(String(input || '')).toUpperCase();
+}
+
+export function sanitizeData(data: FirebaseUser | FirebaseScore | firebase.User): FirebaseUser | FirebaseScore | firebase.User {
+  if (!data) {
+    return;
+  }
+
+  return {
+    ...data,
+    displayName: sanitize(data.displayName),
+  };
+}
 
 export async function getUser(): Promise<FirebaseUser> {
+  // Handle user in offline mode
   if (!navigator.onLine) {
     const persistedUser = getUserLocalStorage();
     if (persistedUser) {
-      return persistedUser;
+      return sanitizeData(persistedUser);
     } else {
       return {
         displayName: 'EXHIBIT',
@@ -40,7 +57,7 @@ export async function getUser(): Promise<FirebaseUser> {
     }
   }
 
-  const user: firebase.User = firebase.auth().currentUser;
+  const user: firebase.User = sanitizeData(firebase.auth().currentUser) as firebase.User;
 
   if (!user || !user.uid) {
     return;
@@ -61,9 +78,12 @@ export async function getUser(): Promise<FirebaseUser> {
       .ref(`/users/${user.uid}`)
       .once('value')).val();
 
+    const sanitizedUser: FirebaseUser = sanitizeData(firebaseUser) as FirebaseUser;
+    userNeedsSanitization = firebaseUser.displayName !== sanitizedUser.displayName;
+
     if (firebaseUser) {
       cachedFirebaseUser = {
-        ...firebaseUser,
+        ...sanitizedUser,
         ...authUser,
       };
 
@@ -84,8 +104,8 @@ export async function saveUser(): Promise<void> {
     return;
   }
 
-  const firebaseUser: FirebaseUser = {
-    displayName: removeDiacritics(user.displayName).toUpperCase(),
+  let firebaseUser: FirebaseUser = {
+    displayName: user.displayName,
     email: user.email,
   };
 
@@ -96,7 +116,8 @@ export async function saveUser(): Promise<void> {
     if (
       currentFirebaseUser &&
       currentFirebaseUser.displayName === firebaseUser.displayName &&
-      currentFirebaseUser.email === firebaseUser.email
+      currentFirebaseUser.email === firebaseUser.email &&
+      !userNeedsSanitization
     ) {
       // No need to write
       return;
@@ -104,6 +125,8 @@ export async function saveUser(): Promise<void> {
   } catch (e) {}
 
   try {
+    firebaseUser = sanitizeData(firebaseUser);
+    debugger;
     await firebase
       .database()
       .ref(`/users/${user.uid}`)
@@ -121,7 +144,7 @@ export async function saveUser(): Promise<void> {
 export const MAX_SCORES = 20;
 
 export async function saveScore(score: number, player: Players, displayName: string): Promise<void> {
-  const user: firebase.User = firebase.auth().currentUser;
+  const user: firebase.User = sanitizeData(firebase.auth().currentUser) as firebase.User;
 
   if (!user || !user.uid) {
     return;
@@ -136,13 +159,13 @@ export async function saveScore(score: number, player: Players, displayName: str
   }
 
   // Save score
-  const firebaseScore: FirebaseScore = {
+  const firebaseScore: FirebaseScore = sanitizeData({
     score,
     player,
     user: user.uid,
-    displayName: removeDiacritics(displayName || user.displayName).toUpperCase(),
+    displayName: displayName || user.displayName,
     timestamp: firebase.database.ServerValue.TIMESTAMP,
-  };
+  }) as FirebaseScore;
 
   try {
     await firebase
@@ -166,7 +189,7 @@ export async function listScores(): Promise<FirebaseScore[]> {
       .once('value');
 
     firebaseScores.forEach((score) => {
-      scores.push(score.val());
+      scores.push(sanitizeData(score.val()) as FirebaseScore);
     });
   } catch (e) {
     console.error(e);

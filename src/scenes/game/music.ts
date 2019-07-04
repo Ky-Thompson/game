@@ -70,7 +70,9 @@ export class SoundEffects {
   }
 
   playEffect(key: Sounds, onEnded: Function = () => {}) {
-    const sound: any = this.scene.sound.addAudioSprite(AUDIO_SPRITE_KEY);
+    const sound: any = this.scene.sound.addAudioSprite(AUDIO_SPRITE_KEY, {
+      volume: this.scene.demo.isActive() ? DEMO_VOLUME : GAME_VOLUME,
+    });
 
     sound.on(Phaser.Sound.Events.COMPLETE, () => {
       sound.destroy();

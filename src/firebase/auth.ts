@@ -2,10 +2,9 @@ import * as firebase from 'firebase/app';
 
 import { GtmEventTypes, GtmLoginTypes, pushEvent } from '@game/analytics';
 import { configUser } from '@game/sentry';
-import { remove as removeDiacritics } from 'diacritics';
 
 import { firebaseApp } from './app';
-import { getUser, hasUserAccess, saveUser } from './database';
+import { getUser, hasUserAccess, sanitize, saveUser } from './database';
 import { AuthButtons, AuthSteps, registerAuthButton, showAdmin, showAuth, showError, showGame, showVersion } from './ui';
 
 export enum LoginTypes {
@@ -221,7 +220,7 @@ export async function sendEmailVerification(user?: firebase.User): Promise<void>
 
 export async function updateProfile(displayName: string): Promise<void> {
   const user: firebase.User = firebase.auth().currentUser;
-  displayName = removeDiacritics(displayName).toUpperCase();
+  displayName = sanitize(displayName);
 
   try {
     await user.updateProfile({ displayName });
