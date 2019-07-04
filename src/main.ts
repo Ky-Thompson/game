@@ -6,6 +6,8 @@ import { initLog } from './sentry';
 
 declare const VERSION: string;
 
+console.info(`Version: ${VERSION}`);
+
 initLog(); // Sentry logging
 window.addEventListener('load', () => initApp()); // Firebase app
 

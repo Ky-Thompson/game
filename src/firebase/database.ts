@@ -4,6 +4,7 @@ import 'firebase/auth';
 import 'firebase/database';
 
 import { Players } from '@game/models';
+import * as Sentry from '@sentry/browser';
 import { remove as removeDiacritics } from 'diacritics';
 
 export interface FirebaseScore {
@@ -92,7 +93,7 @@ export async function getUser(): Promise<FirebaseUser> {
 
     return cachedFirebaseUser;
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
     return authUser;
   }
 }
@@ -137,7 +138,7 @@ export async function saveUser(): Promise<void> {
       ...firebaseUser,
     };
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
   }
 }
 
@@ -173,7 +174,7 @@ export async function saveScore(score: number, player: Players, displayName: str
       .ref('/scores')
       .push(firebaseScore);
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
   }
 }
 
@@ -192,7 +193,7 @@ export async function listScores(): Promise<FirebaseScore[]> {
       scores.push(sanitizeData(score.val()) as FirebaseScore);
     });
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
   }
 
   return scores.sort((scoreA, scoreB) => scoreB.score - scoreA.score);
@@ -216,7 +217,7 @@ export async function cleanUpScores(): Promise<void> {
       deletedScores++;
     });
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
   }
 }
 
@@ -257,7 +258,7 @@ export async function listUsersWithoutAccess(
 
     return unsubscribe;
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
 
     if (unsubscribe) {
       unsubscribe();
@@ -273,7 +274,7 @@ export async function allowUserAccess(user: FirebaseUser): Promise<void> {
       .ref(`/users/${user.uid}`)
       .update({ access: true });
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
   }
 }
 
@@ -284,7 +285,7 @@ export async function disallowUserAccess(user: FirebaseUser): Promise<void> {
       .ref(`/users/${user.uid}`)
       .update({ access: false });
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
   }
 }
 
@@ -325,7 +326,7 @@ export async function hasUserAccess(onSuccess: () => void, onForbidden: () => vo
       }
     });
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
 
     if (unsubscribe) {
       unsubscribe();

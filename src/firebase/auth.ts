@@ -2,6 +2,7 @@ import * as firebase from 'firebase/app';
 
 import { GtmEventTypes, GtmLoginTypes, pushEvent } from '@game/analytics';
 import { configUser } from '@game/sentry';
+import * as Sentry from '@sentry/browser';
 
 import { firebaseApp } from './app';
 import { getUser, hasUserAccess, sanitize, saveUser } from './database';
@@ -56,7 +57,7 @@ export async function initApp() {
       pushEvent({ event: GtmEventTypes.Login, login: GtmLoginTypes.Email });
       removeEmailLocalStorage();
     } catch (e) {
-      console.error(e);
+      Sentry.captureException(e);
       await signOut();
       showError();
     }
@@ -143,7 +144,7 @@ export async function signUp(email: string, password: string): Promise<firebase.
       return await login(LoginTypes.EmailPassword, email, password);
     }
 
-    console.error(e);
+    Sentry.captureException(e);
     await signOut();
     showError();
   }
@@ -159,7 +160,7 @@ export async function loginGoogle(): Promise<firebase.User> {
       return result.user;
     }
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
     await signOut();
     showError();
   }
@@ -168,7 +169,7 @@ export async function loginGoogle(): Promise<firebase.User> {
     await firebase.auth().signInWithRedirect(googleProvider);
     pushEvent({ event: GtmEventTypes.SignUp });
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
     await signOut();
     showError();
   }
@@ -184,7 +185,7 @@ export async function loginEmailPassword(email: string, password: string): Promi
       return await signUp(email, password);
     }
 
-    console.error(e);
+    Sentry.captureException(e);
     await signOut();
     showError();
   }
@@ -199,7 +200,7 @@ export async function loginLink(email: string): Promise<void> {
     await firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings);
     persistEmailLocalStorage(email);
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
     await signOut();
     showError();
   }
@@ -212,7 +213,7 @@ export async function sendEmailVerification(user?: firebase.User): Promise<void>
     try {
       await user.sendEmailVerification();
     } catch (e) {
-      console.error(e);
+      Sentry.captureException(e);
       showError();
     }
   }
@@ -226,7 +227,7 @@ export async function updateProfile(displayName: string): Promise<void> {
     await user.updateProfile({ displayName });
     await saveUser();
   } catch (e) {
-    console.error(e);
+    Sentry.captureException(e);
     showError();
   }
 
