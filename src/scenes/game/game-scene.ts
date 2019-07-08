@@ -1,5 +1,5 @@
 import { MS_TO_S } from '@game/config';
-import { ActionState, TiledGameObject } from '@game/models';
+import { ActionState, GameOptions, TiledGameObject } from '@game/models';
 import { TitleScene } from '@game/scenes/title';
 import { BiblesGroup, BlockEmitter, BounceBrick, EnemyGroup, FinishLine, ModifierGroup, Player, PowerUpsGroup, World } from '@game/sprites';
 
@@ -48,7 +48,7 @@ export class GameScene extends BaseScene {
   }
 
   create() {
-    if (GameScene.RestartCount >= RESTART_LIMIT) {
+    if (GameScene.RestartCount >= RESTART_LIMIT && this.getRegistry(GameOptions.Demo)) {
       return window.location.reload(); // Force reload to avoid memory leaks and game getting stuck
     }
 
