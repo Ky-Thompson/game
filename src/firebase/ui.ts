@@ -34,10 +34,14 @@ const loginEmailSection: HTMLDivElement = <any>document.getElementById('login-em
 const loginForm: HTMLFormElement = <any>document.getElementById('login-email-form');
 const loginSubmitButton: HTMLButtonElement = <any>document.getElementById('login-email-button');
 const loginBackButton: HTMLButtonElement = <any>document.getElementById('login-email-back-button');
+const loginWrongPasswordMsg: HTMLDivElement = <any>document.getElementById('wrong-password-msg');
+const forgotPassword: HTMLButtonElement = <any>document.getElementById('forgot-password-link');
+const resetEmailMsg: HTMLDivElement = <any>document.getElementById('reset-email-sent-msg');
 
 const emailVerificationSection: HTMLElement = document.getElementById('email-verification');
 const emailVerificationButton: HTMLButtonElement = <any>document.getElementById('email-verification-button');
 const emailVerificationSignOutButton: HTMLButtonElement = <any>document.getElementById('email-verification-sign-out-button');
+const emailVerificationSentMsg: HTMLDivElement = <any>document.getElementById('verification-email-sent-msg');
 
 const displayNameSection: HTMLElement = document.getElementById('display-name');
 const displayNameForm: HTMLFormElement = <any>document.getElementById('display-name-form');
@@ -57,6 +61,7 @@ export enum AuthButtons {
   EmailVerification,
   DisplayName,
   SignOut,
+  ResetPassword,
 }
 
 export enum AuthSteps {
@@ -88,6 +93,35 @@ export function hideError() {
   hide(errorMsg);
 }
 
+export function showWrongPasswordError() {
+  show(loginWrongPasswordMsg);
+  show(forgotPassword);
+}
+
+export function hideWrongPasswordError() {
+  hide(loginWrongPasswordMsg);
+}
+
+export function showForgotPassword() {
+  show(forgotPassword);
+}
+
+export function showResetEmailSent() {
+  show(resetEmailMsg);
+}
+
+export function hideResetEmailSent() {
+  hide(resetEmailMsg);
+}
+
+export function showVerificationEmailSent() {
+  show(emailVerificationSentMsg);
+}
+
+export function hideVerificationEmailSent() {
+  hide(emailVerificationSentMsg);
+}
+
 export function showGame() {
   hide(auth);
   hide(admin);
@@ -103,12 +137,16 @@ export function showAuth(step: AuthSteps) {
   hide(admin);
   hide(loadingIndicator);
   hide(errorMsg);
+  hide(loginWrongPasswordMsg);
+  hide(forgotPassword);
+  hide(resetEmailMsg);
   hide(loginSection);
   hide(loginTOCSection);
   hide(loginEmailSection);
   hide(loginLinkSection);
   hide(loginSignUpSection);
   hide(emailVerificationSection);
+  hide(emailVerificationSentMsg);
   hide(displayNameSection);
   hide(waitAccessSection);
   hide(forbiddenSection);
@@ -207,6 +245,10 @@ export function registerAuthButton(button: AuthButtons, callback: (event: Event)
     case AuthButtons.SignOut:
       addClickEvent(emailVerificationSignOutButton, callback);
       addClickEvent(displayNameSignOutButton, callback);
+      break;
+
+    case AuthButtons.ResetPassword:
+      addClickEvent(forgotPassword, callback);
       break;
   }
 }

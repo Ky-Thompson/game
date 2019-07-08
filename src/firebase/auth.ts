@@ -6,7 +6,24 @@ import * as Sentry from '@sentry/browser';
 
 import { firebaseApp } from './app';
 import { getUser, hasUserAccess, sanitize, saveUser } from './database';
-import { AuthButtons, AuthSteps, registerAuthButton, showAdmin, showAuth, showError, showGame, showVersion } from './ui';
+import {
+  AuthButtons,
+  AuthSteps,
+  hideError,
+  hideResetEmailSent,
+  hideVerificationEmailSent,
+  hideWrongPasswordError,
+  registerAuthButton,
+  showAdmin,
+  showAuth,
+  showError,
+  showForgotPassword,
+  showGame,
+  showResetEmailSent,
+  showVerificationEmailSent,
+  showVersion,
+  showWrongPasswordError,
+} from './ui';
 
 export enum LoginTypes {
   Google,
@@ -17,6 +34,7 @@ export enum LoginTypes {
 export enum AuthErrors {
   EmailAlreadyInUse = 'auth/email-already-in-use',
   UserNotFound = 'auth/user-not-found',
+  WrongPassword = 'auth/wrong-password',
 }
 
 export interface AuthFormData {
@@ -38,6 +56,7 @@ export async function initApp() {
   registerAuthButton(AuthButtons.EmailVerification, async () => await sendEmailVerification());
   registerAuthButton(AuthButtons.DisplayName, (event: Event) => handleForm(event, ({ name }) => updateProfile(name)));
   registerAuthButton(AuthButtons.SignOut, async () => await signOut());
+  registerAuthButton(AuthButtons.ResetPassword, async () => handleForm(event, ({ email }) => resetPassword(email)));
 
   // Wait for user to be logged in
   const auth: firebase.auth.Auth = firebase.auth(firebaseApp);
@@ -65,6 +84,8 @@ export async function initApp() {
 }
 
 export async function handleForm(event: Event, callback: (formData: AuthFormData) => Promise<any>) {
+  hideError();
+
   const form: HTMLFormElement = (<any>event.target).elements ? <any>event.target : (<any>event.target).form;
   const email: string = form.elements['email'] ? form.elements['email'].value : undefined;
   const password: string = form.elements['password'] ? form.elements['password'].value : undefined;
@@ -185,12 +206,18 @@ export async function loginGoogle(): Promise<firebase.User> {
 
 export async function loginEmailPassword(email: string, password: string): Promise<firebase.User> {
   try {
+    hideWrongPasswordError();
+    hideResetEmailSent();
     const credential: firebase.auth.UserCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
     pushEvent({ event: GtmEventTypes.Login, login: GtmLoginTypes.Email });
     return credential.user;
   } catch (e) {
     if (e.code === AuthErrors.UserNotFound) {
       return await signUp(email, password);
+    } else if (e.code === AuthErrors.WrongPassword) {
+      showWrongPasswordError();
+      showForgotPassword();
+      return;
     }
 
     console.log(`Login error for email: ${email}`);
@@ -201,10 +228,11 @@ export async function loginEmailPassword(email: string, password: string): Promi
 }
 
 export async function loginLink(email: string): Promise<void> {
-  const actionCodeSettings = {
+  const actionCodeSettings: firebase.auth.ActionCodeSettings = {
     url: window.location.href,
     handleCodeInApp: true,
   };
+
   try {
     await firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings);
     persistEmailLocalStorage(email);
@@ -221,7 +249,9 @@ export async function sendEmailVerification(user?: firebase.User): Promise<void>
 
   if (user) {
     try {
+      hideVerificationEmailSent();
       await user.sendEmailVerification();
+      showVerificationEmailSent();
     } catch (e) {
       if (user && user.email) {
         console.log(`Send email verification error for email: ${user.email}`);
@@ -230,6 +260,30 @@ export async function sendEmailVerification(user?: firebase.User): Promise<void>
       Sentry.captureException(e);
       showError();
     }
+  }
+}
+
+export async function resetPassword(email: string): Promise<void> {
+  if (!email) {
+    showError();
+    return;
+  }
+
+  const actionCodeSettings: firebase.auth.ActionCodeSettings = {
+    url: window.location.href,
+    handleCodeInApp: true,
+  };
+
+  try {
+    hideWrongPasswordError();
+    hideResetEmailSent();
+    await firebase.auth().sendPasswordResetEmail(email, actionCodeSettings);
+    showResetEmailSent();
+  } catch (e) {
+    console.log(`Reset email error for email: ${email}`);
+
+    Sentry.captureException(e);
+    showError();
   }
 }
 

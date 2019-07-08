@@ -1,6 +1,7 @@
 import { allowUserAccess, cleanUpScores, disallowUserAccess, FirebaseUser, listUsersWithoutAccess } from './database';
 
 const adminTable: HTMLElement = document.getElementById('admin-users');
+const firstUser: HTMLElement = document.getElementById('first-admin-user');
 
 let unsubscribe: () => void;
 let users: FirebaseUser[] = [];
@@ -57,7 +58,7 @@ function addUser(newUser: FirebaseUser) {
   row.appendChild(allowColumn);
   row.appendChild(disallowColumn);
 
-  adminTable.appendChild(row);
+  adminTable.insertBefore(row, firstUser.nextSibling);
 }
 
 function removeUser(removedUser: FirebaseUser) {
