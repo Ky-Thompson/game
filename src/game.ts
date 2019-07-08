@@ -60,7 +60,10 @@ export function createGame() {
 
 export function destroyGame() {
   if (game) {
-    game.destroy(true);
+    try {
+      game.destroy(true);
+    } catch (e) {}
+
     game = undefined;
   }
 }

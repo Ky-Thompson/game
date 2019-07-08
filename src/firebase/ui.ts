@@ -266,3 +266,7 @@ export function isNumber(event: KeyboardEvent): boolean {
 export function isBackspace(event: KeyboardEvent): boolean {
   return event.keyCode === Phaser.Input.Keyboard.KeyCodes.BACKSPACE;
 }
+
+export function isEscape(event: KeyboardEvent): boolean {
+  return event.keyCode === Phaser.Input.Keyboard.KeyCodes.ESC;
+}

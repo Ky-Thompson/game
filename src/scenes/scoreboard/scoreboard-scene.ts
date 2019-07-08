@@ -21,6 +21,7 @@ import { TitleScene } from '../title';
 
 const BLINK_TIME = 500;
 
+const NAME_TIMEOUT = 60 * MS_TO_S;
 const NAME_TEXT = 'ENTER YOUR NAME';
 const NAME_CURSOR = '_';
 const NAME_Y = TILE_SIZE * 1.5;
@@ -83,7 +84,8 @@ export class ScoreboardScene extends BaseScene {
   private scoreSprite: Phaser.GameObjects.BitmapText;
   private scoreBlinkTimer: number;
 
-  private timeout: number;
+  private nameTimeout: number;
+  private scoreboardTimeout: number;
 
   constructor() {
     super({ key: ScoreboardScene.SceneKey });
@@ -104,13 +106,14 @@ export class ScoreboardScene extends BaseScene {
 
     if (this.phase === ScoreboardPhases.EnterName) {
       this.blinkCursor(delta);
+      this.nameTimeout += delta;
     } else if (this.phase === ScoreboardPhases.ShowScores) {
       this.blinkYourScore(delta);
+      this.scoreboardTimeout += delta;
+    }
 
-      this.timeout += delta;
-      if (this.timeout > SCOREBOARD_TIMEOUT) {
-        this.scene.start(TitleScene.SceneKey);
-      }
+    if (this.nameTimeout > NAME_TIMEOUT || this.scoreboardTimeout > SCOREBOARD_TIMEOUT) {
+      this.scene.start(TitleScene.SceneKey);
     }
   }
 
@@ -134,7 +137,8 @@ export class ScoreboardScene extends BaseScene {
   private initScene() {
     const { width, height } = this.getGameDimensions();
 
-    this.timeout = 0;
+    this.scoreboardTimeout = 0;
+    this.nameTimeout = 0;
 
     this.setRegistry(GameOptions.Scoreboard, true);
     this.scene.launch(GameScene.SceneKey);

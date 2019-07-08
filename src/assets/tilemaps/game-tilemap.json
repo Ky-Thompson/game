@@ -3636,7 +3636,7 @@
           "type": "",
           "visible": true,
           "width": 64,
-          "x": 896,
+          "x": 5248,
           "y": 352
         },
         {
@@ -3698,7 +3698,7 @@
             {
               "name": "goto",
               "type": "int",
-              "value": 4
+              "value": 3
             },
             {
               "name": "type",
@@ -3738,7 +3738,7 @@
           "type": "",
           "visible": true,
           "width": 64,
-          "x": 5248,
+          "x": 5728,
           "y": 352
         },
         {
@@ -3768,34 +3768,6 @@
           "width": 64,
           "x": 1216,
           "y": 320
-        },
-        {
-          "height": 32,
-          "id": 159,
-          "name": "",
-          "properties": [
-            {
-              "name": "direction",
-              "type": "string",
-              "value": "up"
-            },
-            {
-              "name": "pipeId",
-              "type": "int",
-              "value": 4
-            },
-            {
-              "name": "type",
-              "type": "string",
-              "value": "dest"
-            }
-          ],
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "width": 64,
-          "x": 1824,
-          "y": 288
         },
         {
           "height": 32,

@@ -42,20 +42,29 @@ export class Bible extends Phaser.GameObjects.Sprite {
 
   terminate() {
     this.scene.soundEffects.playEffect(Sounds.Bump);
+
+    this.body.angle = 0;
+    this.body.setVelocityY(0);
+    this.body.setAngularVelocity(0);
+    this.body.setAllowGravity(false);
+
     this.setActive(false);
     this.setVisible(false);
+    this.body.setEnable(false);
   }
 
   throw(x: number, y: number, leftDirection: boolean) {
     this.setPosition(x, y);
+    this.body.angle = 0;
     this.body.setVelocityY(0);
     this.body.setVelocityX(VELOCITY_X * (leftDirection ? -1 : 1));
-    this.body.angularVelocity = ANGULAR_VELOCITY;
+    this.body.setAngularVelocity(ANGULAR_VELOCITY);
     this.body.setAllowGravity(true);
     this.body.gravity.y = -GRAVITY + BIBLE_GRAVITY;
 
     this.setActive(true);
     this.setVisible(true);
+    this.body.setEnable(true);
 
     this.play(BibleAnimations.Fly);
     this.scene.soundEffects.playEffect(Sounds.ThrowBible);

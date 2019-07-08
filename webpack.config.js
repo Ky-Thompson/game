@@ -40,6 +40,7 @@ module.exports.webpackConfig = (mode) => {
         { test: /\.ts$/, loader: 'ts-loader', include: join(__dirname, 'src'), exclude: '/node_modules/' },
         { test: /phaser\.js$/, loader: 'expose-loader?Phaser' },
         { test: [/\.vert$/, /\.frag$/], use: 'raw-loader' },
+        { test: /\.svg$/, use: { loader: 'svg-url-loader' } },
         {
           test: /\.(hbs|html)$/, // So that we can import favicons generated html
           loader: 'handlebars-loader',

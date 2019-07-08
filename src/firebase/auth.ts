@@ -75,8 +75,15 @@ export async function handleForm(event: Event, callback: (formData: AuthFormData
   }
 }
 
+let userLogged: boolean = false;
+
 export async function handleUser(user: firebase.User) {
   configUser(user);
+
+  if (user && !userLogged) {
+    console.info(`User uid: ${user.uid}`, `User displayName: ${user.displayName}`, `User email: ${user.email}`);
+    userLogged = true;
+  }
 
   if (!user) {
     showAuth(AuthSteps.Login);
@@ -129,7 +136,7 @@ export async function signOut(): Promise<void> {
   try {
     return await firebase.auth().signOut();
   } catch (e) {
-    // Sign out errors are not logged
+    Sentry.captureException(e);
   }
 }
 
@@ -144,6 +151,7 @@ export async function signUp(email: string, password: string): Promise<firebase.
       return await login(LoginTypes.EmailPassword, email, password);
     }
 
+    console.log(`Sign-up error for email: ${email}`);
     Sentry.captureException(e);
     await signOut();
     showError();
@@ -185,6 +193,7 @@ export async function loginEmailPassword(email: string, password: string): Promi
       return await signUp(email, password);
     }
 
+    console.log(`Login error for email: ${email}`);
     Sentry.captureException(e);
     await signOut();
     showError();
@@ -200,6 +209,7 @@ export async function loginLink(email: string): Promise<void> {
     await firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings);
     persistEmailLocalStorage(email);
   } catch (e) {
+    console.log(`Get link error for email: ${email}`);
     Sentry.captureException(e);
     await signOut();
     showError();
@@ -213,6 +223,10 @@ export async function sendEmailVerification(user?: firebase.User): Promise<void>
     try {
       await user.sendEmailVerification();
     } catch (e) {
+      if (user && user.email) {
+        console.log(`Send email verification error for email: ${user.email}`);
+      }
+
       Sentry.captureException(e);
       showError();
     }
@@ -227,6 +241,7 @@ export async function updateProfile(displayName: string): Promise<void> {
     await user.updateProfile({ displayName });
     await saveUser();
   } catch (e) {
+    console.log(`Update profile error with display name: ${displayName}`);
     Sentry.captureException(e);
     showError();
   }

@@ -9,7 +9,7 @@ enum MusicPlaylist {
 
 const PLAYLIST: MusicPlaylist[] = [MusicPlaylist.Song89, MusicPlaylist.Bethel];
 
-const DEMO_VOLUME: number = 0.3;
+const DEMO_VOLUME: number = 0.5;
 const GAME_VOLUME: number = 1;
 
 export class SoundEffects {

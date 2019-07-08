@@ -8,4 +8,5 @@ export enum Depths {
   Flower = -20,
   EnterPipe = -10,
   HUD = 100,
+  Menu = 200,
 }

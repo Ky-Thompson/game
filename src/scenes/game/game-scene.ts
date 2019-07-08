@@ -3,18 +3,21 @@ import { ActionState, TiledGameObject } from '@game/models';
 import { TitleScene } from '@game/scenes/title';
 import { BiblesGroup, BlockEmitter, BounceBrick, EnemyGroup, FinishLine, ModifierGroup, Player, PowerUpsGroup, World } from '@game/sprites';
 
-import { BaseScene } from '../base';
+import { BaseScene, GamepadButtons } from '../base';
 import { ScoreboardScene } from '../scoreboard';
 import { Demo } from './demo';
 import { EndTitle } from './end-title';
 import { HUD } from './hud';
 import { Keyboard } from './keyboard';
+import { Menu } from './menu';
 import { SoundEffects } from './music';
 import { VirtualPad } from './pad';
 
 const SCOREBOARD_TIMEOUT = 30 * MS_TO_S;
+const RESTART_LIMIT = 10;
 
 export class GameScene extends BaseScene {
+  private static RestartCount: number = 0;
   static readonly SceneKey = 'GameScene';
 
   // Game
@@ -25,6 +28,7 @@ export class GameScene extends BaseScene {
   soundEffects: SoundEffects;
   hud: HUD;
   endTitle: EndTitle;
+  menu: Menu;
 
   // Sprite groups
   enemies: EnemyGroup;
@@ -44,12 +48,19 @@ export class GameScene extends BaseScene {
   }
 
   create() {
+    if (GameScene.RestartCount >= RESTART_LIMIT) {
+      return window.location.reload(); // Force reload to avoid memory leaks and game getting stuck
+    }
+
+    GameScene.RestartCount++;
+
     this.world = new World(this);
     this.demo = new Demo(this);
     this.virtualPad = new VirtualPad(this);
     this.keyboard = new Keyboard(this, this.virtualPad);
     this.soundEffects = new SoundEffects(this);
     this.endTitle = new EndTitle(this);
+    this.menu = new Menu(this);
 
     this.enemies = new EnemyGroup(this);
     this.powerUps = new PowerUpsGroup(this);
@@ -78,23 +89,21 @@ export class GameScene extends BaseScene {
     this.world.init();
 
     this.physics.world.resume(); // If the game ended while physics was disabled
+    this.anims.resumeAll(); // If the game ended while animations were disabled
+    this.soundEffects.setMusicRate(1);
   }
 
   update(time: number, delta: number) {
     this.updateGamepad();
 
     this.endTitle.update(delta);
+    this.menu.update(delta);
     this.demo.update(delta);
     this.bibles.update();
 
     if (this.physics.world.isPaused) {
       return;
     }
-
-    this.finishLine.update();
-    this.hud.update(delta);
-    this.enemies.update(delta);
-    this.powerUps.update();
 
     let actions: Partial<ActionState> = {};
 
@@ -106,13 +115,17 @@ export class GameScene extends BaseScene {
       actions = this.keyboard.getActions();
     }
 
+    this.finishLine.update();
+    this.hud.update(delta);
+    this.enemies.update(delta);
+    this.powerUps.update();
+
     this.player.update(delta, actions);
     this.world.update();
     this.virtualPad.update();
   }
 
   restart() {
-    this.soundEffects.setMusicRate(1);
     this.scene.start(TitleScene.SceneKey);
   }
 
@@ -148,5 +161,9 @@ export class GameScene extends BaseScene {
     } else {
       this.restart();
     }
+  }
+
+  protected onGamepadPressed(gamepadButton: GamepadButtons) {
+    this.menu.handleGamepadPressed(gamepadButton);
   }
 }

@@ -3,4 +3,5 @@ export enum GameOptions {
   RestartScene = 'RestartScene',
   Player = 'Player',
   Scoreboard = 'Scoreboard',
+  Title = 'Title',
 }

@@ -31,6 +31,8 @@ const TITLE_BUTTONS_ALPHA = 0.7;
 const USER_NAME_X = TITLE_BUTTONS_PADDING + TILE_SIZE / 2;
 const USER_NAME_Y = TILE_SIZE / 4;
 
+const GAMEPAD_EXPLANATION_BACKDROP_ALPHA = 0.6;
+
 export class TitleScene extends BaseScene {
   static readonly SceneKey = 'TitleScene';
 
@@ -60,6 +62,7 @@ export class TitleScene extends BaseScene {
     this.blinkTimer = TITLE_BLINK_TIME * 2;
     this.selectedPlayer = Players.Caleb;
     this.setRegistry(GameOptions.Player, Players.Caleb);
+    this.setRegistry(GameOptions.Title, true);
     this.showingGamepadExplanation = false;
 
     this.initTitle();
@@ -116,6 +119,7 @@ export class TitleScene extends BaseScene {
 
     this.scene.stop(GameScene.SceneKey);
     this.setRegistry(GameOptions.Demo, false);
+    this.setRegistry(GameOptions.Title, false);
     this.scene.start(GameScene.SceneKey);
   }
 
@@ -218,6 +222,7 @@ export class TitleScene extends BaseScene {
 
   private hidePlayerSelection() {
     this.calebPlayerSprite.setActive(false).setAlpha(0);
+    this.sophiaPlayerSprite.setActive(false).setAlpha(0);
     this.calebSprite.setActive(false).setAlpha(0);
     this.sophiaSprite.setActive(false).setAlpha(0);
   }
@@ -260,6 +265,10 @@ export class TitleScene extends BaseScene {
   }
 
   private togglePlayer() {
+    if (this.showingGamepadExplanation) {
+      return;
+    }
+
     if (this.selectedPlayer === Players.Caleb) {
       this.selectPlayer(Players.Sophia);
     } else {
@@ -304,6 +313,10 @@ export class TitleScene extends BaseScene {
   private async initProfile() {
     const user: FirebaseUser = await getUser();
 
+    if (user.exhibit) {
+      document.documentElement.style.cursor = 'none'; // Hide cursor
+    }
+
     this.profileSprite = this.add
       .sprite(TITLE_BUTTONS_PADDING, TITLE_BUTTONS_PADDING, SPRITES_KEY)
       .play(TitleAnimations.Profile)
@@ -346,12 +359,18 @@ export class TitleScene extends BaseScene {
   }
 
   private initGamepadExplanation() {
+    if (this.showingGamepadExplanation) {
+      return;
+    }
+
     this.showingGamepadExplanation = true;
 
     const { width, height } = this.getGameDimensions();
 
     this.backdrop.destroy();
-    this.backdrop = this.add.rectangle(width / 2, height / 2, width, height, Colors.White, 0.6).setScrollFactor(0, 0);
+    this.backdrop = this.add
+      .rectangle(width / 2, height / 2, width, height, Colors.White, GAMEPAD_EXPLANATION_BACKDROP_ALPHA)
+      .setScrollFactor(0, 0);
 
     // Gamepad
     this.add.image(width / 2, height / 2 - TILE_SIZE * 3, GAMEPAD_IMAGE).setScrollFactor(0, 0);
@@ -381,7 +400,9 @@ export class TitleScene extends BaseScene {
       onLoop: () => {
         calebJumpSprite.play(calebStandSuper);
         this.calebJumpTimeout = window.setTimeout(() => {
-          calebJumpSprite.play(calebJumpSuper);
+          if (calebJumpSprite) {
+            calebJumpSprite.play(calebJumpSuper);
+          }
         }, 500);
       },
     });
@@ -414,7 +435,9 @@ export class TitleScene extends BaseScene {
       onLoop: () => {
         calebBendSprite.play(calebStand);
         this.calebBendTimeout = window.setTimeout(() => {
-          calebBendSprite.play(calebBend);
+          if (calebBendSprite) {
+            calebBendSprite.play(calebBend);
+          }
         }, 500);
       },
     });
@@ -438,7 +461,9 @@ export class TitleScene extends BaseScene {
       onLoop: () => {
         bibleSophia.setAlpha(0);
         this.sophiaBibleTimeout = window.setTimeout(() => {
-          bibleSophia.setAlpha(1);
+          if (bibleSophia) {
+            bibleSophia.setAlpha(1);
+          }
         }, 550);
       },
     });
