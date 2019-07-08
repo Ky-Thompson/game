@@ -85,8 +85,11 @@ export class Menu {
     }
   }
 
-  toggle() {
-    if (this.scene.getRegistry(GameOptions.Title)) {
+  private toggle() {
+    if (this.scene.getRegistry(GameOptions.Title) || this.scene.isScoreboardActive() || !this.scene.player.isAlive()) {
+      if (this.visible) {
+        this.hide();
+      }
       return;
     }
 
