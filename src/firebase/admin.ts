@@ -5,12 +5,15 @@ const firstUser: HTMLElement = document.getElementById('first-admin-user');
 
 let unsubscribe: () => void;
 let users: FirebaseUser[] = [];
+let created: boolean = false;
 
 export async function createAdmin() {
   const onAdded = (user: FirebaseUser) => addUser(user);
   const onRemoved = (user: FirebaseUser) => removeUser(user);
   unsubscribe = await listUsersWithoutAccess(onAdded, onRemoved);
   cleanUpScores();
+  await enableNotifications();
+  created = true;
 }
 
 export function destroyAdmin() {
@@ -26,6 +29,10 @@ function addUser(newUser: FirebaseUser) {
   }
 
   users.push(newUser);
+
+  if (created) {
+    showNotification(`${newUser.displayName} waiting for approval`);
+  }
 
   const name = document.createElement('td');
   name.appendChild(document.createTextNode(newUser.displayName.toUpperCase()));
@@ -68,4 +75,27 @@ function removeUser(removedUser: FirebaseUser) {
     adminTable.removeChild(row);
     users = users.filter((user) => user.uid !== removedUser.uid);
   }
+}
+
+async function enableNotifications(): Promise<NotificationPermission> {
+  if (!('Notification' in window)) {
+    return;
+  }
+
+  try {
+    return await Notification.requestPermission();
+  } catch (e) {}
+}
+
+function showNotification(body: string) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') {
+    return;
+  }
+
+  const options: NotificationOptions = {
+    body,
+    icon: 'assets/images/favicon.png',
+  };
+
+  const notification = new Notification('Caleb & Sophia Game', options);
 }

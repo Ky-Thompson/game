@@ -5,7 +5,7 @@ import { configUser } from '@game/sentry';
 import * as Sentry from '@sentry/browser';
 
 import { firebaseApp } from './app';
-import { getUser, hasUserAccess, sanitize, saveUser } from './database';
+import { FirebaseUser, getUser, hasUserAccess, sanitize, saveUser } from './database';
 import {
   AuthButtons,
   AuthSteps,
@@ -114,7 +114,14 @@ export async function handleUser(user: firebase.User) {
     showAuth(AuthSteps.DisplayName);
   } else if (user) {
     await saveUser();
-    const { admin, access, tester } = await getUser();
+    const user: FirebaseUser = await getUser();
+
+    if (!user) {
+      showAuth(AuthSteps.Login);
+      return;
+    }
+
+    const { admin, access, tester } = user;
 
     if (admin) {
       showAdmin();

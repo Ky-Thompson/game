@@ -2,6 +2,9 @@ export enum GtmEventTypes {
   SignUp = 'SignUp',
   Login = 'Login',
   GameCompleted = 'GameCompleted',
+  GameStart = 'GameStart',
+  GameTimeout = 'GameTimeout',
+  GameOver = 'GameOver',
   HiddenRoom = 'HiddenRoom',
 }
 
@@ -24,7 +27,18 @@ export interface GtmLoginEvent {
   login: GtmLoginTypes;
 }
 
-// Game completed event
+// Game events
+export interface GtmGameStartEvent {
+  event: GtmEventTypes.GameStart;
+}
+
+export interface GtmGameTimeoutEvent {
+  event: GtmEventTypes.GameTimeout;
+}
+
+export interface GtmGameGameOverEvent {
+  event: GtmEventTypes.GameOver;
+}
 
 export interface GtmGameCompletedEvent {
   event: GtmEventTypes.GameCompleted;
@@ -39,7 +53,14 @@ export interface GtmEnterPipeEvent {
 
 // Methods
 
-export type GtmEvent = GtmSignUpEvent | GtmLoginEvent | GtmGameCompletedEvent | GtmEnterPipeEvent;
+export type GtmEvent =
+  | GtmSignUpEvent
+  | GtmLoginEvent
+  | GtmGameStartEvent
+  | GtmGameTimeoutEvent
+  | GtmGameGameOverEvent
+  | GtmGameCompletedEvent
+  | GtmEnterPipeEvent;
 
 export type DataLayer = GtmEvent[];
 

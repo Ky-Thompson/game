@@ -1,6 +1,6 @@
 # Caleb and Sophia visit Madrid
 
-[![Gameplay](https://raw.githubusercontent.com/caleb-sophia-madrid/game/master/art/gameplay.gif)](https://caleb-sophia-madrid.github.io/game/)
+[![Gameplay](https://raw.githubusercontent.com/caleb-sophia-madrid/game/master/arcade-art/gameplay.gif)](https://caleb-sophia-madrid.github.io/game/)
 
 [![Logo](https://raw.githubusercontent.com/caleb-sophia-madrid/game/master/reference/convention/convention-logo-low-res.png)](https://caleb-sophia-madrid.github.io/game/)
 

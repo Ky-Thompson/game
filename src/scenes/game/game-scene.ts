@@ -1,3 +1,4 @@
+import { GtmEventTypes, pushEvent } from '@game/analytics';
 import { MS_TO_S } from '@game/config';
 import { ActionState, GameOptions, TiledGameObject } from '@game/models';
 import { TitleScene } from '@game/scenes/title';
@@ -53,6 +54,10 @@ export class GameScene extends BaseScene {
     }
 
     GameScene.RestartCount++;
+
+    if (!this.isScoreboardActive() && !this.getRegistry(GameOptions.Demo)) {
+      pushEvent({ event: GtmEventTypes.GameStart });
+    }
 
     this.world = new World(this);
     this.demo = new Demo(this);
@@ -155,8 +160,10 @@ export class GameScene extends BaseScene {
       this.player.startGraceTime();
       window.setTimeout(() => this.soundEffects.resumeMusic(), 800);
     } else if (this.hud.hasTimedOut()) {
+      pushEvent({ event: GtmEventTypes.GameTimeout });
       this.endTitle.showTimeout();
     } else if (this.hud.noLives()) {
+      pushEvent({ event: GtmEventTypes.GameOver });
       this.endTitle.showGameOver();
     } else {
       this.restart();
