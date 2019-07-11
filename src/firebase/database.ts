@@ -3,6 +3,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 
+import { GtmEventTypes, pushEvent } from '@game/analytics';
 import { Players } from '@game/models';
 import * as Sentry from '@sentry/browser';
 import { remove as removeDiacritics } from 'diacritics';
@@ -273,6 +274,8 @@ export async function allowUserAccess(user: FirebaseUser): Promise<void> {
       .database()
       .ref(`/users/${user.uid}`)
       .update({ access: true });
+
+    pushEvent({ event: GtmEventTypes.AllowUser });
   } catch (e) {
     Sentry.captureException(e);
   }
@@ -284,6 +287,8 @@ export async function disallowUserAccess(user: FirebaseUser): Promise<void> {
       .database()
       .ref(`/users/${user.uid}`)
       .update({ access: false });
+
+    pushEvent({ event: GtmEventTypes.DisallowUser });
   } catch (e) {
     Sentry.captureException(e);
   }

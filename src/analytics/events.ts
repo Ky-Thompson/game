@@ -6,6 +6,18 @@ export enum GtmEventTypes {
   GameTimeout = 'GameTimeout',
   GameOver = 'GameOver',
   HiddenRoom = 'HiddenRoom',
+  AllowUser = 'AllowUser',
+  DisallowUser = 'DisallowUser',
+}
+
+// Admin events
+
+export interface GtmAllowUserEvent {
+  event: GtmEventTypes.AllowUser;
+}
+
+export interface GtmDisallowUserEvent {
+  event: GtmEventTypes.DisallowUser;
 }
 
 // Sign-up event
@@ -54,6 +66,8 @@ export interface GtmEnterPipeEvent {
 // Methods
 
 export type GtmEvent =
+  | GtmAllowUserEvent
+  | GtmDisallowUserEvent
   | GtmSignUpEvent
   | GtmLoginEvent
   | GtmGameStartEvent
