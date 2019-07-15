@@ -4,4 +4,5 @@ export enum GameOptions {
   Player = 'Player',
   Scoreboard = 'Scoreboard',
   Title = 'Title',
+  Exhibit = 'Exhibit',
 }

@@ -1,7 +1,7 @@
 {
   "name": "caleb-sophia-madrid",
   "description": "Game of Caleb and Sophia in Madrid",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "engines": {
     "node": "^8.15.0",
     "npm": ">=6.0.0"

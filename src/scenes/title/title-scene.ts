@@ -313,6 +313,8 @@ export class TitleScene extends BaseScene {
   private async initProfile() {
     const user: FirebaseUser = await getUser();
 
+    this.setRegistry(GameOptions.Exhibit, user.exhibit);
+
     if (user.exhibit) {
       document.documentElement.style.cursor = 'none'; // Hide cursor
     }

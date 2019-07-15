@@ -1,6 +1,8 @@
 import { GtmEventTypes, pushEvent } from '@game/analytics';
 import { MS_TO_S } from '@game/config';
+import { uploading } from '@game/firebase';
 import { ActionState, GameOptions, TiledGameObject } from '@game/models';
+import { createMediaRecorder, startRecording, stopRecording } from '@game/recorder';
 import { TitleScene } from '@game/scenes/title';
 import { BiblesGroup, BlockEmitter, BounceBrick, EnemyGroup, FinishLine, ModifierGroup, Player, PowerUpsGroup, World } from '@game/sprites';
 
@@ -49,7 +51,7 @@ export class GameScene extends BaseScene {
   }
 
   create() {
-    if (GameScene.RestartCount >= RESTART_LIMIT && this.getRegistry(GameOptions.Demo)) {
+    if (GameScene.RestartCount >= RESTART_LIMIT && this.getRegistry(GameOptions.Demo) && !uploading) {
       return window.location.reload(); // Force reload to avoid memory leaks and game getting stuck
     }
 
@@ -96,6 +98,16 @@ export class GameScene extends BaseScene {
     this.physics.world.resume(); // If the game ended while physics was disabled
     this.anims.resumeAll(); // If the game ended while animations were disabled
     this.soundEffects.setMusicRate(1);
+
+    // Init recording
+    if (!this.isScoreboardActive() && this.demo.isActive()) {
+      if (this.getRegistry(GameOptions.Exhibit)) {
+        createMediaRecorder('game', (this.sound as any).context);
+        startRecording();
+      } else {
+        stopRecording();
+      }
+    }
   }
 
   update(time: number, delta: number) {

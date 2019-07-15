@@ -14,6 +14,7 @@ import {
   saveScore,
 } from '@game/firebase';
 import { Colors, GameOptions, PlayerActions, Players, PlayerStates } from '@game/models';
+import { uploadRecording } from '@game/recorder';
 
 import { BaseScene, GamepadButtons } from '../base';
 import { GameScene } from '../game';
@@ -43,6 +44,8 @@ const SCORE_TEXT_PADDING = 5;
 const PLAYER_Y = 12;
 
 const SCORE_TEXT = 'YOUR SCORE';
+
+const SUPER_HIGH_SCORE = 7000;
 
 enum ScoreboardPhases {
   EnterName,
@@ -113,7 +116,7 @@ export class ScoreboardScene extends BaseScene {
     }
 
     if (this.nameTimeout > NAME_TIMEOUT || this.scoreboardTimeout > SCOREBOARD_TIMEOUT) {
-      this.scene.start(TitleScene.SceneKey);
+      this.goToTitleScene();
     }
   }
 
@@ -316,10 +319,10 @@ export class ScoreboardScene extends BaseScene {
       this.initScoreboardTitle();
       this.initScores();
       this.initYourScore();
-      this.input.on(Phaser.Input.Events.POINTER_DOWN, () => this.scene.start(TitleScene.SceneKey));
+      this.input.on(Phaser.Input.Events.POINTER_DOWN, () => this.goToTitleScene());
     } catch (e) {
       console.error(e);
-      this.scene.start(TitleScene.SceneKey);
+      this.goToTitleScene();
     }
   }
 
@@ -378,8 +381,16 @@ export class ScoreboardScene extends BaseScene {
       case GamepadButtons.Select:
       case GamepadButtons.Start:
       case GamepadButtons.A:
-        this.scene.start(TitleScene.SceneKey);
+        this.goToTitleScene();
         break;
+    }
+  }
+
+  private goToTitleScene() {
+    this.scene.start(TitleScene.SceneKey);
+
+    if (ScoreboardScene.Score > SUPER_HIGH_SCORE) {
+      uploadRecording(ScoreboardScene.User.displayName);
     }
   }
 }
