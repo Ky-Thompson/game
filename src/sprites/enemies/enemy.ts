@@ -88,7 +88,13 @@ export abstract class Enemy extends Phaser.GameObjects.Sprite {
   protected collidePlayer() {
     this.scene.physics.world.overlap(this, this.scene.player, () => {
       if (this.active && !this.dropped) {
-        this.playerHit();
+        if (this.scene.player.isSuper()) {
+          // Player has super-powers, enemy dies
+          this.kill(true);
+          this.updatePoints();
+        } else {
+          this.playerHit();
+        }
       }
     });
   }

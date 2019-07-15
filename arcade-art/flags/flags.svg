@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="297mm"
+   height="210mm"
+   viewBox="0 0 297 210"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="flags.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="680.79251"
+     inkscape:cy="151.67404"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="-8"
+     inkscape:window-y="263"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-87)">
+    <g
+       id="g4637"
+       transform="translate(4.0707474,-4.0924492)">
+      <image
+         sodipodi:absref=".\caleb-flag.png"
+         xlink:href="caleb-flag.png"
+         y="98.55645"
+         x="9.4282389"
+         id="image4526"
+         preserveAspectRatio="none"
+         height="65.024002"
+         width="90.000671" />
+      <image
+         sodipodi:absref=".\caleb-flag.png"
+         xlink:href="caleb-flag.png"
+         width="90.000679"
+         height="65.024002"
+         preserveAspectRatio="none"
+         id="image4526-6"
+         x="99.428909"
+         y="98.55645" />
+      <image
+         sodipodi:absref=".\caleb-flag.png"
+         xlink:href="caleb-flag.png"
+         width="90.000679"
+         height="65.024002"
+         preserveAspectRatio="none"
+         id="image4526-3"
+         x="189.4296"
+         y="98.55645" />
+      <image
+         sodipodi:absref=".\caleb-flag.png"
+         xlink:href="caleb-flag.png"
+         width="90.000679"
+         height="65.024002"
+         preserveAspectRatio="none"
+         id="image4526-66"
+         x="9.4282303"
+         y="163.58044" />
+      <image
+         sodipodi:absref=".\caleb-flag.png"
+         xlink:href="caleb-flag.png"
+         width="90.000679"
+         height="65.024002"
+         preserveAspectRatio="none"
+         id="image4526-2"
+         x="9.4282379"
+         y="228.60445" />
+      <image
+         sodipodi:absref=".\sophia-flag.png"
+         xlink:href="sophia-flag.png"
+         y="163.58044"
+         x="99.428925"
+         id="image4589"
+         preserveAspectRatio="none"
+         height="65.024002"
+         width="90.000671" />
+      <image
+         sodipodi:absref=".\sophia-flag.png"
+         xlink:href="sophia-flag.png"
+         width="90.000679"
+         height="65.024002"
+         preserveAspectRatio="none"
+         id="image4589-3"
+         x="189.4296"
+         y="163.58044" />
+      <image
+         sodipodi:absref=".\sophia-flag.png"
+         xlink:href="sophia-flag.png"
+         width="90.000679"
+         height="65.024002"
+         preserveAspectRatio="none"
+         id="image4589-2"
+         x="99.428909"
+         y="228.60445" />
+      <image
+         sodipodi:absref=".\sophia-flag.png"
+         xlink:href="sophia-flag.png"
+         width="90.000679"
+         height="65.024002"
+         preserveAspectRatio="none"
+         id="image4589-26"
+         x="189.4296"
+         y="228.60445" />
+    </g>
+  </g>
+</svg>

@@ -116,6 +116,10 @@ export class Player extends Phaser.GameObjects.Sprite {
     return this.alive;
   }
 
+  isSuper(): boolean {
+    return this.superActive;
+  }
+
   getPlayerType(): Players {
     return this.playerType;
   }
@@ -390,8 +394,8 @@ export class Player extends Phaser.GameObjects.Sprite {
       return;
     }
 
-    if (this.superActive || this.scene.demo.isActive()) {
-      // Player has super-powers, enemy dies
+    if (this.scene.demo.isActive()) {
+      // In demo mode collision with enemies always kills them
       enemy.kill(true);
       enemy.updatePoints();
     } else if (this.wasHurtTimer <= 0) {

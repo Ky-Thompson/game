@@ -160,7 +160,7 @@ export async function saveScore(score: number, player: Players, displayName: str
     return;
   }
 
-  // Save score
+  // Create new score record
   const firebaseScore: FirebaseScore = sanitizeData({
     score,
     player,
@@ -169,11 +169,23 @@ export async function saveScore(score: number, player: Players, displayName: str
     timestamp: firebase.database.ServerValue.TIMESTAMP,
   }) as FirebaseScore;
 
+  // Check if the new score is the best for the user
+  const maxScore: FirebaseScore = scores.filter((score) => score.displayName === firebaseScore.displayName)[0];
+
+  if (maxScore && maxScore.score >= firebaseScore.score) {
+    return;
+  }
+
+  // Save score
   try {
     await firebase
       .database()
       .ref('/scores')
       .push(firebaseScore);
+
+    if (maxScore) {
+      await cleanUpScores();
+    }
   } catch (e) {
     Sentry.captureException(e);
   }
@@ -201,6 +213,37 @@ export async function listScores(): Promise<FirebaseScore[]> {
 }
 
 export async function cleanUpScores(): Promise<void> {
+  const keyedScores: { [displayName: string]: { ref: firebase.database.Reference; score: FirebaseScore } } = {};
+
+  try {
+    const firebaseScores: firebase.database.DataSnapshot = await firebase
+      .database()
+      .ref('/scores')
+      .orderByChild('score')
+      .limitToLast(MAX_SCORES)
+      .once('value');
+
+    firebaseScores.forEach((score: firebase.database.DataSnapshot) => {
+      const currentScore: FirebaseScore = sanitizeData(score.val()) as FirebaseScore;
+
+      if (keyedScores[currentScore.displayName]) {
+        // When for the same display name there are multiple scores, remove the worst
+        if (keyedScores[currentScore.displayName].score.score > currentScore.score) {
+          score.ref.remove();
+        } else {
+          keyedScores[currentScore.displayName].ref.remove();
+          keyedScores[currentScore.displayName] = { score: currentScore, ref: score.ref };
+        }
+      } else {
+        keyedScores[currentScore.displayName] = { score: currentScore, ref: score.ref };
+      }
+    });
+  } catch (e) {
+    Sentry.captureException(e);
+  }
+}
+
+export async function limitScores(): Promise<void> {
   try {
     const firebaseScores: firebase.database.DataSnapshot = await firebase
       .database()

@@ -1,6 +1,8 @@
 /// <reference path="./phaser.d.ts"/>
 import 'phaser';
 
+import * as Sentry from '@sentry/browser';
+
 import { GAME_HEIGHT, GAME_WIDTH, GRAVITY, TILE_SIZE } from './config';
 import { BootScene, GameScene, ScoreboardScene, TitleScene } from './scenes';
 
@@ -54,7 +56,17 @@ let game: Game;
 
 export function createGame() {
   if (!game) {
-    game = new Game(config);
+    try {
+      game = new Game(config);
+    } catch (e) {
+      Sentry.captureException(e);
+
+      // Show error
+      var errorIE = document.getElementById('error-ie');
+      errorIE.style.display = '';
+
+      destroyGame();
+    }
   }
 }
 
