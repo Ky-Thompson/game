@@ -2,7 +2,6 @@ import { GtmEventTypes, pushEvent } from '@game/analytics';
 import { MS_TO_S } from '@game/config';
 import { uploading } from '@game/firebase';
 import { ActionState, GameOptions, TiledGameObject } from '@game/models';
-import { createMediaRecorder, startRecording, stopRecording } from '@game/recorder';
 import { TitleScene } from '@game/scenes/title';
 import { BiblesGroup, BlockEmitter, BounceBrick, EnemyGroup, FinishLine, ModifierGroup, Player, PowerUpsGroup, World } from '@game/sprites';
 
@@ -102,10 +101,10 @@ export class GameScene extends BaseScene {
     // Init recording
     if (!this.isScoreboardActive() && this.demo.isActive()) {
       if (this.getRegistry(GameOptions.Exhibit)) {
-        createMediaRecorder('game', (this.sound as any).context);
-        startRecording();
+        // createMediaRecorder('game', (this.sound as any).context);
+        // startRecording();
       } else {
-        stopRecording();
+        // stopRecording();
       }
     }
   }
