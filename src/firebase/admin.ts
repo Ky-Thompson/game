@@ -97,5 +97,7 @@ function showNotification(body: string) {
     icon: 'assets/images/favicon.png',
   };
 
-  const notification = new Notification('Caleb & Sophia Game', options);
+  try {
+    const notification = new Notification('Caleb & Sophia Game', options);
+  } catch (e) {}
 }
