@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app';
 
 import { GtmEventTypes, GtmLoginTypes, pushEvent } from '@game/analytics';
+import { isSocialReferral } from '@game/firewall';
 import { configUser } from '@game/sentry';
 import * as Sentry from '@sentry/browser';
 
@@ -106,7 +107,9 @@ export async function handleUser(user: firebase.User) {
     userLogged = true;
   }
 
-  if (!user) {
+  if (isSocialReferral()) {
+    showAuth(AuthSteps.Forbidden);
+  } else if (!user) {
     showAuth(AuthSteps.Login);
   } else if (user && user.email && !user.emailVerified) {
     showAuth(AuthSteps.EmailVerification);

@@ -83,8 +83,8 @@ export class SoundEffects {
   }
 
   setMusicRate(rate: number = 1) {
-    if (this.music) {
+    try {
       this.music.play('', { seek: 0, rate });
-    }
+    } catch (e) {}
   }
 }
