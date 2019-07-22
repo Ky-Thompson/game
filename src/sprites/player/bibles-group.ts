@@ -17,14 +17,18 @@ export class BiblesGroup {
   }
 
   update() {
-    Array.from(this.group.children.entries).forEach((bible: Bible) => {
-      bible.update();
-    });
+    if (this.group.children) {
+      Array.from(this.group.children.entries).forEach((bible: Bible) => {
+        bible.update();
+      });
+    }
   }
 
   terminateAll() {
-    Array.from(this.group.children.entries).forEach((bible: Bible) => {
-      bible.terminate();
-    });
+    if (this.group.children) {
+      Array.from(this.group.children.entries).forEach((bible: Bible) => {
+        bible.terminate();
+      });
+    }
   }
 }
