@@ -110,7 +110,7 @@ export async function handleUser(user: firebase.User) {
 
   if (isSocialReferral()) {
     showAuth(AuthSteps.Forbidden);
-  } else if (!user && !ENABLE_NEW_USERS && !window.location.search.match(/\?login/i)) {
+  } else if (!user && !ENABLE_NEW_USERS && !window.location.search.match(/login/i)) {
     showAuth(AuthSteps.Forbidden);
   } else if (!user) {
     showAuth(AuthSteps.Login);
