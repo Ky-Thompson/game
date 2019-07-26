@@ -206,12 +206,14 @@ export function registerAuthButton(button: AuthButtons, callback: (event: Event)
       break;
 
     case AuthButtons.GetLink:
-      loginTOCLinkButton.addEventListener('click', () => showAuth(AuthSteps.LoginGetLink));
-      getLinkBackButton.addEventListener('click', () => showAuth(AuthSteps.Login));
-      addSubmitEvent(getLinkForm, getLinkSubmitButton, callback, () => {
-        getLinkSubmitButton.disabled = true;
-        show(getLinkSuccessMsg);
-      });
+      if (loginTOCLinkButton) {
+        loginTOCLinkButton.addEventListener('click', () => showAuth(AuthSteps.LoginGetLink));
+        getLinkBackButton.addEventListener('click', () => showAuth(AuthSteps.Login));
+        addSubmitEvent(getLinkForm, getLinkSubmitButton, callback, () => {
+          getLinkSubmitButton.disabled = true;
+          show(getLinkSuccessMsg);
+        });
+      }
       break;
 
     case AuthButtons.LoginEmailPassword:
@@ -221,9 +223,11 @@ export function registerAuthButton(button: AuthButtons, callback: (event: Event)
       break;
 
     case AuthButtons.SignUp:
-      loginTOCSignUpButton.addEventListener('click', () => showAuth(AuthSteps.LoginSignUp));
-      signUpBackButton.addEventListener('click', () => showAuth(AuthSteps.Login));
-      addSubmitEvent(signUpForm, signUpSubmitButton, callback);
+      if (loginTOCSignUpButton) {
+        loginTOCSignUpButton.addEventListener('click', () => showAuth(AuthSteps.LoginSignUp));
+        signUpBackButton.addEventListener('click', () => showAuth(AuthSteps.Login));
+        addSubmitEvent(signUpForm, signUpSubmitButton, callback);
+      }
       break;
 
     case AuthButtons.EmailVerification:

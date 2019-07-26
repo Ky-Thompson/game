@@ -5,24 +5,30 @@
       Login with Gmail
     </button>
   </div>
+
+  {{#if htmlWebpackPlugin.options.enableNewUsers}}
   <div class="col-12 mt-1 mb-2">
     <button id="login-toc-link-button" class="btn btn-light">
       <span class="btn-icon icon-link"></span>
       Access without account
     </button>
   </div>
+
   <div class="col-12 mt-1 mb-2">
     <button id="login-toc-sign-up-button" class="btn btn-light">
       <span class="btn-icon icon-account"></span>
       Create an account
     </button>
   </div>
+  {{/if}}
+
   <div class="col-12 mt-1 mb-2">
     <button id="login-toc-email-button" class="btn btn-light">
       <span class="btn-icon icon-outlook"></span>
       Login with other email
     </button>
   </div>
+
   <div class="alert alert-warning mt-4 w-100" role="alert">
     <span class="font-weight-bold">Do not share this app.</span><br>
     It is only for your personal use.
