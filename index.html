@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" class="m-0 p-0">
+
+<head>
+  <meta charset="utf-8">
+  <title>Caleb & Sophia Game</title>
+
+  <!-- Google Tag Manager DNS preconnect -->
+  <link href="https://www.googletagmanager.com" rel="preconnect" crossorigin />
+  <link href="https://www.google-analytics.com" rel="preconnect" crossorigin />
+
+  <!-- Workbox DNS preconnect -->
+  <link href="https://storage.googleapis.com" rel="preconnect" crossorigin />
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale = 1, maximum-scale = 1, user-scalable = no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <!-- Generated favicons -->
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#343A40">
+  <meta name="application-name" content="Caleb & Sophia Game">
+  <link rel="apple-touch-icon" sizes="57x57" href="apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167x167.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180x180.png">
+  <link rel="apple-touch-icon" sizes="1024x1024" href="apple-touch-icon-1024x1024.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Caleb & Sophia Game">
+  <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)" href="apple-touch-startup-image-320x460.png">
+  <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)" href="apple-touch-startup-image-640x920.png">
+  <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="apple-touch-startup-image-640x1096.png">
+  <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" href="apple-touch-startup-image-750x1294.png">
+  <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3)" href="apple-touch-startup-image-1182x2208.png">
+  <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3)" href="apple-touch-startup-image-1242x2148.png">
+  <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 1)" href="apple-touch-startup-image-748x1024.png">
+  <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 1)" href="apple-touch-startup-image-768x1004.png">
+  <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" href="apple-touch-startup-image-1496x2048.png">
+  <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)" href="apple-touch-startup-image-1536x2008.png">
+  <meta name="msapplication-TileColor" content="#33A5FF">
+  <meta name="msapplication-TileImage" content="mstile-144x144.png">
+  <meta name="msapplication-config" content="browserconfig.xml">
+  <!-- Google Tag Manager -->
+  <script>
+    var isProduction = location.host.match(/.*\.github\.io/);
+    var isIE = /Edge\/|Trident\/|MSIE/.test(window.navigator.userAgent);
+  
+    if (isProduction && !isIE) {
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+          'gtm.start':
+            new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-56JKFTL');
+    }
+  </script>
+  <!-- Service Worker -->
+  <script>
+    // Check that service workers are registered
+    if ('serviceWorker' in navigator) {
+      // Use the window load event to keep the page load performant
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('service-worker.js');
+      });
+    }
+  </script>
+  <!-- Catch IE errors -->
+  <script>
+    var isIE = /Edge\/|Trident\/|MSIE/.test(window.navigator.userAgent);
+  
+    if (isIE) {
+      window.addEventListener('load', function () {
+        var loadingIndicator = document.getElementById('loading-indicator');
+        var errorIE = document.getElementById('error-ie');
+  
+        loadingIndicator.style.display = 'none';
+        errorIE.style.display = '';
+      });
+    }
+  </script><link href="style.d8258d6551c04a27c101.css" rel="stylesheet"></head>
+
+<body class="m-0 p-0 bg-dark text-center">
+  <div id="loading-indicator"></div>
+  <div id="error-ie" style="display: none" class="alert alert-warning m-4 w-100" role="alert">
+    <b>This browser is not supported.</b>
+  </div>
+
+  <article id="game" class="text-left" style="display: none">
+  </article>  <article id="auth" style="display: none" class="card p-3">
+    <header>
+      <img id="logo-img" src="./assets/images/convention-logo.png" class="card-img-top">
+    </header>
+  
+    <section id="login" style="display: none">
+      <div class="card-body">
+        <div class="container-fluid">
+          <div id="login-toc-section" class="row">
+            <div class="col-12 mt-1 mb-2">
+              <button id="login-toc-google-button" class="btn btn-primary">
+                <span class="btn-icon icon-google"></span>
+                Login with Gmail
+              </button>
+            </div>
+          
+          
+            <div class="col-12 mt-1 mb-2">
+              <button id="login-toc-email-button" class="btn btn-light">
+                <span class="btn-icon icon-outlook"></span>
+                Login with other email
+              </button>
+            </div>
+          
+            <div class="alert alert-warning mt-4 w-100" role="alert">
+              <span class="font-weight-bold">Do not share this app.</span><br>
+              It is only for your personal use.
+            </div>
+          </div>      <div id="login-email-section" class="row">
+            <div class="col-12">
+              <h4 class="card-subtitle mb-3 text-muted">Login using your email</h4>
+              <form id="login-email-form">
+                <div class="form-group text-left">
+                  <label for="login-email-input">Email address</label>
+                  <input type="email" class="form-control" name="email" id="login-email-input" placeholder="Enter email" required>
+                </div>
+          
+                <div class="form-group text-left">
+                  <label for="login-password">Password</label>
+                  <button type="button" id="forgot-password-link" class="btn btn-link" style="float: right; display: none" hidden>
+                    Forgot password?
+                  </button>
+                  <input type="password" class="form-control" name="password" id="login-password" placeholder="Password" required
+                    minlength="6">
+                </div>
+          
+                <button id="login-email-back-button" class="btn btn-light" type="button">Back</button>
+                <button id="login-email-button" class="btn btn-primary" type="submit">Login</button>
+              </form>
+            </div>
+          
+            <div id="reset-email-sent-msg" class="alert alert-success mt-4 w-100" style="display: none" hidden>
+              Reset password email sent.
+            </div>
+          
+            <div id="wrong-password-msg" class="alert alert-danger mt-4 w-100" style="display: none" hidden>
+              Invalid username or password.
+            </div>
+          </div>      <div id="get-link-section" class="row">
+            <div class="col-12">
+              <h4 class="card-subtitle mb-3 text-muted">Access without account by getting a link in your email</h4>
+              <form id="get-link-form">
+                <div class="form-group text-left">
+                  <label for="get-link-input">Email address</label>
+                  <input type="email" class="form-control" name="email" id="get-link-input" placeholder="Enter email" required>
+                </div>
+          
+                <button id="get-link-back-button" class="btn btn-light" type="button">Back</button>
+                <button id="get-link-button" class="btn btn-primary" type="submit">Send link</button>
+              </form>
+              <div id="get-link-success-msg" class="alert alert-success mt-4">
+                Email successfully sent. Check your email and follow instructions.
+              </div>
+            </div>
+          </div>      <div id="sign-up-section" class="row">
+            <div class="col-12">
+              <h4 class="card-subtitle mb-3 text-muted">Create an account</h4>
+              <form id="sign-up-form">
+                <div class="form-group text-left">
+                  <label for="sign-up-email-input">Email address</label>
+                  <input type="email" class="form-control" name="email" id="sign-up-email-input" placeholder="Enter email"
+                    required>
+                </div>
+          
+                <div class="form-group text-left">
+                  <label for="sign-up-password">Password</label>
+                  <input type="password" class="form-control" name="password" id="sign-up-password" placeholder="Password"
+                    required minlength="6">
+                </div>
+          
+                <button id="sign-up-back-button" class="btn btn-light" type="button">Back</button>
+                <button id="sign-up-button" class="btn btn-primary" type="submit">Sign-up</button>
+              </form>
+            </div>
+          </div>    </div>
+      </div>
+    </section>  <section id="email-verification" style="display: none">
+      <header>
+        <h1 class="card-title mt-4">Email verification</h1>
+      </header>
+    
+      <div class="card-body">
+        <p class="card-text">Your email needs to be verified in order to access this app.
+          Check your inbox and open the link you will find.</p>
+        <p class="card-text">If you need your email to be resent click the button below.</p>
+    
+        <button id="email-verification-sign-out-button" class="btn btn-danger">Sign out</button>
+        <button id="email-verification-button" class="btn btn-primary">Send verification email</button>
+      </div>
+    
+      <div id="verification-email-sent-msg" class="alert alert-success mt-1 w-100" style="display: none" hidden>
+        Verification email sent successfully.
+      </div>
+    </section>  <section id="display-name" style="display: none">
+      <header>
+        <h1 class="card-title mt-4">Your name</h1>
+      </header>
+    
+      <div class="card-body">
+        <form id="display-name-form">
+          <div class="form-group text-left">
+            <label for="display-name-input">Nick name</label>
+            <input type="text" class="form-control text-uppercase" name="name" id="display-name-input" required
+              maxlength="8">
+          </div>
+    
+          <button id="display-name-sign-out-button" type="button" class="btn btn-danger">Sign out</button>
+          <button id="display-name-button" type="submit" class="btn btn-primary">Save name</button>
+        </form>
+      </div>
+    </section>  <section id="wait-access" style="display: none">
+      <header>
+        <h1 class="card-title mt-4">Accessing</h1>
+      </header>
+    
+      <div class="card-body">
+        <p class="card-text">The game will be loaded as soon as you are given access...</p>
+    
+        <div class="spinner-border text-primary mt-4" role="status">
+          <span class="sr-only">Waiting...</span>
+        </div>
+      </div>
+    </section>  <section id="forbidden" style="display: none">
+      <header>
+        <h1 class="card-title mt-4">Forbidden</h1>
+      </header>
+    
+      <div class="card-body">
+        <p class="card-text text-danger"><b>You are not allowed to access.</b></p>
+      </div>
+    </section>
+    <div id="error-msg" class="alert alert-danger mt-4" style="display: none" hidden>
+      An error ocurred.
+    </div>
+  </article>  <article id="admin" style="display: none" class="card p-3">
+    <header>
+      <img id="logo-img-admin" src="./assets/images/convention-logo.png" class="card-img-top">
+    </header>
+  
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col" id="admin-table-container">
+          <table class="table table-striped table-borderless mt-3">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Allow</th>
+                <th scope="col">Disallow</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users">
+              <tr id="first-admin-user" style="display: none" hidden>
+                <td></td>
+                <td><button type="button" class="btn btn-success">Allow</button></td>
+                <td><button type="button" class="btn btn-danger">Disallow</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </article>  <div id="pwa-install-ios" class="pwa-install-ios" role="alert" hidden>
+    <p>
+      <img src="assets/images/favicon.png" class="pwa-icon">
+      Install this game in your device: tap
+      <img src="assets/images/share.png" class="ios-button">
+      Share and
+      <img src="assets/images/home_screen.png" class="ios-button">
+      Add to Home screen.
+    </p>
+  </div>
+  <div id="version" hidden>caleb-sophia-madrid@1.0.17</div>
+<script type="text/javascript" src="main.52f1eac47abc1df65e29.js"></script></body>
+
+</html>

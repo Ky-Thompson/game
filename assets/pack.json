@@ -1,0 +1,102 @@
+{
+  "preload": {
+    "files": [
+      {
+        "type": "image",
+        "key": "title",
+        "url": "assets/images/title.png"
+      },
+      {
+        "type": "image",
+        "key": "gamepad",
+        "url": "assets/images/gamepad.png"
+      },
+      {
+        "type": "image",
+        "key": "background-clouds",
+        "url": "assets/images/clouds.png"
+      },
+      {
+        "type": "image",
+        "key": "city",
+        "url": "assets/images/city.png"
+      },
+      {
+        "type": "image",
+        "key": "city-lights",
+        "url": "assets/images/city-lights.png"
+      },
+      {
+        "type": "image",
+        "key": "bull",
+        "url": "assets/images/bull.png"
+      },
+      {
+        "type": "image",
+        "key": "wanda",
+        "url": "assets/images/wanda.png"
+      },
+      {
+        "type": "image",
+        "key": "metro",
+        "url": "assets/images/metro.png"
+      },
+      {
+        "type": "image",
+        "key": "alcala-gate",
+        "url": "assets/images/alcala-gate.png"
+      },
+      {
+        "type": "spritesheet",
+        "key": "tiles",
+        "url": "assets/images/game-sprites.png",
+        "frameConfig": {
+          "frameWidth": 32,
+          "frameHeight": 32,
+          "spacing": 0
+        }
+      },
+      {
+        "type": "atlas",
+        "key": "game-sprites",
+        "textureURL": "assets/sprites/game-sprites.png",
+        "atlasURL": "assets/sprites/game-sprites.json"
+      },
+      {
+        "type": "bitmapFont",
+        "key": "font",
+        "textureURL": "assets/fonts/font.png",
+        "fontDataURL": "assets/fonts/font.fnt"
+      },
+      {
+        "type": "tilemapTiledJSON",
+        "key": "map",
+        "url": "assets/tilemaps/game-tilemap.json"
+      },
+      {
+        "type": "audio",
+        "key": "overworld",
+        "url": ["assets/music/overworld.ogg", "assets/music/overworld.mp3"]
+      },
+      {
+        "type": "audio",
+        "key": "89",
+        "url": ["assets/music/89.ogg", "assets/music/89.mp3"]
+      },
+      {
+        "type": "audio",
+        "key": "bethel",
+        "url": ["assets/music/bethel.ogg", "assets/music/bethel.mp3"]
+      },
+      {
+        "type": "audioSprite",
+        "key": "sfx",
+        "jsonURL": "assets/audio/sfx.json",
+        "audioURL": ["assets/audio/sfx.ogg", "assets/audio/sfx.mp3"],
+        "audioConfig": {
+          "instances": 4
+        }
+      }
+    ]
+  }
+}
