@@ -45,6 +45,7 @@ export interface AuthFormData {
 }
 
 export const MAX_DISPLAY_NAME = 8;
+declare const ENABLE_NEW_USERS: string;
 
 export async function initApp() {
   // Initialize UI
@@ -109,6 +110,8 @@ export async function handleUser(user: firebase.User) {
 
   if (isSocialReferral()) {
     showAuth(AuthSteps.Forbidden);
+  } else if (!user && !ENABLE_NEW_USERS && !window.location.search.match(/\?login/i)) {
+    showAuth(AuthSteps.Forbidden);
   } else if (!user) {
     showAuth(AuthSteps.Login);
   } else if (user && user.email && !user.emailVerified) {
@@ -172,6 +175,10 @@ export async function signOut(): Promise<void> {
 }
 
 export async function signUp(email: string, password: string): Promise<firebase.User> {
+  if (!ENABLE_NEW_USERS) {
+    throw new Error('Sign up not allowed');
+  }
+
   try {
     const result: firebase.auth.UserCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
     pushEvent({ event: GtmEventTypes.SignUp });
@@ -238,6 +245,10 @@ export async function loginEmailPassword(email: string, password: string): Promi
 }
 
 export async function loginLink(email: string): Promise<void> {
+  if (!ENABLE_NEW_USERS) {
+    throw new Error('Sign up not allowed');
+  }
+
   const actionCodeSettings: firebase.auth.ActionCodeSettings = {
     url: window.location.href,
     handleCodeInApp: true,
@@ -255,6 +266,10 @@ export async function loginLink(email: string): Promise<void> {
 }
 
 export async function sendEmailVerification(user?: firebase.User): Promise<void> {
+  if (!ENABLE_NEW_USERS) {
+    throw new Error('Sign up not allowed');
+  }
+
   user = user || firebase.auth().currentUser;
 
   if (user) {

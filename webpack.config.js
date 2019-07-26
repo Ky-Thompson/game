@@ -26,6 +26,7 @@ module.exports.webpackConfig = (mode) => {
     ? ['style-loader', MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
     : ['style-loader', MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'];
   const phaserScript = isProduction ? PHASER_PRODUCTION : PHASER_DEVELOPMENT;
+  const enableNewUsers = !isProduction;
 
   return {
     entry: './src/main.ts',
@@ -64,6 +65,7 @@ module.exports.webpackConfig = (mode) => {
         WEBGL_RENDERER: JSON.stringify(true),
         CANVAS_RENDERER: JSON.stringify(true),
         VERSION: JSON.stringify(VERSION),
+        ENABLE_NEW_USERS: JSON.stringify(enableNewUsers),
       }),
       new MiniCssExtractPlugin({
         filename: isProduction ? 'style.[hash].css' : 'style.css',
@@ -71,6 +73,7 @@ module.exports.webpackConfig = (mode) => {
       }),
       new HtmlWebpackPlugin({
         isProduction: isProduction,
+        enableNewUsers: enableNewUsers,
         version: VERSION,
         template: join(__dirname, 'src/index.hbs'),
         filename: join(__dirname, 'dist/index.html'),
