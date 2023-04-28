@@ -12,7 +12,7 @@ export const IS_PRODUCTION = !!location.host.match(/.*\.github.io/);
 export const IS_STAGING = !!location.host.match(/.*\.herokuapp\.com/);
 export const IS_DEVELOPMENT = !!location.host.match(/localhost/);
 
-export const SENTRY_DSN = 'https://199cda71329c4e1b8b174785af5addf5@sentry.io/1494963';
+export const SENTRY_DSN = null; //'https://199cda71329c4e1b8b174785af5addf5@sentry.io/1494963';
 
 export const initLog = () => {
   let environment: Environment;

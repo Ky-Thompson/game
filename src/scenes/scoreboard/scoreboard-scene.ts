@@ -71,7 +71,8 @@ export class ScoreboardScene extends BaseScene {
   }
 
   static async SaveLastScore(displayName: string) {
-    await saveScore(ScoreboardScene.Score, ScoreboardScene.Player, displayName || ScoreboardScene.User.displayName);
+    // await saveScore(ScoreboardScene.Score, ScoreboardScene.Player, displayName || ScoreboardScene.User.displayName);
+    alert(`New Score: ${ScoreboardScene.Score} Points by ${ScoreboardScene.Player}`);
   }
 
   private phase: ScoreboardPhases;
@@ -313,7 +314,7 @@ export class ScoreboardScene extends BaseScene {
 
     try {
       await ScoreboardScene.SaveLastScore(this.name);
-      await ScoreboardScene.LoadScores();
+      // await ScoreboardScene.LoadScores();
 
       this.hideName();
       this.initScoreboardTitle();

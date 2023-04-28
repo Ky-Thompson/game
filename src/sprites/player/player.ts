@@ -408,6 +408,8 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.die();
       }
     }
+
+    this.scene.physics.world.resume();
   }
 
   startGraceTime() {

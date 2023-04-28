@@ -85,5 +85,6 @@ export abstract class PowerUp extends Phaser.GameObjects.Sprite {
         this.scene.hud.updateLives(1); // get life
         break;
     }
+    this.scene.physics.world.resume();
   }
 }

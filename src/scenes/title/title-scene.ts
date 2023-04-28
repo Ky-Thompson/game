@@ -311,7 +311,13 @@ export class TitleScene extends BaseScene {
   }
 
   private async initProfile() {
-    const user: FirebaseUser = await getUser();
+    // const user: FirebaseUser = await getUser();
+    const user: FirebaseUser = {
+      displayName: 'EXHIBIT',
+      access: true,
+      exhibit: true,
+    };
+    // user.exhibit = true;
 
     this.setRegistry(GameOptions.Exhibit, user.exhibit);
 

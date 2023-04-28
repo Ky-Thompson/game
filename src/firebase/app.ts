@@ -4,10 +4,10 @@ import 'firebase/auth';
 
 const config = {
   apiKey: 'AIzaSyDpmYC4GoCsBlkAF7SarIzL4GC21xGyvV0',
-  authDomain: 'caleb-sophia-madrid.firebaseapp.com',
-  databaseURL: 'https://caleb-sophia-madrid.firebaseio.com',
-  projectId: 'caleb-sophia-madrid',
-  storageBucket: 'caleb-sophia-madrid.appspot.com',
+  authDomain: 'madrid-2019.firebaseapp.com',
+  databaseURL: 'https://madrid-2019.firebaseio.com',
+  projectId: 'madrid-2019',
+  storageBucket: 'madrid-2019.appspot.com',
   messagingSenderId: '954573942686',
 };
 

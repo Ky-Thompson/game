@@ -48,41 +48,43 @@ export const MAX_DISPLAY_NAME = 8;
 declare const ENABLE_NEW_USERS: string;
 
 export async function initApp() {
+  showGame();
   // Initialize UI
-  registerAuthButton(AuthButtons.LoginGoogle, async () => await login(LoginTypes.Google));
-  registerAuthButton(AuthButtons.LoginEmailPassword, (event: Event) =>
-    handleForm(event, ({ email, password }) => login(LoginTypes.EmailPassword, email, password))
-  );
-  registerAuthButton(AuthButtons.GetLink, (event: Event) => handleForm(event, ({ email }) => login(LoginTypes.Link, email)));
-  registerAuthButton(AuthButtons.SignUp, (event: Event) => handleForm(event, ({ email, password }) => signUp(email, password)));
-  registerAuthButton(AuthButtons.EmailVerification, async () => await sendEmailVerification());
-  registerAuthButton(AuthButtons.DisplayName, (event: Event) => handleForm(event, ({ name }) => updateProfile(name)));
-  registerAuthButton(AuthButtons.SignOut, async () => await signOut());
-  registerAuthButton(AuthButtons.ResetPassword, async () => handleForm(event, ({ email }) => resetPassword(email)));
+  // registerAuthButton(AuthButtons.LoginGoogle, async () => await login(LoginTypes.Google));
+  // registerAuthButton(AuthButtons.LoginEmailPassword, (event: Event) =>
+  //   handleForm(event, ({ email, password }) => login(LoginTypes.EmailPassword, email, password))
+  // );
+  // registerAuthButton(AuthButtons.GetLink, (event: Event) => handleForm(event, ({ email }) => login(LoginTypes.Link, email)));
+  // registerAuthButton(AuthButtons.SignUp, (event: Event) => handleForm(event, ({ email, password }) => signUp(email, password)));
+  // // registerAuthButton(AuthButtons.EmailVerification, async () => await sendEmailVerification());
+  // registerAuthButton(AuthButtons.DisplayName, (event: Event) => handleForm(event, ({ name }) => updateProfile(name)));
+  // registerAuthButton(AuthButtons.SignOut, async () => await signOut());
+  // registerAuthButton(AuthButtons.ResetPassword, async () => handleForm(event, ({ email }) => resetPassword(email)));
+  // updateProfile("User");
 
-  // Wait for user to be logged in
-  const auth: firebase.auth.Auth = firebase.auth(firebaseApp);
-  auth.useDeviceLanguage();
-  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-  auth.onAuthStateChanged((user: firebase.User) => handleUser(user));
+  // // Wait for user to be logged in
+  // const auth: firebase.auth.Auth = firebase.auth(firebaseApp);
+  // auth.useDeviceLanguage();
+  // auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  // auth.onAuthStateChanged((user: firebase.User) => handleUser(user));
 
   // Check sign-in with email
-  if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-    let email = getEmailLocalStorage();
-    if (!email) {
-      email = window.prompt('Please provide your email for confirmation');
-    }
+  // if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+  //   // let email = getEmailLocalStorage();
+  //   // if (!email) {
+  //   //   email = window.prompt('Please provide your email for confirmation');
+  //   // }
 
-    try {
-      await firebase.auth().signInWithEmailLink(email, window.location.href);
-      pushEvent({ event: GtmEventTypes.Login, login: GtmLoginTypes.Email });
-      removeEmailLocalStorage();
-    } catch (e) {
-      Sentry.captureException(e);
-      await signOut();
-      showError();
-    }
-  }
+  //   try {
+  //     await firebase.auth().signInWithEmailLink(email, window.location.href);
+  //     pushEvent({ event: GtmEventTypes.Login, login: GtmLoginTypes.Email });
+  //     removeEmailLocalStorage();
+  //   } catch (e) {
+  //     Sentry.captureException(e);
+  //     await signOut();
+  //     showError();
+  //   }
+  // }
 }
 
 export async function handleForm(event: Event, callback: (formData: AuthFormData) => Promise<any>) {
@@ -101,7 +103,7 @@ export async function handleForm(event: Event, callback: (formData: AuthFormData
 let userLogged: boolean = false;
 
 export async function handleUser(user: firebase.User) {
-  configUser(user);
+  // configUser(user);
 
   if (user && !userLogged) {
     console.info(`User uid: ${user.uid}`, `User displayName: ${user.displayName}`, `User email: ${user.email}`);
@@ -120,14 +122,14 @@ export async function handleUser(user: firebase.User) {
     showAuth(AuthSteps.DisplayName);
   } else if (user) {
     await saveUser();
-    const user: FirebaseUser = await getUser();
+    const Newuser: FirebaseUser = await getUser();
 
-    if (!user) {
+    if (!Newuser) {
       showAuth(AuthSteps.Login);
       return;
     }
 
-    const { admin, access, tester } = user;
+    const { admin, access, tester } = Newuser;
 
     if (admin) {
       showAdmin();
@@ -137,7 +139,10 @@ export async function handleUser(user: firebase.User) {
       showAuth(AuthSteps.Forbidden);
     } else {
       showAuth(AuthSteps.WaitAccess);
-      hasUserAccess(() => showGame(), () => showAuth(AuthSteps.Forbidden));
+      hasUserAccess(
+        () => showGame(),
+        () => showAuth(AuthSteps.Forbidden)
+      );
     }
 
     if (tester) {
@@ -238,7 +243,7 @@ export async function loginEmailPassword(email: string, password: string): Promi
     }
 
     console.log(`Login error for email: ${email}`);
-    Sentry.captureException(e);
+    // Sentry.captureException(e);
     await signOut();
     showError();
   }
@@ -259,7 +264,7 @@ export async function loginLink(email: string): Promise<void> {
     persistEmailLocalStorage(email);
   } catch (e) {
     console.log(`Get link error for email: ${email}`);
-    Sentry.captureException(e);
+    // Sentry.captureException(e);
     await signOut();
     showError();
   }
@@ -282,7 +287,7 @@ export async function sendEmailVerification(user?: firebase.User): Promise<void>
         console.log(`Send email verification error for email: ${user.email}`);
       }
 
-      Sentry.captureException(e);
+      // Sentry.captureException(e);
       showError();
     }
   }
@@ -307,7 +312,7 @@ export async function resetPassword(email: string): Promise<void> {
   } catch (e) {
     console.log(`Reset email error for email: ${email}`);
 
-    Sentry.captureException(e);
+    // Sentry.captureException(e);
     showError();
   }
 }
@@ -321,7 +326,8 @@ export async function updateProfile(displayName: string): Promise<void> {
     await saveUser();
   } catch (e) {
     console.log(`Update profile error with display name: ${displayName}`);
-    Sentry.captureException(e);
+    console.log(e);
+    // Sentry.captureException(e);
     showError();
   }
 

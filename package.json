@@ -14,6 +14,7 @@
     "start": "gulp watch",
     "build": "gulp build",
     "serve": "gulp serve:prod",
+    "serve_dev": "gulp serve:dev",
     "docker:build": "docker build -t caleb-sophia-madrid .",
     "docker:shell": "docker run -it caleb-sophia-madrid sh"
   },

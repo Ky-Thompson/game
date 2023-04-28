@@ -81,7 +81,7 @@ export abstract class BaseScene extends Phaser.Scene {
   }
 
   updateGamepad() {
-    (<any>this.input).update(); // https://github.com/photonstorm/phaser/issues/4414
+    // (<any>this.input).update(); // https://github.com/photonstorm/phaser/issues/4414
 
     if (!this.gamepad && this.input.gamepad.getPad(0)) {
       // Gamepad just connected

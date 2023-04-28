@@ -78,12 +78,12 @@ module.exports.webpackConfig = (mode) => {
         template: join(__dirname, 'src/index.hbs'),
         filename: join(__dirname, 'dist/index.html'),
       }),
-      new SentryWebpackPlugin({
-        release: VERSION,
-        include: './dist',
-        ignore: ['node_modules', 'webpack.config.js'],
-        dryRun: !isProduction,
-      }),
+      // new SentryWebpackPlugin({
+      //   release: VERSION,
+      //   include: './dist',
+      //   ignore: ['node_modules', 'webpack.config.js'],
+      //   dryRun: !isProduction,
+      // }),
       new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
     ],
     performance: {

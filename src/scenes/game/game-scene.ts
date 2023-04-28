@@ -45,6 +45,8 @@ export class GameScene extends BaseScene {
   finishLine: FinishLine;
   player: Player;
 
+  frameTime: number;
+
   constructor() {
     super({ key: GameScene.SceneKey });
   }
@@ -110,6 +112,13 @@ export class GameScene extends BaseScene {
   }
 
   update(time: number, delta: number) {
+    this.frameTime += delta;
+
+    if (this.frameTime > 16.5) {
+      this.frameTime = 0;
+      // Code that relies on a consistent 60hz update
+      this.world.update();
+    }
     this.updateGamepad();
 
     this.endTitle.update(delta);
@@ -137,7 +146,7 @@ export class GameScene extends BaseScene {
     this.powerUps.update();
 
     this.player.update(delta, actions);
-    this.world.update();
+    // this.world.update();
     this.virtualPad.update();
   }
 
