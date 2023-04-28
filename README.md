@@ -1,3 +1,16 @@
+# Local Run Modifications
+
+```shell
+npm install
+```
+
+Appears to need nodejs version 10 for dependencies
+
+```shell
+npm run serve_dev
+```
+
+
 # Caleb and Sophia visit Madrid
 
 [![Gameplay](https://raw.githubusercontent.com/caleb-sophia-madrid/game/master/arcade-art/gameplay.gif)](https://caleb-sophia-madrid.github.io/game/)
