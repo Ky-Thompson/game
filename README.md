@@ -3,6 +3,10 @@
 ```shell
 npm install
 ```
+```shell
+nvm install 10.24.1
+nvm use 10.24.1
+```
 
 Appears to need nodejs version 10 for dependencies
 
