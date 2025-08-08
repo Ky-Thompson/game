@@ -1,15 +1,21 @@
 # Local Run Modifications
 
+Requires Node Version Manager (NVM) for ease of use when installing specific NodeJS versions
+
+[NVM Download](https://github.com/coreybutler/nvm-windows/releases/latest)
+
+Install the game
 ```shell
 npm install
 ```
+
+Install NodeJS version 10.24.1 as it appears to need nodejs 10 for dependencies
 ```shell
 nvm install 10.24.1
 nvm use 10.24.1
 ```
 
-Appears to need nodejs version 10 for dependencies
-
+Launch the game using a local dev server
 ```shell
 npm run serve_dev
 ```
